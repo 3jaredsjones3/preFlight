@@ -53,7 +53,14 @@ identical under a canonical G-code comparator.
 
 ## M1.5: independent trusted verifier
 
-Status: designed.
+Status: implemented and qualified for the v1 linear-command static checks;
+the full milestone remains in progress. Seven accepted M1 goldens, twenty focused
+production mutations, independent modal replay and actual off/on comparisons
+pass under explicit synthetic machine/startup assumptions. See
+[M1_5_STATUS.md](M1_5_STATUS.md) and [TRUSTED_VERIFIER.md](TRUSTED_VERIFIER.md).
+Exact datum protection, deposited-part collision, dependency/contact contracts
+and authenticated artifact/calibration binding remain unproven. Requesting an
+unimplemented proof rejects; the original broader exit criterion is not weakened.
 
 - Separate library/executable with no generator or repair APIs.
 - Parse final G-code independently.

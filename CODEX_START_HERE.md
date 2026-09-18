@@ -39,9 +39,17 @@ resolve downstream emitter state; see the documented coverage limits.
 Read `docs/predictive-slicer/M1_STATUS.md` and `tests/predictive/README.md` for the
 implemented boundary, verification evidence and remaining work.
 
-## In progress: M1 lossless adapter
+M1.5 now has a separate `src/TrustedVerifier` library and `jslice_verify` CLI.
+It consumes final G-code plus versioned immutable fingerprint/manifest files,
+replays its own modal state, and only reports/rejects. The initial supported
+linear-command mutation gate passes; the full milestone remains in progress.
+Read `docs/predictive-slicer/M1_5_STATUS.md` and `TRUSTED_VERIFIER.md` before
+continuing. Exact datum/part collision and dependency/contact proofs remain
+unimplemented and explicit. Do not begin M2 or replace legacy emission.
 
-Implement analysis-only conversion from preFlight's generated
+## Qualified M1 source-inventory boundary
+
+Preserve the analysis-only conversion from preFlight's generated
 `ExtrusionEntity` trees into `BeadGraphIR` before G-code text emission.
 
 Requirements:
@@ -56,6 +64,11 @@ Requirements:
   allowed to replace the legacy emission path.
 
 M1 exit criterion is written in `IMPLEMENTATION_PLAN.md`.
+
+For M1.5, build `research/trusted_verifier` independently or enable
+`JS_SLICE_TRUSTED_VERIFIER=ON` in the native root build. It never links into
+the slicer. Exact native commands and the accepted/mutated program evidence are
+in `M1_5_STATUS.md`; the seven M1 inputs remain unchanged.
 
 ## Fast verification
 
@@ -94,7 +107,7 @@ seven entity goldens. The direct g++ command above runs only the original smoke.
 - Do not implement physical failed-part ejection before safe object exclusion.
 - Free-space support strands/arches remain rejected until experiments establish
   their process envelope.
-- The future verifier must be independent and unable to repair paths.
+- The verifier must remain independent and unable to repair paths.
 
 ## Recovery note
 

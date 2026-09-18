@@ -146,6 +146,9 @@ pause are preferred to physical part ejection.
 
 M0/M0.1 compile and run as an isolated C++20 research target. M1 adds a read-only
 generated-entity adapter, source-order inventory and opt-in analysis report. The
-isolated golden tests pass, but native integration and full slicing equivalence
-remain unverified because the local production dependency toolchain is incomplete.
-See `M1_STATUS.md`. J-Slice remains executable research code, not a replacement slicer.
+native Windows build and seven production fixture equivalence tests pass; see
+`M1_STATUS.md`. M1.5 adds a separate final-G-code verifier with no generator/IR
+linkage. Its initial static checks and mutations pass under explicit synthetic
+machine assumptions, while exact datum and deposited-part collision proofs remain
+unimplemented; see `M1_5_STATUS.md`. J-Slice remains executable research code, not
+a replacement slicer.

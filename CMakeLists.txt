@@ -698,6 +698,13 @@ if(JS_SLICE_NATIVE_ADAPTER_TESTS)
 endif()
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT preFlight_app_console)
 
+# Standalone final-program verifier. Never link it into the generator.
+option(JS_SLICE_TRUSTED_VERIFIER "Build the independent M1.5 verifier and tests" OFF)
+if(JS_SLICE_TRUSTED_VERIFIER)
+    enable_testing()
+    add_subdirectory(research/trusted_verifier)
+endif()
+
 add_dependencies(gettext_make_pot hintsToPot)
 
 if (WIN32)

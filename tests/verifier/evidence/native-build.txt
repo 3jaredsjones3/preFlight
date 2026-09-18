@@ -1,0 +1,77 @@
+**********************************************************************
+** Visual Studio 2026 Developer Command Prompt v18.6.2
+** Copyright (c) 2026 Microsoft Corporation
+**********************************************************************
+-- SLIC3R_ASAN: OFF
+-- SLIC3R_BUILD_SEQUENTIAL_DECIMATOR: ON
+-- SLIC3R_DESKTOP_INTEGRATION: ON
+-- SLIC3R_ENABLE_FORMAT_STEP: ON
+-- SLIC3R_ENC_CHECK: ON
+-- SLIC3R_FHS: OFF
+-- SLIC3R_GTK: 2
+-- SLIC3R_GUI: OFF
+-- SLIC3R_LOG_TO_FILE: OFF
+-- SLIC3R_MSVC_COMPILE_PARALLEL: ON
+-- SLIC3R_PCH: ON
+-- SLIC3R_PYTHON_PREPROCESSOR: OFF
+-- SLIC3R_REPO_URL: OFF
+-- SLIC3R_STATIC: ON
+-- SLIC3R_UBSAN: OFF
+-- SLIC3R_STATIC: ON
+-- CMAKE_PREFIX_PATH: C:/src/j_slice/j-slice/deps/build/destdir/usr/local (from cache or command line)
+-- preFlight: Enabled Link-Time Optimization for Release builds (MSVC /GL + /LTCG)
+Building with Win10 STL fixing service support
+-- Boost::boost exists
+-- Found ZLIB: C:/src/j_slice/j-slice/deps/build/destdir/usr/local/lib/zlib.lib (found suitable version "1.3.1", minimum required is "1")
+-- Found ZLIB: C:/src/j_slice/j-slice/deps/build/destdir/usr/local/lib/zlib.lib (found version "1.3.1")
+CMake Deprecation Warning at cmake/modules/FindOpenVDB.cmake:126 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+Call Stack (most recent call first):
+  CMakeLists.txt:617 (find_package)
+
+
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE)
+CMake Warning at cmake/modules/OpenVDBUtils.cmake:129 (message):
+  vdb_print not found! OPENVDB_PRINT-NOTFOUND
+Call Stack (most recent call first):
+  cmake/modules/FindOpenVDB.cmake:317 (OPENVDB_ABI_VERSION_FROM_PRINT)
+  CMakeLists.txt:617 (find_package)
+
+
+CMake Warning at cmake/modules/FindOpenVDB.cmake:324 (message):
+  Unable to determine OpenVDB ABI version from OpenVDB installation.  The
+  library major version "11" will be inferred.  If this is not correct, use
+  add_definitions(-DOPENVDB_ABI_VERSION_NUMBER=N)
+Call Stack (most recent call first):
+  CMakeLists.txt:617 (find_package)
+
+
+-- Found Imath (OpenEXR 3.x)
+-- find_package could not find Blosc. Using fallback blosc search...
+-- Found Blosc: C:/src/j_slice/j-slice/deps/build/destdir/usr/local/lib/libblosc.lib
+-- OpenVDB libraries: C:/src/j_slice/j-slice/deps/build/destdir/usr/local/lib/libopenvdb.lib
+-- Python pre-processor: OFF
+-- IGL NOT found, using bundled version...
+-- preFlight: Using Clipper2 exclusively
+-- Visual Leak Detector (VLD) is not found.
+-- Boost include dirs: C:/src/j_slice/j-slice/deps/build/destdir/usr/local/include/boost-1_90
+-- Boost libraries:
+-- Found nlohmann_json: C:/src/j_slice/j-slice/deps/build/destdir/usr/local/share/cmake/nlohmann_json/nlohmann_jsonConfig.cmake (found version "3.12.0")
+-- Adding precompiled header pchheader.hpp to target libslic3r.
+-- Found nlohmann_json: C:/src/j_slice/j-slice/deps/build/destdir/usr/local/share/cmake/nlohmann_json/nlohmann_jsonConfig.cmake (found suitable version "3.12.0", minimum required is "3.12")
+-- Configuring done (3.3s)
+-- Generating done (0.3s)
+-- Build files have been written to: C:/src/j_slice/j-slice/build/m1-native
+[1/8] Running utility command for encoding-check-semver
+[2/8] Running utility command for encoding-check-qoi
+[3/8] Building CXX object research\trusted_verifier\CMakeFiles\jslice_verify.dir\__\__\tools\trusted_verify.cpp.obj
+[4/8] Building CXX object research\trusted_verifier\CMakeFiles\jslice_trusted_verifier.dir\__\__\src\TrustedVerifier\Input.cpp.obj
+[5/8] Building CXX object research\trusted_verifier\CMakeFiles\jslice_trusted_verifier.dir\__\__\src\TrustedVerifier\Verifier.cpp.obj
+[6/8] Linking CXX static library research\trusted_verifier\jslice_trusted_verifier.lib
+[7/8] Linking CXX executable research\trusted_verifier\jslice_verify.exe
+[8/8] Running utility command for encoding-check-libslic3r

@@ -1,0 +1,17 @@
+Test project C:/src/j_slice/j-slice/build/predictive-core
+    Start 1: predictive_core_smoke
+1/6 Test #1: predictive_core_smoke ............   Passed    0.01 sec
+    Start 2: predictive_adapter_tests
+2/6 Test #2: predictive_adapter_tests .........   Passed    0.01 sec
+    Start 3: predictive_golden_invariants
+3/6 Test #3: predictive_golden_invariants .....   Passed    0.07 sec
+    Start 4: predictive_job_inputs
+4/6 Test #4: predictive_job_inputs ............   Passed    0.08 sec
+    Start 5: predictive_golden_runner
+5/6 Test #5: predictive_golden_runner .........   Passed    1.84 sec
+    Start 6: predictive_golden_schema
+6/6 Test #6: predictive_golden_schema .........   Passed    0.20 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) =   2.25 sec

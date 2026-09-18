@@ -1,0 +1,23 @@
+Test project C:/src/j_slice/j-slice/build/m1-native
+    Start 1: predictive_native_adapter_tests
+1/9 Test #1: predictive_native_adapter_tests ...   Passed    0.01 sec
+    Start 2: legacy_label_objects_tests
+2/9 Test #2: legacy_label_objects_tests ........   Passed    0.02 sec
+    Start 3: predictive_core_smoke
+3/9 Test #3: predictive_core_smoke .............   Passed    0.01 sec
+    Start 4: predictive_adapter_tests
+4/9 Test #4: predictive_adapter_tests ..........   Passed    0.01 sec
+    Start 5: predictive_golden_invariants
+5/9 Test #5: predictive_golden_invariants ......   Passed    0.08 sec
+    Start 6: predictive_job_inputs
+6/9 Test #6: predictive_job_inputs .............   Passed    0.08 sec
+    Start 7: predictive_golden_runner
+7/9 Test #7: predictive_golden_runner ..........   Passed    1.72 sec
+    Start 8: predictive_golden_schema
+8/9 Test #8: predictive_golden_schema ..........   Passed    0.19 sec
+    Start 9: trusted_verifier_mutations
+9/9 Test #9: trusted_verifier_mutations ........   Passed    4.89 sec
+
+100% tests passed, 0 tests failed out of 9
+
+Total Test time (real) =   7.02 sec

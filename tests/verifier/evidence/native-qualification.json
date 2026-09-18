@@ -1,0 +1,1870 @@
+{
+  "starting_commit": "9228575df549161ff77f6b103580aa16c2f2d91a",
+  "verifier_sha256": "3e2bf6b32bc7a9e9dc183d5aad4022a6e7cd21c6f5dc69b9e324d6e07ae2a858",
+  "fingerprint_sha256": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
+  "acceptance": [
+    {
+      "fixture": "bridge_support",
+      "program_sha256": "6d678f1a4c90aa12578a7ab44330f3b8c1e9922022b0c1f3fda96bac699431fe",
+      "accepted": true,
+      "deterministic": true,
+      "report": {
+        "accepted": true,
+        "checked_properties": [
+          "axis_velocity",
+          "build_volume",
+          "cold_extrusion",
+          "configured_motion_limits",
+          "extrusion_continuity",
+          "fingerprint_binding",
+          "modal_state",
+          "numeric",
+          "object_boundaries",
+          "program_integrity",
+          "schema_compatibility",
+          "syntax",
+          "temperature_commands",
+          "tool_envelope",
+          "volumetric_flow"
+        ],
+        "commands_seen": 7643,
+        "final_state": {
+          "active_object": null,
+          "axis_acceleration_mm_s2": [
+            10000.0,
+            10000.0,
+            10000.0,
+            10000.0
+          ],
+          "axis_velocity_mm_s": [
+            200.0,
+            200.0,
+            200.0,
+            120.0
+          ],
+          "bed_lower_bound_c": 20.0,
+          "bed_target_c": 0.0,
+          "coordinate_mode": "absolute",
+          "coordinate_origin_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "e_mm": 0.0,
+          "extrusion_mode": "absolute",
+          "fan_pwm": [
+            0
+          ],
+          "feedrate_mm_s": 40.0,
+          "flow_factors": [
+            1.0,
+            1.0
+          ],
+          "heater_lower_bounds_c": [
+            0.0
+          ],
+          "heater_targets_c": [
+            0.0
+          ],
+          "position_mm": [
+            98.882,
+            102.303,
+            10.0
+          ],
+          "print_acceleration_mm_s2": 10000.0,
+          "retract_acceleration_mm_s2": 10000.0,
+          "retraction_debt_mm": [
+            2.0,
+            0.0
+          ],
+          "saved_speed_factor": null,
+          "speed_factor": 1.0,
+          "tool": 0,
+          "travel_acceleration_mm_s2": 10000.0,
+          "units_mm": 1.0
+        },
+        "final_state_trusted": true,
+        "findings": [
+          {
+            "byte_offset": 0,
+            "code": "unproven.artifact_binding",
+            "line": 0,
+            "message": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.contact_contracts",
+            "line": 0,
+            "message": "No independent physical contact/bond evidence or calibrated model.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.datum_protection",
+            "line": 0,
+            "message": "No exact datum geometry or tolerance contract is supplied/implemented.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dependency_contracts",
+            "line": 0,
+            "message": "G-code does not establish support/deposition dependencies.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dynamic_motion",
+            "line": 0,
+            "message": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.physical_machine_state",
+            "line": 0,
+            "message": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.swept_collision",
+            "line": 0,
+            "message": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven.",
+            "severity": "warning"
+          }
+        ],
+        "first_replay_error_line": null,
+        "input_sha256": {
+          "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
+          "manifest": "153e6729d13d407f6e85ff63b93f0bad3ae3ff3ec4dee261e7234965a3160f9e",
+          "program": "6d678f1a4c90aa12578a7ab44330f3b8c1e9922022b0c1f3fda96bac699431fe"
+        },
+        "lines_scanned": 8979,
+        "metrics": {
+          "linear_commands": 7439,
+          "peak_positive_drive_flow_mm3_s": 96.2112750161874,
+          "peak_requested_feedrate_mm_s": 130.0
+        },
+        "replay_complete": true,
+        "schema_version": "js-verifier-report-1",
+        "scope": "conditional_static_checks",
+        "unproven_properties": {
+          "artifact_binding": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+          "contact_contracts": "No independent physical contact/bond evidence or calibrated model.",
+          "datum_protection": "No exact datum geometry or tolerance contract is supplied/implemented.",
+          "dependency_contracts": "G-code does not establish support/deposition dependencies.",
+          "dynamic_motion": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+          "physical_machine_state": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+          "swept_collision": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven."
+        }
+      }
+    },
+    {
+      "fixture": "interlocking",
+      "program_sha256": "eaa30a70f9067f66d37d56525c9952585d697e043c85b88fb5255d9b5a16d2cd",
+      "accepted": true,
+      "deterministic": true,
+      "report": {
+        "accepted": true,
+        "checked_properties": [
+          "axis_velocity",
+          "build_volume",
+          "cold_extrusion",
+          "configured_motion_limits",
+          "extrusion_continuity",
+          "fingerprint_binding",
+          "modal_state",
+          "numeric",
+          "object_boundaries",
+          "program_integrity",
+          "schema_compatibility",
+          "syntax",
+          "temperature_commands",
+          "tool_envelope",
+          "volumetric_flow"
+        ],
+        "commands_seen": 2464,
+        "final_state": {
+          "active_object": null,
+          "axis_acceleration_mm_s2": [
+            10000.0,
+            10000.0,
+            10000.0,
+            10000.0
+          ],
+          "axis_velocity_mm_s": [
+            200.0,
+            200.0,
+            200.0,
+            120.0
+          ],
+          "bed_lower_bound_c": 20.0,
+          "bed_target_c": 0.0,
+          "coordinate_mode": "absolute",
+          "coordinate_origin_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "e_mm": 0.0,
+          "extrusion_mode": "absolute",
+          "fan_pwm": [
+            0
+          ],
+          "feedrate_mm_s": 40.0,
+          "flow_factors": [
+            1.0,
+            1.0
+          ],
+          "heater_lower_bounds_c": [
+            0.0
+          ],
+          "heater_targets_c": [
+            0.0
+          ],
+          "position_mm": [
+            99.298,
+            101.882,
+            6.0
+          ],
+          "print_acceleration_mm_s2": 10000.0,
+          "retract_acceleration_mm_s2": 10000.0,
+          "retraction_debt_mm": [
+            2.0,
+            0.0
+          ],
+          "saved_speed_factor": null,
+          "speed_factor": 1.0,
+          "tool": 0,
+          "travel_acceleration_mm_s2": 10000.0,
+          "units_mm": 1.0
+        },
+        "final_state_trusted": true,
+        "findings": [
+          {
+            "byte_offset": 0,
+            "code": "unproven.artifact_binding",
+            "line": 0,
+            "message": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.contact_contracts",
+            "line": 0,
+            "message": "No independent physical contact/bond evidence or calibrated model.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.datum_protection",
+            "line": 0,
+            "message": "No exact datum geometry or tolerance contract is supplied/implemented.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dependency_contracts",
+            "line": 0,
+            "message": "G-code does not establish support/deposition dependencies.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dynamic_motion",
+            "line": 0,
+            "message": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.physical_machine_state",
+            "line": 0,
+            "message": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.swept_collision",
+            "line": 0,
+            "message": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven.",
+            "severity": "warning"
+          }
+        ],
+        "first_replay_error_line": null,
+        "input_sha256": {
+          "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
+          "manifest": "c057f117f568b1b3932f92f147a597f51e5eea2fb1a2eb5731bd8aab1c47a450",
+          "program": "eaa30a70f9067f66d37d56525c9952585d697e043c85b88fb5255d9b5a16d2cd"
+        },
+        "lines_scanned": 3431,
+        "metrics": {
+          "linear_commands": 2383,
+          "peak_positive_drive_flow_mm3_s": 96.2112750161874,
+          "peak_requested_feedrate_mm_s": 130.0
+        },
+        "replay_complete": true,
+        "schema_version": "js-verifier-report-1",
+        "scope": "conditional_static_checks",
+        "unproven_properties": {
+          "artifact_binding": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+          "contact_contracts": "No independent physical contact/bond evidence or calibrated model.",
+          "datum_protection": "No exact datum geometry or tolerance contract is supplied/implemented.",
+          "dependency_contracts": "G-code does not establish support/deposition dependencies.",
+          "dynamic_motion": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+          "physical_machine_state": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+          "swept_collision": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven."
+        }
+      }
+    },
+    {
+      "fixture": "mechanical",
+      "program_sha256": "13a1090cc129f69cbbfc503136e8dd9d757b07e4b06abbf6c02ca2cefa88ea24",
+      "accepted": true,
+      "deterministic": true,
+      "report": {
+        "accepted": true,
+        "checked_properties": [
+          "axis_velocity",
+          "build_volume",
+          "cold_extrusion",
+          "configured_motion_limits",
+          "extrusion_continuity",
+          "fingerprint_binding",
+          "modal_state",
+          "numeric",
+          "object_boundaries",
+          "program_integrity",
+          "schema_compatibility",
+          "syntax",
+          "temperature_commands",
+          "tool_envelope",
+          "volumetric_flow"
+        ],
+        "commands_seen": 4914,
+        "final_state": {
+          "active_object": null,
+          "axis_acceleration_mm_s2": [
+            10000.0,
+            10000.0,
+            10000.0,
+            10000.0
+          ],
+          "axis_velocity_mm_s": [
+            200.0,
+            200.0,
+            200.0,
+            120.0
+          ],
+          "bed_lower_bound_c": 20.0,
+          "bed_target_c": 0.0,
+          "coordinate_mode": "absolute",
+          "coordinate_origin_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "e_mm": 0.0,
+          "extrusion_mode": "absolute",
+          "fan_pwm": [
+            0
+          ],
+          "feedrate_mm_s": 40.0,
+          "flow_factors": [
+            1.0,
+            1.0
+          ],
+          "heater_lower_bounds_c": [
+            0.0
+          ],
+          "heater_targets_c": [
+            0.0
+          ],
+          "position_mm": [
+            99.297,
+            101.882,
+            10.0
+          ],
+          "print_acceleration_mm_s2": 10000.0,
+          "retract_acceleration_mm_s2": 10000.0,
+          "retraction_debt_mm": [
+            2.0,
+            0.0
+          ],
+          "saved_speed_factor": null,
+          "speed_factor": 1.0,
+          "tool": 0,
+          "travel_acceleration_mm_s2": 10000.0,
+          "units_mm": 1.0
+        },
+        "final_state_trusted": true,
+        "findings": [
+          {
+            "byte_offset": 0,
+            "code": "unproven.artifact_binding",
+            "line": 0,
+            "message": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.contact_contracts",
+            "line": 0,
+            "message": "No independent physical contact/bond evidence or calibrated model.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.datum_protection",
+            "line": 0,
+            "message": "No exact datum geometry or tolerance contract is supplied/implemented.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dependency_contracts",
+            "line": 0,
+            "message": "G-code does not establish support/deposition dependencies.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dynamic_motion",
+            "line": 0,
+            "message": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.physical_machine_state",
+            "line": 0,
+            "message": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.swept_collision",
+            "line": 0,
+            "message": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven.",
+            "severity": "warning"
+          }
+        ],
+        "first_replay_error_line": null,
+        "input_sha256": {
+          "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
+          "manifest": "2cfac16ecb304e47481a819315cd16019f6fa92850c68a43fe66988bf100e0f8",
+          "program": "13a1090cc129f69cbbfc503136e8dd9d757b07e4b06abbf6c02ca2cefa88ea24"
+        },
+        "lines_scanned": 5933,
+        "metrics": {
+          "linear_commands": 4822,
+          "peak_positive_drive_flow_mm3_s": 96.2112750161874,
+          "peak_requested_feedrate_mm_s": 130.0
+        },
+        "replay_complete": true,
+        "schema_version": "js-verifier-report-1",
+        "scope": "conditional_static_checks",
+        "unproven_properties": {
+          "artifact_binding": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+          "contact_contracts": "No independent physical contact/bond evidence or calibrated model.",
+          "datum_protection": "No exact datum geometry or tolerance contract is supplied/implemented.",
+          "dependency_contracts": "G-code does not establish support/deposition dependencies.",
+          "dynamic_motion": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+          "physical_machine_state": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+          "swept_collision": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven."
+        }
+      }
+    },
+    {
+      "fixture": "multi_material",
+      "program_sha256": "8a33f96022dd2fb9b53fd2c725b5d539eed54f9dd4d9c54ec7f5050e8bfb928f",
+      "accepted": true,
+      "deterministic": true,
+      "report": {
+        "accepted": true,
+        "checked_properties": [
+          "axis_velocity",
+          "build_volume",
+          "cold_extrusion",
+          "configured_motion_limits",
+          "extrusion_continuity",
+          "fingerprint_binding",
+          "modal_state",
+          "numeric",
+          "object_boundaries",
+          "program_integrity",
+          "schema_compatibility",
+          "syntax",
+          "temperature_commands",
+          "tool_envelope",
+          "volumetric_flow"
+        ],
+        "commands_seen": 6878,
+        "final_state": {
+          "active_object": null,
+          "axis_acceleration_mm_s2": [
+            10000.0,
+            10000.0,
+            10000.0,
+            10000.0
+          ],
+          "axis_velocity_mm_s": [
+            200.0,
+            200.0,
+            200.0,
+            120.0
+          ],
+          "bed_lower_bound_c": 20.0,
+          "bed_target_c": 0.0,
+          "coordinate_mode": "absolute",
+          "coordinate_origin_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "e_mm": -2.0,
+          "extrusion_mode": "relative",
+          "fan_pwm": [
+            0
+          ],
+          "feedrate_mm_s": 40.0,
+          "flow_factors": [
+            1.0,
+            1.0
+          ],
+          "heater_lower_bounds_c": [
+            0.0
+          ],
+          "heater_targets_c": [
+            0.0
+          ],
+          "position_mm": [
+            230.082,
+            142.9,
+            6.2
+          ],
+          "print_acceleration_mm_s2": 10000.0,
+          "retract_acceleration_mm_s2": 10000.0,
+          "retraction_debt_mm": [
+            94.0,
+            102.0
+          ],
+          "saved_speed_factor": 1.0,
+          "speed_factor": 1.0,
+          "tool": 0,
+          "travel_acceleration_mm_s2": 10000.0,
+          "units_mm": 1.0
+        },
+        "final_state_trusted": true,
+        "findings": [
+          {
+            "byte_offset": 0,
+            "code": "unproven.artifact_binding",
+            "line": 0,
+            "message": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.contact_contracts",
+            "line": 0,
+            "message": "No independent physical contact/bond evidence or calibrated model.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.datum_protection",
+            "line": 0,
+            "message": "No exact datum geometry or tolerance contract is supplied/implemented.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dependency_contracts",
+            "line": 0,
+            "message": "G-code does not establish support/deposition dependencies.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dynamic_motion",
+            "line": 0,
+            "message": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.physical_machine_state",
+            "line": 0,
+            "message": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.swept_collision",
+            "line": 0,
+            "message": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven.",
+            "severity": "warning"
+          }
+        ],
+        "first_replay_error_line": null,
+        "input_sha256": {
+          "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
+          "manifest": "a489383b0daa0163c65edfdf77f9e3546fe946b21caac2360839e474adf2bbcc",
+          "program": "8a33f96022dd2fb9b53fd2c725b5d539eed54f9dd4d9c54ec7f5050e8bfb928f"
+        },
+        "lines_scanned": 8704,
+        "metrics": {
+          "linear_commands": 6541,
+          "peak_positive_drive_flow_mm3_s": 96.21127501618741,
+          "peak_requested_feedrate_mm_s": 130.0
+        },
+        "replay_complete": true,
+        "schema_version": "js-verifier-report-1",
+        "scope": "conditional_static_checks",
+        "unproven_properties": {
+          "artifact_binding": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+          "contact_contracts": "No independent physical contact/bond evidence or calibrated model.",
+          "datum_protection": "No exact datum geometry or tolerance contract is supplied/implemented.",
+          "dependency_contracts": "G-code does not establish support/deposition dependencies.",
+          "dynamic_motion": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+          "physical_machine_state": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+          "swept_collision": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven."
+        }
+      }
+    },
+    {
+      "fixture": "multi_object",
+      "program_sha256": "8d22abeedfbd5bcc1198b3771d52d385429bbace7958c92ecc5f567d85786900",
+      "accepted": true,
+      "deterministic": true,
+      "report": {
+        "accepted": true,
+        "checked_properties": [
+          "axis_velocity",
+          "build_volume",
+          "cold_extrusion",
+          "configured_motion_limits",
+          "extrusion_continuity",
+          "fingerprint_binding",
+          "modal_state",
+          "numeric",
+          "object_boundaries",
+          "program_integrity",
+          "schema_compatibility",
+          "syntax",
+          "temperature_commands",
+          "tool_envelope",
+          "volumetric_flow"
+        ],
+        "commands_seen": 2952,
+        "final_state": {
+          "active_object": null,
+          "axis_acceleration_mm_s2": [
+            10000.0,
+            10000.0,
+            10000.0,
+            10000.0
+          ],
+          "axis_velocity_mm_s": [
+            200.0,
+            200.0,
+            200.0,
+            120.0
+          ],
+          "bed_lower_bound_c": 20.0,
+          "bed_target_c": 0.0,
+          "coordinate_mode": "absolute",
+          "coordinate_origin_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "e_mm": 0.0,
+          "extrusion_mode": "absolute",
+          "fan_pwm": [
+            0
+          ],
+          "feedrate_mm_s": 40.0,
+          "flow_factors": [
+            1.0,
+            1.0
+          ],
+          "heater_lower_bounds_c": [
+            0.0
+          ],
+          "heater_targets_c": [
+            0.0
+          ],
+          "position_mm": [
+            99.298,
+            92.882,
+            6.0
+          ],
+          "print_acceleration_mm_s2": 10000.0,
+          "retract_acceleration_mm_s2": 10000.0,
+          "retraction_debt_mm": [
+            2.0,
+            0.0
+          ],
+          "saved_speed_factor": null,
+          "speed_factor": 1.0,
+          "tool": 0,
+          "travel_acceleration_mm_s2": 10000.0,
+          "units_mm": 1.0
+        },
+        "final_state_trusted": true,
+        "findings": [
+          {
+            "byte_offset": 0,
+            "code": "unproven.artifact_binding",
+            "line": 0,
+            "message": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.contact_contracts",
+            "line": 0,
+            "message": "No independent physical contact/bond evidence or calibrated model.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.datum_protection",
+            "line": 0,
+            "message": "No exact datum geometry or tolerance contract is supplied/implemented.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dependency_contracts",
+            "line": 0,
+            "message": "G-code does not establish support/deposition dependencies.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dynamic_motion",
+            "line": 0,
+            "message": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.physical_machine_state",
+            "line": 0,
+            "message": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.swept_collision",
+            "line": 0,
+            "message": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven.",
+            "severity": "warning"
+          }
+        ],
+        "first_replay_error_line": null,
+        "input_sha256": {
+          "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
+          "manifest": "2062737b55110ad82cc67dedda6b65583cc92933b7f58d42dcfcd6813e20a29c",
+          "program": "8d22abeedfbd5bcc1198b3771d52d385429bbace7958c92ecc5f567d85786900"
+        },
+        "lines_scanned": 3939,
+        "metrics": {
+          "linear_commands": 2795,
+          "peak_positive_drive_flow_mm3_s": 96.2112750161874,
+          "peak_requested_feedrate_mm_s": 130.0
+        },
+        "replay_complete": true,
+        "schema_version": "js-verifier-report-1",
+        "scope": "conditional_static_checks",
+        "unproven_properties": {
+          "artifact_binding": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+          "contact_contracts": "No independent physical contact/bond evidence or calibrated model.",
+          "datum_protection": "No exact datum geometry or tolerance contract is supplied/implemented.",
+          "dependency_contracts": "G-code does not establish support/deposition dependencies.",
+          "dynamic_motion": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+          "physical_machine_state": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+          "swept_collision": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven."
+        }
+      }
+    },
+    {
+      "fixture": "serpentine",
+      "program_sha256": "13f4dd5df3f92a535d61ea22ed30e72a1a085119d5bff2da0f072981ba6644d5",
+      "accepted": true,
+      "deterministic": true,
+      "report": {
+        "accepted": true,
+        "checked_properties": [
+          "axis_velocity",
+          "build_volume",
+          "cold_extrusion",
+          "configured_motion_limits",
+          "extrusion_continuity",
+          "fingerprint_binding",
+          "modal_state",
+          "numeric",
+          "object_boundaries",
+          "program_integrity",
+          "schema_compatibility",
+          "syntax",
+          "temperature_commands",
+          "tool_envelope",
+          "volumetric_flow"
+        ],
+        "commands_seen": 11357,
+        "final_state": {
+          "active_object": null,
+          "axis_acceleration_mm_s2": [
+            10000.0,
+            10000.0,
+            10000.0,
+            10000.0
+          ],
+          "axis_velocity_mm_s": [
+            200.0,
+            200.0,
+            200.0,
+            120.0
+          ],
+          "bed_lower_bound_c": 20.0,
+          "bed_target_c": 0.0,
+          "coordinate_mode": "absolute",
+          "coordinate_origin_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "e_mm": 0.0,
+          "extrusion_mode": "absolute",
+          "fan_pwm": [
+            0
+          ],
+          "feedrate_mm_s": 40.0,
+          "flow_factors": [
+            1.0,
+            1.0
+          ],
+          "heater_lower_bounds_c": [
+            0.0
+          ],
+          "heater_targets_c": [
+            0.0
+          ],
+          "position_mm": [
+            110.409,
+            109.713,
+            6.0
+          ],
+          "print_acceleration_mm_s2": 10000.0,
+          "retract_acceleration_mm_s2": 10000.0,
+          "retraction_debt_mm": [
+            2.0,
+            0.0
+          ],
+          "saved_speed_factor": null,
+          "speed_factor": 1.0,
+          "tool": 0,
+          "travel_acceleration_mm_s2": 10000.0,
+          "units_mm": 1.0
+        },
+        "final_state_trusted": true,
+        "findings": [
+          {
+            "byte_offset": 0,
+            "code": "unproven.artifact_binding",
+            "line": 0,
+            "message": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.contact_contracts",
+            "line": 0,
+            "message": "No independent physical contact/bond evidence or calibrated model.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.datum_protection",
+            "line": 0,
+            "message": "No exact datum geometry or tolerance contract is supplied/implemented.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dependency_contracts",
+            "line": 0,
+            "message": "G-code does not establish support/deposition dependencies.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dynamic_motion",
+            "line": 0,
+            "message": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.physical_machine_state",
+            "line": 0,
+            "message": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.swept_collision",
+            "line": 0,
+            "message": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven.",
+            "severity": "warning"
+          }
+        ],
+        "first_replay_error_line": null,
+        "input_sha256": {
+          "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
+          "manifest": "98d61015af5c30bc006388dad1f4de965f7b1a717f006ba6018d0ed8dcd79b8d",
+          "program": "13f4dd5df3f92a535d61ea22ed30e72a1a085119d5bff2da0f072981ba6644d5"
+        },
+        "lines_scanned": 11934,
+        "metrics": {
+          "linear_commands": 11341,
+          "peak_positive_drive_flow_mm3_s": 96.2112750161874,
+          "peak_requested_feedrate_mm_s": 130.0
+        },
+        "replay_complete": true,
+        "schema_version": "js-verifier-report-1",
+        "scope": "conditional_static_checks",
+        "unproven_properties": {
+          "artifact_binding": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+          "contact_contracts": "No independent physical contact/bond evidence or calibrated model.",
+          "datum_protection": "No exact datum geometry or tolerance contract is supplied/implemented.",
+          "dependency_contracts": "G-code does not establish support/deposition dependencies.",
+          "dynamic_motion": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+          "physical_machine_state": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+          "swept_collision": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven."
+        }
+      }
+    },
+    {
+      "fixture": "thin_wall",
+      "program_sha256": "2813fb6f24f16e94e5bd610217785e8f10420ac4c1103693e63b3f250021d8ef",
+      "accepted": true,
+      "deterministic": true,
+      "report": {
+        "accepted": true,
+        "checked_properties": [
+          "axis_velocity",
+          "build_volume",
+          "cold_extrusion",
+          "configured_motion_limits",
+          "extrusion_continuity",
+          "fingerprint_binding",
+          "modal_state",
+          "numeric",
+          "object_boundaries",
+          "program_integrity",
+          "schema_compatibility",
+          "syntax",
+          "temperature_commands",
+          "tool_envelope",
+          "volumetric_flow"
+        ],
+        "commands_seen": 315,
+        "final_state": {
+          "active_object": null,
+          "axis_acceleration_mm_s2": [
+            10000.0,
+            10000.0,
+            10000.0,
+            10000.0
+          ],
+          "axis_velocity_mm_s": [
+            200.0,
+            200.0,
+            200.0,
+            120.0
+          ],
+          "bed_lower_bound_c": 20.0,
+          "bed_target_c": 0.0,
+          "coordinate_mode": "absolute",
+          "coordinate_origin_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "e_mm": 0.0,
+          "extrusion_mode": "absolute",
+          "fan_pwm": [
+            0
+          ],
+          "feedrate_mm_s": 40.0,
+          "flow_factors": [
+            1.0,
+            1.0
+          ],
+          "heater_lower_bounds_c": [
+            0.0
+          ],
+          "heater_targets_c": [
+            0.0
+          ],
+          "position_mm": [
+            119.457,
+            110.119,
+            6.0
+          ],
+          "print_acceleration_mm_s2": 10000.0,
+          "retract_acceleration_mm_s2": 10000.0,
+          "retraction_debt_mm": [
+            2.0,
+            0.0
+          ],
+          "saved_speed_factor": null,
+          "speed_factor": 1.0,
+          "tool": 0,
+          "travel_acceleration_mm_s2": 10000.0,
+          "units_mm": 1.0
+        },
+        "final_state_trusted": true,
+        "findings": [
+          {
+            "byte_offset": 0,
+            "code": "unproven.artifact_binding",
+            "line": 0,
+            "message": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.contact_contracts",
+            "line": 0,
+            "message": "No independent physical contact/bond evidence or calibrated model.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.datum_protection",
+            "line": 0,
+            "message": "No exact datum geometry or tolerance contract is supplied/implemented.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dependency_contracts",
+            "line": 0,
+            "message": "G-code does not establish support/deposition dependencies.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.dynamic_motion",
+            "line": 0,
+            "message": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.physical_machine_state",
+            "line": 0,
+            "message": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+            "severity": "warning"
+          },
+          {
+            "byte_offset": 0,
+            "code": "unproven.swept_collision",
+            "line": 0,
+            "message": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven.",
+            "severity": "warning"
+          }
+        ],
+        "first_replay_error_line": null,
+        "input_sha256": {
+          "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
+          "manifest": "1b9758c95ad160ac100022324af808dcb07ac7de0902e506022d972a38033c34",
+          "program": "2813fb6f24f16e94e5bd610217785e8f10420ac4c1103693e63b3f250021d8ef"
+        },
+        "lines_scanned": 893,
+        "metrics": {
+          "linear_commands": 299,
+          "peak_positive_drive_flow_mm3_s": 96.2112750161874,
+          "peak_requested_feedrate_mm_s": 130.0
+        },
+        "replay_complete": true,
+        "schema_version": "js-verifier-report-1",
+        "scope": "conditional_static_checks",
+        "unproven_properties": {
+          "artifact_binding": "No compiler ArtifactIR/contract payload is consumed; only final program and fingerprint bytes are bound.",
+          "contact_contracts": "No independent physical contact/bond evidence or calibrated model.",
+          "datum_protection": "No exact datum geometry or tolerance contract is supplied/implemented.",
+          "dependency_contracts": "G-code does not establish support/deposition dependencies.",
+          "dynamic_motion": "Requested speeds and configured limits checked; acceleration trajectories, jerk, resonance and step timing unproven.",
+          "physical_machine_state": "Initial position, calibrated fingerprint, firmware semantics and maintained temperatures are trusted inputs; no telemetry.",
+          "swept_collision": "Only a translated tool AABB against the build box is checked; deposited-part collision is unproven."
+        }
+      }
+    }
+  ],
+  "mutations": [
+    {
+      "name": "out_of_bounds",
+      "base": "mechanical",
+      "insert": "G1 X400 F60\n",
+      "expected_code": "motion.bounds",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "motion.bounds",
+          "line": 5463,
+          "message": "nozzle outside build volume",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "tool_envelope",
+      "base": "mechanical",
+      "insert": "G1 X299.9 F60\n",
+      "expected_code": "tool.envelope",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "tool.envelope",
+          "line": 5463,
+          "message": "tool bounding box outside build volume",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "feedrate",
+      "base": "mechanical",
+      "insert": "G1 F18000\n",
+      "expected_code": "motion.feedrate",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "motion.feedrate",
+          "line": 5463,
+          "message": "requested feedrate exceeds machine limit",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "axis_velocity",
+      "base": "mechanical",
+      "insert": "M83\nG1 E-1 F9000\n",
+      "expected_code": "motion.axis_velocity",
+      "expected_line": 5464,
+      "errors": [
+        {
+          "byte_offset": 144965,
+          "code": "motion.axis_velocity",
+          "line": 5464,
+          "message": "axis velocity exceeded: E",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "volumetric_flow",
+      "base": "mechanical",
+      "insert": "M83\nG1 E1 F6000\n",
+      "expected_code": "extrusion.flow",
+      "expected_line": 5464,
+      "errors": [
+        {
+          "byte_offset": 144965,
+          "code": "extrusion.flow",
+          "line": 5464,
+          "message": "volumetric drive flow exceeded (including unretraction)",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "nan",
+      "base": "mechanical",
+      "insert": "G1 XNaN\n",
+      "expected_code": "numeric.nonfinite",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "numeric.nonfinite",
+          "line": 5463,
+          "message": "non-finite numeric word",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "infinite",
+      "base": "mechanical",
+      "insert": "G1 Xinf\n",
+      "expected_code": "numeric.nonfinite",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "numeric.nonfinite",
+          "line": 5463,
+          "message": "non-finite numeric word",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "cold_extrusion",
+      "base": "mechanical",
+      "insert": "M109 S100\nM83\nG1 E1 F60\n",
+      "expected_code": "extrusion.cold",
+      "expected_line": 5465,
+      "errors": [
+        {
+          "byte_offset": 144975,
+          "code": "extrusion.cold",
+          "line": 5465,
+          "message": "positive E motion without established minimum temperature",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "coordinate_mode_parameters",
+      "base": "mechanical",
+      "insert": "G91 X0\n",
+      "expected_code": "modal.parameters",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "modal.parameters",
+          "line": 5463,
+          "message": "unexpected parameter X for G91",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "unsupported",
+      "base": "mechanical",
+      "insert": "M302 S0\n",
+      "expected_code": "command.unsupported",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "command.unsupported",
+          "line": 5463,
+          "message": "unmodeled safety-relevant command M302",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "invalid_tool",
+      "base": "mechanical",
+      "insert": "T9\n",
+      "expected_code": "tool.invalid",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "tool.invalid",
+          "line": 5463,
+          "message": "index outside configured range",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "temperature",
+      "base": "mechanical",
+      "insert": "M104 S999\n",
+      "expected_code": "temperature.bounds",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "temperature.bounds",
+          "line": 5463,
+          "message": "temperature target outside configured range",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "extrusion_discontinuity",
+      "base": "mechanical",
+      "insert": "M83\nG1 E201 F60\n",
+      "expected_code": "extrusion.continuity",
+      "expected_line": 5464,
+      "errors": [
+        {
+          "byte_offset": 144965,
+          "code": "extrusion.continuity",
+          "line": 5464,
+          "message": "extrusion coordinate or single move discontinuity",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "acceleration",
+      "base": "mechanical",
+      "insert": "M204 P10001\n",
+      "expected_code": "motion.config_limit",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "motion.config_limit",
+          "line": 5463,
+          "message": "acceleration exceeds fingerprint",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "arcs",
+      "base": "mechanical",
+      "insert": "G2 X10 Y10 I2 J2 F60\n",
+      "expected_code": "arc.unsupported",
+      "expected_line": 5463,
+      "errors": [
+        {
+          "byte_offset": 144961,
+          "code": "arc.unsupported",
+          "line": 5463,
+          "message": "arcs require independent sweep/velocity analysis and are rejected",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "retraction",
+      "base": "mechanical",
+      "insert": "M83\nG1 E-199 F60\nG1 E-199 F60\nG1 E-199 F60\nG1 E-199 F60\nG1 E-199 F60\nG1 E-199 F60\n",
+      "expected_code": "extrusion.retraction",
+      "expected_line": 5469,
+      "errors": [
+        {
+          "byte_offset": 145030,
+          "code": "extrusion.retraction",
+          "line": 5469,
+          "message": "cumulative unrecovered retraction exceeds limit",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "missing_coordinate_mode",
+      "expected_code": "modal.unknown",
+      "error_count": 4822,
+      "full_input_scanned": true
+    },
+    {
+      "name": "fingerprint_hash",
+      "expected_code": "binding.fingerprint",
+      "errors": [
+        {
+          "byte_offset": 0,
+          "code": "binding.fingerprint",
+          "line": 0,
+          "message": "fingerprint bytes do not match manifest SHA-256",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "truncated",
+      "expected_code": "program.truncated",
+      "errors": [
+        {
+          "byte_offset": 159714,
+          "code": "program.truncated",
+          "line": 5932,
+          "message": "missing unique terminal marker or final newline",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    },
+    {
+      "name": "object_boundary",
+      "base": "multi_object",
+      "expected_code": "object.boundary",
+      "errors": [
+        {
+          "byte_offset": 5992,
+          "code": "object.boundary",
+          "line": 224,
+          "message": "mismatched object end",
+          "severity": "error"
+        },
+        {
+          "byte_offset": 6042,
+          "code": "object.boundary",
+          "line": 225,
+          "message": "nested or unclosed object boundary",
+          "severity": "error"
+        },
+        {
+          "byte_offset": 8518,
+          "code": "object.boundary",
+          "line": 319,
+          "message": "mismatched object end",
+          "severity": "error"
+        },
+        {
+          "byte_offset": 8568,
+          "code": "object.boundary",
+          "line": 320,
+          "message": "nested or unclosed object boundary",
+          "severity": "error"
+        }
+      ],
+      "full_input_scanned": true
+    }
+  ],
+  "modal_cases": [
+    {
+      "name": "relative_absolute_reset",
+      "final_state": {
+        "active_object": null,
+        "axis_acceleration_mm_s2": [
+          10000.0,
+          10000.0,
+          10000.0,
+          10000.0
+        ],
+        "axis_velocity_mm_s": [
+          200.0,
+          200.0,
+          200.0,
+          120.0
+        ],
+        "bed_lower_bound_c": 20.0,
+        "bed_target_c": 0.0,
+        "coordinate_mode": "absolute",
+        "coordinate_origin_mm": [
+          20.0,
+          0.0,
+          0.0
+        ],
+        "e_mm": 0.0,
+        "extrusion_mode": "absolute",
+        "fan_pwm": [
+          0
+        ],
+        "feedrate_mm_s": 10.0,
+        "flow_factors": [
+          1.0,
+          1.0
+        ],
+        "heater_lower_bounds_c": [
+          0.0
+        ],
+        "heater_targets_c": [
+          0.0
+        ],
+        "position_mm": [
+          30.0,
+          20.0,
+          1.0
+        ],
+        "print_acceleration_mm_s2": 10000.0,
+        "retract_acceleration_mm_s2": 10000.0,
+        "retraction_debt_mm": [
+          0.0,
+          0.0
+        ],
+        "saved_speed_factor": null,
+        "speed_factor": 1.0,
+        "tool": 0,
+        "travel_acceleration_mm_s2": 10000.0,
+        "units_mm": 1.0
+      }
+    },
+    {
+      "name": "inches",
+      "final_state": {
+        "active_object": null,
+        "axis_acceleration_mm_s2": [
+          10000.0,
+          10000.0,
+          10000.0,
+          10000.0
+        ],
+        "axis_velocity_mm_s": [
+          200.0,
+          200.0,
+          200.0,
+          120.0
+        ],
+        "bed_lower_bound_c": 20.0,
+        "bed_target_c": 0.0,
+        "coordinate_mode": "relative",
+        "coordinate_origin_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "e_mm": 0.0,
+        "extrusion_mode": "relative",
+        "fan_pwm": [
+          0
+        ],
+        "feedrate_mm_s": 25.4,
+        "flow_factors": [
+          1.0,
+          1.0
+        ],
+        "heater_lower_bounds_c": [
+          0.0
+        ],
+        "heater_targets_c": [
+          0.0
+        ],
+        "position_mm": [
+          36.4,
+          10.0,
+          0.0
+        ],
+        "print_acceleration_mm_s2": 10000.0,
+        "retract_acceleration_mm_s2": 10000.0,
+        "retraction_debt_mm": [
+          0.0,
+          0.0
+        ],
+        "saved_speed_factor": null,
+        "speed_factor": 1.0,
+        "tool": 0,
+        "travel_acceleration_mm_s2": 10000.0,
+        "units_mm": 1.0
+      }
+    },
+    {
+      "name": "shared_heater_tool",
+      "final_state": {
+        "active_object": null,
+        "axis_acceleration_mm_s2": [
+          10000.0,
+          10000.0,
+          10000.0,
+          10000.0
+        ],
+        "axis_velocity_mm_s": [
+          200.0,
+          200.0,
+          200.0,
+          120.0
+        ],
+        "bed_lower_bound_c": 20.0,
+        "bed_target_c": 0.0,
+        "coordinate_mode": "absolute",
+        "coordinate_origin_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "e_mm": 2.0,
+        "extrusion_mode": "relative",
+        "fan_pwm": [
+          0
+        ],
+        "feedrate_mm_s": 1.0,
+        "flow_factors": [
+          1.0,
+          1.0
+        ],
+        "heater_lower_bounds_c": [
+          0.0
+        ],
+        "heater_targets_c": [
+          0.0
+        ],
+        "position_mm": [
+          10.0,
+          10.0,
+          0.0
+        ],
+        "print_acceleration_mm_s2": 10000.0,
+        "retract_acceleration_mm_s2": 10000.0,
+        "retraction_debt_mm": [
+          0.0,
+          0.0
+        ],
+        "saved_speed_factor": null,
+        "speed_factor": 1.0,
+        "tool": 0,
+        "travel_acceleration_mm_s2": 10000.0,
+        "units_mm": 1.0
+      }
+    },
+    {
+      "name": "compact",
+      "final_state": {
+        "active_object": null,
+        "axis_acceleration_mm_s2": [
+          10000.0,
+          10000.0,
+          10000.0,
+          10000.0
+        ],
+        "axis_velocity_mm_s": [
+          200.0,
+          200.0,
+          200.0,
+          120.0
+        ],
+        "bed_lower_bound_c": 20.0,
+        "bed_target_c": 0.0,
+        "coordinate_mode": "absolute",
+        "coordinate_origin_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "e_mm": 0.5,
+        "extrusion_mode": "relative",
+        "fan_pwm": [
+          0
+        ],
+        "feedrate_mm_s": 10.0,
+        "flow_factors": [
+          1.0,
+          1.0
+        ],
+        "heater_lower_bounds_c": [
+          0.0
+        ],
+        "heater_targets_c": [
+          0.0
+        ],
+        "position_mm": [
+          20.0,
+          20.0,
+          1.0
+        ],
+        "print_acceleration_mm_s2": 10000.0,
+        "retract_acceleration_mm_s2": 10000.0,
+        "retraction_debt_mm": [
+          0.0,
+          0.0
+        ],
+        "saved_speed_factor": null,
+        "speed_factor": 1.0,
+        "tool": 0,
+        "travel_acceleration_mm_s2": 10000.0,
+        "units_mm": 1.0
+      }
+    },
+    {
+      "name": "config_limits",
+      "final_state": {
+        "active_object": null,
+        "axis_acceleration_mm_s2": [
+          500.0,
+          10000.0,
+          10000.0,
+          10000.0
+        ],
+        "axis_velocity_mm_s": [
+          10.0,
+          200.0,
+          200.0,
+          120.0
+        ],
+        "bed_lower_bound_c": 20.0,
+        "bed_target_c": 0.0,
+        "coordinate_mode": "absolute",
+        "coordinate_origin_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "e_mm": 0.0,
+        "extrusion_mode": "relative",
+        "fan_pwm": [
+          0
+        ],
+        "feedrate_mm_s": 10.0,
+        "flow_factors": [
+          1.0,
+          1.0
+        ],
+        "heater_lower_bounds_c": [
+          0.0
+        ],
+        "heater_targets_c": [
+          0.0
+        ],
+        "position_mm": [
+          20.0,
+          10.0,
+          0.0
+        ],
+        "print_acceleration_mm_s2": 500.0,
+        "retract_acceleration_mm_s2": 700.0,
+        "retraction_debt_mm": [
+          0.0,
+          0.0
+        ],
+        "saved_speed_factor": null,
+        "speed_factor": 1.0,
+        "tool": 0,
+        "travel_acceleration_mm_s2": 600.0,
+        "units_mm": 1.0
+      }
+    },
+    {
+      "name": "override_backup",
+      "final_state": {
+        "active_object": null,
+        "axis_acceleration_mm_s2": [
+          10000.0,
+          10000.0,
+          10000.0,
+          10000.0
+        ],
+        "axis_velocity_mm_s": [
+          200.0,
+          200.0,
+          200.0,
+          120.0
+        ],
+        "bed_lower_bound_c": 20.0,
+        "bed_target_c": 0.0,
+        "coordinate_mode": "absolute",
+        "coordinate_origin_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "e_mm": 0.0,
+        "extrusion_mode": "relative",
+        "fan_pwm": [
+          0
+        ],
+        "feedrate_mm_s": 10.0,
+        "flow_factors": [
+          1.0,
+          1.0
+        ],
+        "heater_lower_bounds_c": [
+          0.0
+        ],
+        "heater_targets_c": [
+          0.0
+        ],
+        "position_mm": [
+          30.0,
+          10.0,
+          0.0
+        ],
+        "print_acceleration_mm_s2": 10000.0,
+        "retract_acceleration_mm_s2": 10000.0,
+        "retraction_debt_mm": [
+          0.0,
+          0.0
+        ],
+        "saved_speed_factor": 1.0,
+        "speed_factor": 1.0,
+        "tool": 0,
+        "travel_acceleration_mm_s2": 10000.0,
+        "units_mm": 1.0
+      }
+    }
+  ],
+  "off_on": [
+    {
+      "fixture": "bridge_support",
+      "four_results_equivalent": true
+    },
+    {
+      "fixture": "interlocking",
+      "four_results_equivalent": true
+    },
+    {
+      "fixture": "mechanical",
+      "four_results_equivalent": true
+    },
+    {
+      "fixture": "multi_material",
+      "four_results_equivalent": true
+    },
+    {
+      "fixture": "multi_object",
+      "four_results_equivalent": true
+    },
+    {
+      "fixture": "serpentine",
+      "four_results_equivalent": true
+    },
+    {
+      "fixture": "thin_wall",
+      "four_results_equivalent": true
+    }
+  ],
+  "link_contract": "library=nlohmann_json::nlohmann_json;bcrypt\nexecutable=jslice_trusted_verifier\n",
+  "original_220mm_bed": {
+    "multi_material_accepted": false,
+    "error_count": 1376,
+    "first_error": {
+      "byte_offset": 3806,
+      "code": "motion.bounds",
+      "line": 204,
+      "message": "nozzle outside build volume",
+      "severity": "error"
+    },
+    "accepted_fixtures": [
+      "bridge_support",
+      "interlocking",
+      "mechanical",
+      "multi_object",
+      "serpentine",
+      "thin_wall"
+    ]
+  },
+  "continued_parsing": {
+    "first_error_line": 5463,
+    "later_tool_error_line": 5464,
+    "both_faults_identified": true
+  },
+  "differential": {
+    "seed": 1551,
+    "commands": 692,
+    "decimal_state_matches": true
+  },
+  "tests_run": 21,
+  "successful": true,
+  "skipped": 0
+}

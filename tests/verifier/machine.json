@@ -1,0 +1,20 @@
+{
+  "schema_version": "js-machine-1",
+  "machine_id": "SYNTHETIC-300-M1-REGRESSION-NOT-A-PRINTER",
+  "dialect": "marlin-cartesian-1",
+  "build_min_mm": [0, 0, 0],
+  "build_max_mm": [300, 300, 300],
+  "axis_velocity_mm_s": [200, 200, 200, 120],
+  "axis_acceleration_mm_s2": [10000, 10000, 10000, 10000],
+  "max_feedrate_mm_s": 200,
+  "max_acceleration_mm_s2": 10000,
+  "max_bed_temperature_c": 120,
+  "max_retraction_mm": 1000,
+  "max_extrusion_step_mm": 200,
+  "fan_count": 1,
+  "heaters": [280],
+  "tools": [
+    {"heater": 0, "offset_mm": [0, 0, 0], "envelope_min_mm": [-0.2, -0.2, 0], "envelope_max_mm": [0.2, 0.2, 1], "filament_diameter_mm": 1.75, "max_flow_mm3_s": 200, "min_extrusion_temperature_c": 170},
+    {"heater": 0, "offset_mm": [0, 0, 0], "envelope_min_mm": [-0.2, -0.2, 0], "envelope_max_mm": [0.2, 0.2, 1], "filament_diameter_mm": 1.75, "max_flow_mm3_s": 200, "min_extrusion_temperature_c": 170}
+  ]
+}

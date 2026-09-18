@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jslice:verifier-report:1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "accepted", "findings"],
+  "properties": {
+    "schema_version": {"const": "js-verifier-report-1"},
+    "accepted": {"type": "boolean"},
+    "scope": {"const": "conditional_static_checks"},
+    "input_sha256": {"type": "object", "additionalProperties": false, "required": ["program", "fingerprint", "manifest"],
+      "properties": {"program": {"$ref": "#/$defs/hash"}, "fingerprint": {"$ref": "#/$defs/hash"}, "manifest": {"$ref": "#/$defs/hash"}}},
+    "findings": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+      "required": ["line", "severity", "code", "message"], "properties": {
+        "line": {"type": "integer", "minimum": 0}, "byte_offset": {"type": "integer", "minimum": 0},
+        "severity": {"enum": ["error", "warning"]}, "code": {"type": "string"}, "message": {"type": "string"}
+      }}},
+    "lines_scanned": {"type": "integer", "minimum": 0},
+    "commands_seen": {"type": "integer", "minimum": 0},
+    "replay_complete": {"type": "boolean"},
+    "first_replay_error_line": {"type": ["integer", "null"], "minimum": 1},
+    "final_state_trusted": {"type": "boolean"},
+    "final_state": {"type": "object"},
+    "metrics": {"type": "object", "required": ["linear_commands", "peak_requested_feedrate_mm_s", "peak_positive_drive_flow_mm3_s"], "additionalProperties": false,
+      "properties": {"linear_commands": {"type": "integer", "minimum": 0}, "peak_requested_feedrate_mm_s": {"type": "number", "minimum": 0}, "peak_positive_drive_flow_mm3_s": {"type": "number", "minimum": 0}}},
+    "checked_properties": {"type": "array", "items": {"type": "string"}},
+    "unproven_properties": {"type": "object", "additionalProperties": {"type": "string"}}
+  },
+  "$defs": {"hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

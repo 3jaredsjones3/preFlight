@@ -1,0 +1,43 @@
+{
+  "schema_version": "js-verification-1",
+  "fingerprint_sha256": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
+  "program_sha256": "8d22abeedfbd5bcc1198b3771d52d385429bbace7958c92ecc5f567d85786900",
+  "initial_state": {
+    "position_mm": [
+      10,
+      10,
+      0
+    ],
+    "e_mm": 0,
+    "tool": 0,
+    "heater_temperature_c": [
+      20
+    ],
+    "bed_temperature_c": 20,
+    "fan_pwm": [
+      0
+    ]
+  },
+  "objects": [
+    "multi_object-0 id:0 copy 0",
+    "multi_object-1 id:1 copy 0"
+  ],
+  "required_properties": [
+    "syntax",
+    "modal_state",
+    "numeric",
+    "build_volume",
+    "tool_envelope",
+    "axis_velocity",
+    "configured_motion_limits",
+    "volumetric_flow",
+    "temperature_commands",
+    "cold_extrusion",
+    "extrusion_continuity",
+    "object_boundaries",
+    "fingerprint_binding",
+    "program_integrity",
+    "schema_compatibility"
+  ],
+  "end_marker": "; preflight_config = end"
+}
