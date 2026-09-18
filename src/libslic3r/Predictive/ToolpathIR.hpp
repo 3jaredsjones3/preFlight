@@ -20,7 +20,11 @@ enum class PathRole {
     SupportInterface,
     SkirtBrim,
     Travel,
-    Calibration
+    Calibration,
+    GapFill,
+    Ironing,
+    Wipe,
+    Unknown
 };
 
 struct ThermalWindow {
@@ -79,6 +83,8 @@ struct BeadPath {
     std::string material_id;
     bool closed {false};
     bool extrusion_enabled {true};
+    // M1 source entity record; absent for paths made by the research compiler.
+    std::optional<std::uint64_t> legacy_entity_id;
 
     Aabb3 bounds() const
     {
@@ -99,6 +105,7 @@ struct BeadPath {
 
 struct BeadGraphIR {
     std::vector<BeadPath> paths;
+    bool analysis_only {false}; // source inventory with unresolved emission state
 
     const BeadPath *find(PathId id) const
     {

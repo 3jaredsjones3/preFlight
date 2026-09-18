@@ -31,7 +31,9 @@ Status: implemented at graph/contract level.
 
 ## M1: lossless preFlight adapter
 
-Status: next.
+Status: in progress. Native capture, source-order analysis, opt-in CLI sidecar and
+golden infrastructure are implemented; production slicing/output equivalence is
+not yet qualified. See [M1_STATUS.md](M1_STATUS.md) for evidence and remaining gaps.
 
 1. Define stable adapters from `ExtrusionEntity`/collections into `BeadGraphIR`.
 2. Preserve object, instance, layer, region, tool, material, extrusion role,

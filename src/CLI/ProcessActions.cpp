@@ -30,6 +30,7 @@
 #include "libslic3r/Preset.hpp"
 #include <arrange-wrapper/ModelArrange.hpp>
 #include "libslic3r/Print.hpp"
+#include "libslic3r/Predictive/ArtifactJson.hpp"
 #include "libslic3r/Format/AMF.hpp"
 #include "libslic3r/Format/3mf.hpp"
 #include "libslic3r/Format/STL.hpp"
@@ -369,7 +370,7 @@ bool process_actions(Data &cli, const DynamicPrintConfig &print_config, std::vec
             return 1;
     }
 
-    if (actions.has("slice") || actions.has("export_gcode") || actions.has("export_sla"))
+    if (actions.has("slice") || actions.has("export_gcode") || actions.has("export_sla") || actions.has("predictive_analysis"))
     {
         PrinterTechnology printer_technology = Preset::printer_technology(print_config);
         if (actions.has("export_sla"))
@@ -430,6 +431,11 @@ bool process_actions(Data &cli, const DynamicPrintConfig &print_config, std::vec
                 {
                     std::string outfile_final;
                     print->process();
+                    // Const snapshot before textual lowering. No predictive compiler,
+                    // optimizer, scheduler or replacement emitter is invoked in M1.
+                    std::optional<Predictive::LegacyAnalysis> predictive_analysis;
+                    if (actions.has("predictive_analysis"))
+                        predictive_analysis = Predictive::analyze_legacy_print(fff_print);
                     GCodeProcessorResult gcode_result;
                     if (printer_technology == ptFFF)
                     {
@@ -463,6 +469,12 @@ bool process_actions(Data &cli, const DynamicPrintConfig &print_config, std::vec
                         boost::filesystem::remove(text_path);
                     }
 
+                    if (predictive_analysis) {
+                        boost::nowide::ofstream artifact(outfile + ".artifact.json", std::ios::binary | std::ios::trunc);
+                        Predictive::write_artifact_json(artifact, *predictive_analysis);
+                        artifact.close();
+                        if (!artifact) throw std::runtime_error("Failed to close predictive analysis artifact");
+                    }
                     boost::nowide::cout << "Slicing result exported to " << outfile << std::endl;
                 }
                 catch (const std::exception &ex)

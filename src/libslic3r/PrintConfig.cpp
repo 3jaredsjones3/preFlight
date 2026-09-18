@@ -7585,6 +7585,12 @@ CLIActionsConfigDef::CLIActionsConfigDef()
     def->tooltip = L("Slice the model and export toolpaths as G-code.");
     def->cli = "export-gcode|gcode|g";
     def->set_default_value(new ConfigOptionBool(false));
+
+    def = this->add("predictive_analysis", coBool);
+    def->label = L("Predictive analysis");
+    def->tooltip = L("Export ordinary G-code plus an analysis-only extrusion inventory (.artifact.json).");
+    def->cli = "predictive-analysis";
+    def->set_default_value(new ConfigOptionBool(false));
 }
 
 CLITransformConfigDef::CLITransformConfigDef()

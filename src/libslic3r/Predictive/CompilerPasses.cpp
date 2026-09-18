@@ -62,6 +62,9 @@ bool depends_on_missing_path(const BeadGraphIR &graph, const BeadPath &path)
 ValidationReport validate_bead_graph(const BeadGraphIR &graph)
 {
     ValidationReport report;
+    if (graph.analysis_only)
+        report.add(Severity::Error, "graph.analysis_only",
+                   "Source inventory has unresolved emission state and cannot enter the predictive emission pipeline.");
     std::unordered_set<PathId> identifiers;
 
     for (const BeadPath &path : graph.paths) {

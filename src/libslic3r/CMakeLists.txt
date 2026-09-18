@@ -344,6 +344,15 @@ set(SLIC3R_SOURCES
     Predictive/SupportPlanning.cpp
     Predictive/ToolpathIR.hpp
     Predictive/Types.hpp
+    Predictive/LegacyExtrusionAdapter.hpp
+    Predictive/LegacyExtrusionAdapter.cpp
+    Predictive/LegacyPrintAnalysis.cpp
+    Predictive/LegacySnapshot.cpp
+    Predictive/LegacyRoleMapping.cpp
+    Predictive/ArtifactJson.hpp
+    Predictive/ArtifactJson.cpp
+    Predictive/CanonicalGCodeComparator.hpp
+    Predictive/CanonicalGCodeComparator.cpp
     ProgressConfig.cpp
     ProgressConfig.hpp
     PrintRegion.cpp
@@ -544,6 +553,12 @@ if (SLIC3R_PYTHON_PREPROCESSOR)
 endif ()
 
 add_library(libslic3r STATIC ${SLIC3R_SOURCES})
+
+option(JS_SLICE_NATIVE_ADAPTER_TESTS "Build the M1 test against real preFlight entities" OFF)
+if(JS_SLICE_NATIVE_ADAPTER_TESTS)
+    add_executable(predictive_native_adapter_tests "${CMAKE_SOURCE_DIR}/tools/predictive_native_adapter_tests.cpp")
+    target_link_libraries(predictive_native_adapter_tests PRIVATE libslic3r)
+endif()
 
 
 if (WIN32)

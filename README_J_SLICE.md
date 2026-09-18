@@ -13,7 +13,8 @@ representation for 3D bead paths, manufacturing intent, temporary structures,
 machine fingerprints, timed programs, forward prediction, uncertainty, and
 independent verification.
 
-Current status: executable M0/M0.1 reference core. The next milestone is a
-lossless, analysis-only adapter from preFlight extrusion entities.
+Current status: executable M0/M0.1 reference core plus the first M1 analysis-only
+adapter and golden regression infrastructure. Full production slicing equivalence
+is not yet qualified; see [`M1_STATUS.md`](docs/predictive-slicer/M1_STATUS.md).
 
 Start with [`CODEX_START_HERE.md`](CODEX_START_HERE.md).

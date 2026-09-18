@@ -19,7 +19,7 @@
 | Drawn strands and arches | Rejected unless qualified | Strand, joint, arch, load, lifetime, collision experiments |
 | Orientation Pareto search | Designed | Reduced compiler and stable objectives |
 | Independent verifier | Designed | Separate implementation and mutation suite |
-| Legacy preFlight adapter | Not implemented | M1 |
+| Legacy preFlight adapter | M1 source inventory and regression infrastructure implemented | Native build and end-to-end golden qualification; see M1_STATUS.md |
 | Full GUI build | Not verified | Dependency-complete Windows/Linux builds |
 
 Labels used in this project:

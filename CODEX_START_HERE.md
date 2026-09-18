@@ -30,10 +30,14 @@ M0/M0.1 are executable reference implementations for compiler interfaces,
 contracts, deterministic scheduling, reduced forward models, bounded policy, and
 temporary support topology. They are not calibrated production physics.
 
-The code builds independently with C++20 and strict warnings. It is listed in
-`src/libslic3r/CMakeLists.txt`, but no end-to-end preFlight adapter exists yet.
+The code builds independently with C++20 and strict warnings. M1 now has native
+entity capture, a source-order bead inventory, deterministic JSON, an opt-in CLI
+analysis action and golden regression infrastructure. Production integration is
+not yet qualified: the local full build is blocked by missing Boost dependencies.
+Read `docs/predictive-slicer/M1_STATUS.md` and `tests/predictive/README.md` for the
+implemented boundary, verification evidence and remaining work.
 
-## Next task: M1 lossless adapter
+## In progress: M1 lossless adapter
 
 Implement analysis-only conversion from preFlight's generated
 `ExtrusionEntity` trees into `BeadGraphIR` before G-code text emission.
@@ -74,6 +78,10 @@ cmake -S research/predictive_core -B build/predictive-core
 cmake --build build/predictive-core
 ctest --test-dir build/predictive-core --output-on-failure
 ```
+
+For Visual Studio multi-configuration builds, add `--config Release` to the build
+and `-C Release` to CTest. CMake also builds the adapter/comparator tests and checks
+seven entity goldens. The direct g++ command above runs only the original smoke.
 
 ## Guardrails
 

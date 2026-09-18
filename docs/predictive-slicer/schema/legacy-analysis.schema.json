@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "M1 generated entity inventory (analysis ArtifactIR envelope)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "mode", "order", "prediction", "unmodeled_downstream_passes", "source_entities", "bead_graph", "certification"],
+  "properties": {
+    "schema_version": {"const": "m1-analysis-1"},
+    "mode": {"const": "analysis_only"},
+    "order": {"const": "source_storage"},
+    "prediction": {"const": {"duration_s": null, "thermal": null, "bond": null}},
+    "unmodeled_downstream_passes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "source_entities": {"type": "array", "items": {"$ref": "#/$defs/entity"}},
+    "bead_graph": {"type": "array", "items": {"$ref": "#/$defs/path"}},
+    "certification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "source_complete", "issues"],
+      "properties": {
+        "status": {"const": "analysis_only"}, "source_complete": {"type": "boolean"},
+        "issues": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["severity", "code", "message", "path_id"],
+          "properties": {
+            "severity": {"enum": ["information", "warning", "error"]},
+            "code": {"type": "string"}, "message": {"type": "string"},
+            "path_id": {"$ref": "#/$defs/nullable_id"}
+          }
+        }}
+      }
+    }
+  },
+  "$defs": {
+    "nullable_id": {"type": ["integer", "null"], "minimum": 0},
+    "nullable_string": {"type": ["string", "null"]},
+    "xy": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer"}},
+    "context": {
+      "type": "object", "additionalProperties": false,
+      "required": ["object", "instance", "print_object", "layer", "region", "island", "configured_tool", "material", "cancel_object", "generator", "speed_mm_s", "source", "print_z_mm", "shift_scaled", "coordinate_scale_mm"],
+      "properties": {
+        "object": {"$ref": "#/$defs/nullable_id"}, "instance": {"$ref": "#/$defs/nullable_id"},
+        "print_object": {"$ref": "#/$defs/nullable_id"}, "layer": {"$ref": "#/$defs/nullable_id"},
+        "region": {"$ref": "#/$defs/nullable_id"}, "island": {"$ref": "#/$defs/nullable_id"},
+        "configured_tool": {"$ref": "#/$defs/nullable_id"}, "material": {"$ref": "#/$defs/nullable_string"},
+        "cancel_object": {"$ref": "#/$defs/nullable_string"}, "generator": {"$ref": "#/$defs/nullable_string"},
+        "speed_mm_s": {"type": ["number", "null"]}, "source": {"type": "string"},
+        "print_z_mm": {"type": ["number", "null"]}, "shift_scaled": {"$ref": "#/$defs/xy"},
+        "coordinate_scale_mm": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "attributes": {
+      "type": "object", "additionalProperties": false,
+      "required": ["role_bits", "width_mm", "height_mm", "mm3_per_mm", "flow_ratio", "maybe_self_crossing", "overhang", "perimeter_index", "feature_id", "region_area_mm2", "fill_pattern"],
+      "properties": {
+        "role_bits": {"type": "integer", "minimum": 0, "maximum": 65535},
+        "width_mm": {"type": "number"}, "height_mm": {"type": "number"}, "mm3_per_mm": {"type": "number"},
+        "flow_ratio": {"type": "number"}, "maybe_self_crossing": {"type": "boolean"},
+        "overhang": {"type": ["array", "null"], "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+        "perimeter_index": {"$ref": "#/$defs/nullable_id"}, "feature_id": {"$ref": "#/$defs/nullable_id"},
+        "region_area_mm2": {"type": "number"}, "fill_pattern": {"type": "integer"}
+      }
+    },
+    "entity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "parent", "child_index", "kind", "can_reverse", "no_sort", "loop_role", "bead_path", "context", "attributes", "points_scaled"],
+      "properties": {
+        "id": {"type": "integer", "minimum": 1}, "parent": {"$ref": "#/$defs/nullable_id"},
+        "child_index": {"type": "integer", "minimum": 0}, "kind": {"type": "integer", "minimum": 0, "maximum": 5},
+        "can_reverse": {"type": "boolean"}, "no_sort": {"type": "boolean"},
+        "loop_role": {"$ref": "#/$defs/nullable_id"}, "bead_path": {"$ref": "#/$defs/nullable_id"},
+        "context": {"$ref": "#/$defs/context"}, "attributes": {"$ref": "#/$defs/attributes"},
+        "points_scaled": {"type": "array", "items": {"$ref": "#/$defs/xy"}}
+      }
+    },
+    "path": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "source_entity", "role", "closed", "extrusion_enabled", "samples"],
+      "properties": {
+        "id": {"type": "integer", "minimum": 1}, "source_entity": {"type": "integer", "minimum": 1},
+        "role": {"type": "integer", "minimum": 0, "maximum": 14},
+        "closed": {"type": "boolean"}, "extrusion_enabled": {"type": "boolean"},
+        "samples": {"type": "array", "items": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "number"}}}
+      }
+    }
+  }
+}

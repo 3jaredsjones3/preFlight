@@ -144,8 +144,8 @@ pause are preferred to physical part ejection.
 
 ## Current implementation boundary
 
-M0/M0.1 compile and run as an isolated C++20 research target. They are not yet
-connected end-to-end to preFlight's `ExtrusionEntity` pipeline. The next milestone
-is a lossless legacy adapter and analysis-only artifact report. Until that passes
-golden regression tests, J-Slice is architecture and executable research code,
-not a replacement slicer.
+M0/M0.1 compile and run as an isolated C++20 research target. M1 adds a read-only
+generated-entity adapter, source-order inventory and opt-in analysis report. The
+isolated golden tests pass, but native integration and full slicing equivalence
+remain unverified because the local production dependency toolchain is incomplete.
+See `M1_STATUS.md`. J-Slice remains executable research code, not a replacement slicer.

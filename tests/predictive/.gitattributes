@@ -1,0 +1,4 @@
+# Byte-exact golden reports must survive Windows checkout unchanged.
+*.json text eol=lf
+*.amf text eol=lf
+*.ini text eol=lf

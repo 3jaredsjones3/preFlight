@@ -1,0 +1,113 @@
+{
+  "status": "unqualified_inputs_pending_dependency_complete_run",
+  "volatile_comment_prefixes": [],
+  "jobs": [
+    {
+      "name": "mechanical",
+      "models": [
+        "mechanical.amf"
+      ],
+      "profiles": [
+        "base.ini",
+        "mechanical.ini"
+      ],
+      "expect": {
+        "generator": [
+          "athena"
+        ]
+      }
+    },
+    {
+      "name": "thin_wall",
+      "models": [
+        "thin_wall.amf"
+      ],
+      "profiles": [
+        "base.ini",
+        "thin_wall.ini"
+      ],
+      "expect": {
+        "generator": [
+          "arachne"
+        ]
+      }
+    },
+    {
+      "name": "bridge_support",
+      "models": [
+        "bridge_support.amf"
+      ],
+      "profiles": [
+        "base.ini",
+        "bridge_support.ini"
+      ],
+      "expect": {
+        "role_bits": [
+          8
+        ]
+      }
+    },
+    {
+      "name": "multi_object",
+      "models": [
+        "multi_object.amf"
+      ],
+      "profiles": [
+        "base.ini",
+        "multi_object.ini"
+      ],
+      "expect": {
+        "object": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "serpentine",
+      "models": [
+        "serpentine.amf"
+      ],
+      "profiles": [
+        "base.ini",
+        "serpentine.ini"
+      ],
+      "expect": {
+        "role_bits": [
+          4161
+        ]
+      }
+    },
+    {
+      "name": "interlocking",
+      "models": [
+        "interlocking.amf"
+      ],
+      "profiles": [
+        "base.ini",
+        "interlocking.ini"
+      ],
+      "expect": {
+        "role_bits": [
+          2049
+        ]
+      }
+    },
+    {
+      "name": "multi_material",
+      "models": [
+        "multi_material.amf"
+      ],
+      "profiles": [
+        "base.ini",
+        "multi_material.ini"
+      ],
+      "expect": {
+        "configured_tool": [
+          0,
+          1
+        ]
+      }
+    }
+  ]
+}
