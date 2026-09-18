@@ -554,7 +554,11 @@ endif ()
 
 add_library(libslic3r STATIC ${SLIC3R_SOURCES})
 
-option(JS_SLICE_NATIVE_ADAPTER_TESTS "Build the M1 test against real preFlight entities" OFF)
+# NSVGUtils is part of the engine (SVG/emboss import), including headless builds.
+# Do not rely on libslic3r_gui to supply its parser at the final link.
+find_package(NanoSVG REQUIRED)
+target_link_libraries(libslic3r PRIVATE NanoSVG::nanosvg)
+
 if(JS_SLICE_NATIVE_ADAPTER_TESTS)
     add_executable(predictive_native_adapter_tests "${CMAKE_SOURCE_DIR}/tools/predictive_native_adapter_tests.cpp")
     target_link_libraries(predictive_native_adapter_tests PRIVATE libslic3r)

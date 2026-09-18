@@ -8,6 +8,10 @@ namespace Slic3r::Predictive {
 LegacyAnalysis analyze_legacy_print(const Print &print)
 {
     LegacyAnalysis out;
+    out.unmodeled_downstream_passes.push_back(
+        "emitter object labels, dynamic overhang segmentation and interlocking gap-flow adjustments");
+    out.unmodeled_downstream_passes.push_back(
+        "G-code processor statistics/progress substitutions and optional binary G-code encoding");
     out.report.add(Severity::Warning, "analysis.storage_order",
         "Generated entity inventory, not final emission order. Duration, thermal and bond predictions are unavailable.");
     out.report.add(Severity::Warning, "analysis.unresolved_emitter_state",

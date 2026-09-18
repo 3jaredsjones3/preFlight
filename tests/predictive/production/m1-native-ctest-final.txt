@@ -1,0 +1,101 @@
+UpdateCTestConfiguration  from :C:/src/j_slice/j-slice/build/m1-native/DartConfiguration.tcl
+Test project C:/src/j_slice/j-slice/build/m1-native
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: predictive_native_adapter_tests
+
+1: Test command: C:\src\j_slice\j-slice\build\m1-native\src\libslic3r\predictive_native_adapter_tests.exe
+1: Working Directory: C:/src/j_slice/j-slice/build/m1-native
+1: Test timeout computed to be: 10000000
+1: Native ExtrusionEntity traversal passed
+1/8 Test #1: predictive_native_adapter_tests ...   Passed    0.01 sec
+test 2
+    Start 2: legacy_label_objects_tests
+
+2: Test command: C:\src\j_slice\j-slice\build\m1-native\src\libslic3r\legacy_label_objects_tests.exe
+2: Working Directory: C:/src/j_slice/j-slice/build/m1-native
+2: Test timeout computed to be: 10000000
+2: Legacy OctoPrint declarations, body identities and unchanged firmware declarations passed
+2/8 Test #2: legacy_label_objects_tests ........   Passed    0.02 sec
+test 3
+    Start 3: predictive_core_smoke
+
+3: Test command: C:\src\j_slice\j-slice\build\m1-native\research\predictive_core\predictive_core_smoke.exe
+3: Working Directory: C:/src/j_slice/j-slice/build/m1-native/research/predictive_core
+3: Test timeout computed to be: 10000000
+3: J-Slice predictive core smoke checks passed
+3/8 Test #3: predictive_core_smoke .............   Passed    0.01 sec
+test 4
+    Start 4: predictive_adapter_tests
+
+4: Test command: C:\src\j_slice\j-slice\build\m1-native\research\predictive_core\predictive_adapter_tests.exe "C:/src/j_slice/j-slice/tests/predictive/golden"
+4: Working Directory: C:/src/j_slice/j-slice/build/m1-native/research/predictive_core
+4: Test timeout computed to be: 10000000
+4: Adapter invariants, comparator mutations and seven entity goldens passed
+4/8 Test #4: predictive_adapter_tests ..........   Passed    0.01 sec
+test 5
+    Start 5: predictive_golden_invariants
+
+5: Test command: C:\Users\jsjon\AppData\Local\Programs\Python\Python313\python.exe "C:/src/j_slice/j-slice/tools/predictive_golden.py" "validate" "C:/src/j_slice/j-slice/tests/predictive/golden"
+5: Working Directory: C:/src/j_slice/j-slice/build/m1-native/research/predictive_core
+5: Test timeout computed to be: 10000000
+5: Seven JSON goldens: provenance, geometry and volume checks passed
+5/8 Test #5: predictive_golden_invariants ......   Passed    0.08 sec
+test 6
+    Start 6: predictive_job_inputs
+
+6: Test command: C:\Users\jsjon\AppData\Local\Programs\Python\Python313\python.exe "C:/src/j_slice/j-slice/tools/predictive_golden.py" "validate-jobs" "C:/src/j_slice/j-slice/tests/predictive/jobs/manifest.json"
+6: Working Directory: C:/src/j_slice/j-slice/build/m1-native/research/predictive_core
+6: Test timeout computed to be: 10000000
+6: AMF job geometry, profiles and expectations validated (slicing not run)
+6/8 Test #6: predictive_job_inputs .............   Passed    0.08 sec
+test 7
+    Start 7: predictive_golden_runner
+
+7: Test command: C:\Users\jsjon\AppData\Local\Programs\Python\Python313\python.exe "C:/src/j_slice/j-slice/tools/predictive_golden_tests.py" "C:/src/j_slice/j-slice/build/m1-native/research/predictive_core/predictive_compare_gcode.exe"
+7: Working Directory: C:/src/j_slice/j-slice/build/m1-native/research/predictive_core
+7: Test timeout computed to be: 10000000
+7: PASSED mechanical
+7: PASSED thin_wall
+7: PASSED bridge_support
+7: PASSED multi_object
+7: PASSED serpentine
+7: PASSED interlocking
+7: PASSED multi_material
+7: ...FAILED mechanical
+7: FAILED thin_wall
+7: FAILED bridge_support
+7: FAILED multi_object
+7: FAILED serpentine
+7: FAILED interlocking
+7: FAILED multi_material
+7: ..PASSED mechanical
+7: PASSED thin_wall
+7: PASSED bridge_support
+7: PASSED multi_object
+7: PASSED serpentine
+7: PASSED interlocking
+7: PASSED multi_material
+7: ..........
+7: ----------------------------------------------------------------------
+7: Ran 15 tests in 1.588s
+7:
+7: OK
+7/8 Test #7: predictive_golden_runner ..........   Passed    1.82 sec
+test 8
+    Start 8: predictive_golden_schema
+
+8: Test command: C:\Users\jsjon\AppData\Local\Programs\Python\Python313\python.exe "C:/src/j_slice/j-slice/tools/predictive_golden.py" "validate" "C:/src/j_slice/j-slice/tests/predictive/golden" "--schema" "C:/src/j_slice/j-slice/docs/predictive-slicer/schema/legacy-analysis.schema.json"
+8: Working Directory: C:/src/j_slice/j-slice/build/m1-native/research/predictive_core
+8: Test timeout computed to be: 10000000
+8: Seven JSON goldens: provenance, geometry and volume checks passed
+8/8 Test #8: predictive_golden_schema ..........   Passed    0.20 sec
+
+100% tests passed, 0 tests failed out of 8
+
+Total Test time (real) =   2.23 sec

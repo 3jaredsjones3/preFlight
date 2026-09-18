@@ -6,9 +6,51 @@
 
 using namespace Slic3r;
 using namespace Slic3r::Predictive;
+
+// Real composite entities retain a width/flow discontinuity and a bridge role
+// at a shared junction. This tests native capture, not generator coverage.
+static void check_composite_segments()
+{
+    Polyline outward, inward;
+    outward.points = {Point(0, 0), Point(10000000, 0)};
+    inward.points = {Point(10000000, 0), Point(0, 0)};
+    ExtrusionAttributes regular(ExtrusionRole::ExternalPerimeter, ExtrusionFlow(0.081, 0.45f, 0.2f));
+    ExtrusionAttributes bridge(ExtrusionRole::OverhangPerimeter, ExtrusionFlow(0.125, 0.55f, 0.25f));
+    ExtrusionPaths paths {ExtrusionPath(outward, regular), ExtrusionPath(inward, bridge)};
+    ExtrusionLoop loop(paths);
+    ExtrusionMultiPath multi(paths);
+    LegacyContext context;
+    context.object = 3;
+    context.instance = 2;
+    context.cancel_object = "native object 3 copy 2";
+    context.print_z_mm = 0.4;
+    context.source = "native_composite";
+    LegacyAnalysis analysis;
+    append_legacy_entity(loop, context, analysis);
+    append_legacy_entity(multi, context, analysis);
+    if (analysis.entities.size() != 6 || analysis.graph.paths.size() != 4)
+        throw std::runtime_error("composite path boundaries lost");
+    for (std::size_t i = 0; i < 4; ++i) {
+        const auto &source = paths[i % 2];
+        const auto &bead = analysis.graph.paths[i];
+        const auto &entity = analysis.entities[bead.legacy_entity_id.value() - 1];
+        if (bead.samples.size() != 2 || entity.context.object != context.object ||
+            entity.context.instance != context.instance || entity.context.cancel_object != context.cancel_object ||
+            entity.data.attributes.role_bits != legacy_role_bits(source.role()) ||
+            bead.samples.front().width_mm != source.attributes().width ||
+            bead.samples.back().height_mm != source.attributes().height ||
+            std::abs(bead.samples.back().deposited_volume_mm3 - 10 * source.attributes().mm3_per_mm) > 1e-12)
+            throw std::runtime_error("composite segment attributes or provenance lost");
+    }
+    if (loop.paths[0].polyline.points != outward.points || loop.paths[1].polyline.points != inward.points ||
+        multi.paths[0].attributes().width != regular.width || multi.paths[1].attributes().mm3_per_mm != bridge.mm3_per_mm)
+        throw std::runtime_error("composite source mutated");
+}
+
 int main()
 {
     try {
+        check_composite_segments();
         ExtrusionAttributes attributes(ExtrusionRole::SerpentineOverhang, ExtrusionFlow(0.081, 0.45f, 0.2f));
         attributes.flow_ratio = 1.5f;
         attributes.feature_id = 17;

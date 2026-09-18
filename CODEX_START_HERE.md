@@ -32,8 +32,10 @@ temporary support topology. They are not calibrated production physics.
 
 The code builds independently with C++20 and strict warnings. M1 now has native
 entity capture, a source-order bead inventory, deterministic JSON, an opt-in CLI
-analysis action and golden regression infrastructure. Production integration is
-not yet qualified: the local full build is blocked by missing Boost dependencies.
+analysis action and golden regression infrastructure. The native Windows headless
+production build and all seven real slicing fixtures now pass off/on equivalence,
+report determinism and schema checks. Source inventory qualification does not
+resolve downstream emitter state; see the documented coverage limits.
 Read `docs/predictive-slicer/M1_STATUS.md` and `tests/predictive/README.md` for the
 implemented boundary, verification evidence and remaining work.
 

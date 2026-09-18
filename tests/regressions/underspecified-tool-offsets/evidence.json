@@ -1,0 +1,193 @@
+{
+  "status": "failed",
+  "failures": [
+    "command, parameter, or preserved metadata differs (baseline line 35, candidate line 35) [C:\\src\\j_slice\\j-slice\\build\\m1-qualified\\multi_material\\ordinary.gcode]",
+    "command, parameter, or preserved metadata differs (baseline line 35, candidate line 35) [C:\\src\\j_slice\\j-slice\\build\\m1-qualified\\multi_material\\analysis.gcode]",
+    "command, parameter, or preserved metadata differs (baseline line 35, candidate line 35) [C:\\src\\j_slice\\j-slice\\build\\m1-qualified\\multi_material\\repeat.gcode]"
+  ],
+  "job": "multi_material",
+  "inputs_sha256": {
+    "base.ini": "224513e729e1206d122cb1a777a44f90fc1f531dc9a531b7e02878ea11b86888",
+    "multi_material.ini": "379d0be338540414ae8c9282ed385174b81be7955835aa2f857e7f04f6060648",
+    "multi_material.amf": "66ebf0b8078cdc8932587843e315a5e5dd6576cd908d0f482d0ef45d95b48241"
+  },
+  "commands": [
+    [
+      "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+      "--export-gcode",
+      "--output",
+      "C:\\src\\j_slice\\j-slice\\build\\m1-qualified\\multi_material\\baseline.gcode",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_material.ini",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_material.amf"
+    ],
+    [
+      "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+      "--export-gcode",
+      "--output",
+      "C:\\src\\j_slice\\j-slice\\build\\m1-qualified\\multi_material\\ordinary.gcode",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_material.ini",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_material.amf"
+    ],
+    [
+      "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+      "--predictive-analysis",
+      "--output",
+      "C:\\src\\j_slice\\j-slice\\build\\m1-qualified\\multi_material\\analysis.gcode",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_material.ini",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_material.amf"
+    ],
+    [
+      "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+      "--predictive-analysis",
+      "--output",
+      "C:\\src\\j_slice\\j-slice\\build\\m1-qualified\\multi_material\\repeat.gcode",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_material.ini",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_material.amf"
+    ]
+  ],
+  "comparisons": [
+    "command, parameter, or preserved metadata differs (baseline line 35, candidate line 35)",
+    "command, parameter, or preserved metadata differs (baseline line 35, candidate line 35)",
+    "command, parameter, or preserved metadata differs (baseline line 35, candidate line 35)"
+  ],
+  "gcode_sha256": {
+    "baseline": "ddb3a2328ffa263480f2802de51047640dec9f89322602f5f3180f4a6ed72c46",
+    "ordinary": "71f704b7a4f30c4f3c4ab678edee5fd74a3d1950b7c8b01ba8c83c400187578a",
+    "analysis": "5a38df6292c458f1091449ac52dfb1aa8fea11a6c042e1fbede102cbf2f347f1",
+    "repeat": "ba5e8aae2cda5cbfa3c613a5772754e998048fedc0e1e6184ba35615b842d42d"
+  },
+  "byte_identical": {
+    "ordinary": false,
+    "analysis": false,
+    "repeat": false
+  },
+  "byte_identical_except_approved_comments": {
+    "ordinary": false,
+    "analysis": false,
+    "repeat": false
+  },
+  "schema_valid": true,
+  "report_deterministic": true,
+  "observed_coverage": {
+    "paths": 211,
+    "role_bits": {
+      "1": 60,
+      "130": 38,
+      "16": 1,
+      "194": 2,
+      "2": 48,
+      "65": 60,
+      "706": 2
+    },
+    "sources": {
+      "fills": 90,
+      "perimeters": 120,
+      "skirt_template": 1
+    },
+    "entity_kinds": {
+      "0": 304,
+      "1": 121,
+      "2": 2,
+      "3": 211
+    },
+    "objects": [
+      0
+    ],
+    "materials": [
+      "PETG",
+      "PLA"
+    ],
+    "configured_tools": [
+      0,
+      1
+    ],
+    "emitted_tools": [
+      0,
+      1
+    ],
+    "object_labels": [],
+    "temperature_commands": 5,
+    "emitted_roles": {
+      "Bridge infill": 2,
+      "Custom": 2,
+      "External perimeter": 60,
+      "Internal infill": 48,
+      "Perimeter": 60,
+      "Skirt/Brim": 1,
+      "Solid infill": 10,
+      "Top solid infill": 2,
+      "Wipe tower": 63
+    },
+    "flow_ratios": [
+      1
+    ],
+    "widths_mm": [
+      0.4551660120487213,
+      0.45700401067733765,
+      0.4570080041885376,
+      0.4570299983024597,
+      0.4570319950580597,
+      0.48877912759780884,
+      0.4942219853401184,
+      0.4942229986190796,
+      0.4942399859428406,
+      0.49424201250076294,
+      0.49424299597740173,
+      0.49514099955558777,
+      0.4951440095901489,
+      0.4969100058078766,
+      0.4969109892845154,
+      0.4978419840335846,
+      0.4978429973125458,
+      0.5,
+      0.5076383352279663,
+      0.5223302245140076,
+      0.5332779884338379,
+      0.5332800149917603,
+      0.5386539697647095,
+      0.5386559963226318
+    ]
+  },
+  "volatile_comments": {
+    "baseline": [
+      "; generated by preFlight 1.2.0 on 2026-09-18 at 10:53:40 UTC"
+    ],
+    "ordinary": [
+      "; generated by preFlight 1.2.0 on 2026-09-18 at 10:53:40 UTC"
+    ],
+    "analysis": [
+      "; generated by preFlight 1.2.0 on 2026-09-18 at 10:53:40 UTC"
+    ],
+    "repeat": [
+      "; generated by preFlight 1.2.0 on 2026-09-18 at 10:53:40 UTC"
+    ]
+  },
+  "artifact_sha256": "0442287e2adad16c6f22bd77b7e911b35afca947c04ce46b568ece8c9cb80b6e",
+  "runtime_dlls_sha256": {
+    "baseline": {
+      "OCCTWrapper.dll": "78cd5b644fe8d8e47dc6f301eafbf2a31ae15f288ff834ec25b56b522f85ec69",
+      "preFlight.dll": "8c61fda272e3bc34bed48843c3d5beb6e799052491b0d4337d12b02374d595d2"
+    },
+    "candidate": {
+      "OCCTWrapper.dll": "78cd5b644fe8d8e47dc6f301eafbf2a31ae15f288ff834ec25b56b522f85ec69",
+      "preFlight.dll": "8c61fda272e3bc34bed48843c3d5beb6e799052491b0d4337d12b02374d595d2"
+    }
+  },
+  "executables_sha256": {
+    "baseline": "8f7081aebe39e1e303b33755adcefe9f84bee2804746e9574f5879c29b081479",
+    "candidate": "8f7081aebe39e1e303b33755adcefe9f84bee2804746e9574f5879c29b081479",
+    "comparator": "dc9bc4491bcad79b1e0e62fb671a3b1eb8e8082742fccf28d37af8fbea49819d"
+  }
+}
