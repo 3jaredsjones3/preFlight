@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://j-slice.local/schema/manufacturing-intent.schema.json",
+  "title": "J-Slice manufacturing intent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_model_hash", "datums", "contacts"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "source_model_hash": {"type": "string", "minLength": 1},
+    "datums": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "region_ref", "positional_tolerance_mm", "surface_tolerance_mm", "permissions"],
+        "properties": {
+          "id": {"type": "integer", "minimum": 1},
+          "name": {"type": "string", "minLength": 1},
+          "region_ref": {"type": "string", "minLength": 1},
+          "positional_tolerance_mm": {"type": "number", "minimum": 0},
+          "surface_tolerance_mm": {"type": "number", "minimum": 0},
+          "permissions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["nonplanar_warp", "interlock_deformation", "dynamic_compensation"],
+            "properties": {
+              "nonplanar_warp": {"type": "boolean"},
+              "interlock_deformation": {"type": "boolean"},
+              "dynamic_compensation": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "contacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["a_ref", "b_ref", "intent", "min_bond_utilization", "max_bond_utilization", "min_contact_area_mm2", "scar_budget_mm", "removal_access_required"],
+        "properties": {
+          "a_ref": {"type": "string"},
+          "b_ref": {"type": "string"},
+          "intent": {"enum": ["structural_bond", "temporary_brace", "designed_fracture", "nonbonding_contact"]},
+          "min_bond_utilization": {"type": "number", "minimum": 0, "maximum": 1},
+          "max_bond_utilization": {"type": "number", "minimum": 0, "maximum": 1},
+          "min_contact_area_mm2": {"type": "number", "minimum": 0},
+          "scar_budget_mm": {"type": "number", "minimum": 0},
+          "removal_access_required": {"type": "boolean"}
+        }
+      }
+    },
+    "loads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["region_ref", "kind", "vector", "magnitude", "confidence", "confirmed_by_user"],
+        "properties": {
+          "region_ref": {"type": "string"},
+          "kind": {"enum": ["force", "moment", "pressure", "constraint"]},
+          "vector": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+          "magnitude": {"type": "number", "minimum": 0},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "confirmed_by_user": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

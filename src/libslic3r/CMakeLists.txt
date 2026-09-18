@@ -332,6 +332,18 @@ set(SLIC3R_SOURCES
     PrintConfig.hpp
     PrintObject.cpp
     PrintObjectSlice.cpp
+    Predictive/CompilerPasses.cpp
+    Predictive/CompilerPasses.hpp
+    Predictive/FieldIR.hpp
+    Predictive/ForwardModel.cpp
+    Predictive/ForwardModel.hpp
+    Predictive/MachineModel.hpp
+    Predictive/PredictiveCompiler.cpp
+    Predictive/PredictiveCompiler.hpp
+    Predictive/SupportIR.hpp
+    Predictive/SupportPlanning.cpp
+    Predictive/ToolpathIR.hpp
+    Predictive/Types.hpp
     ProgressConfig.cpp
     ProgressConfig.hpp
     PrintRegion.cpp

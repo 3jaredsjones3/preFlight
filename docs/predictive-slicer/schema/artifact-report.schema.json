@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://j-slice.local/schema/artifact-report.schema.json",
+  "title": "J-Slice predicted artifact report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "compiler", "inputs", "prediction", "certification"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "compiler": {
+      "type": "object",
+      "required": ["build_id", "source_commit"],
+      "properties": {
+        "build_id": {"type": "string"},
+        "source_commit": {"type": "string"}
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "required": ["model_hash", "settings_hash", "intent_hash", "machine_fingerprint_hash"],
+      "properties": {
+        "model_hash": {"type": "string"},
+        "settings_hash": {"type": "string"},
+        "intent_hash": {"type": "string"},
+        "machine_fingerprint_hash": {"type": "string"}
+      }
+    },
+    "prediction": {
+      "type": "object",
+      "required": ["duration_s", "datum_envelopes", "minimum_bond_utilization", "unmodeled_downstream_passes"],
+      "properties": {
+        "duration_s": {"type": "number", "minimum": 0},
+        "minimum_bond_utilization": {"type": "number", "minimum": 0, "maximum": 1},
+        "datum_envelopes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["datum_id", "max_error_mm", "uncertainty_mm", "within_contract"],
+            "properties": {
+              "datum_id": {"type": "integer", "minimum": 1},
+              "max_error_mm": {"type": "number", "minimum": 0},
+              "uncertainty_mm": {"type": "number", "minimum": 0},
+              "within_contract": {"type": "boolean"}
+            }
+          }
+        },
+        "unmodeled_downstream_passes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "certification": {
+      "type": "object",
+      "required": ["status", "issues"],
+      "properties": {
+        "status": {"enum": ["passed", "failed", "analysis_only"]},
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["severity", "code", "message"],
+            "properties": {
+              "severity": {"enum": ["information", "warning", "error"]},
+              "code": {"type": "string"},
+              "message": {"type": "string"},
+              "path_id": {"type": ["integer", "null"], "minimum": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}
