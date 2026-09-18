@@ -1,0 +1,1 @@
+Legacy OctoPrint declarations, body identities and unchanged firmware declarations passed

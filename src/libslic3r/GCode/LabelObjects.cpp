@@ -91,6 +91,7 @@ void LabelObjects::init(const SpanOfConstPtrs<PrintObject> &objects, LabelObject
             int instance_id = int(
                 std::find(model_object->instances.begin(), model_object->instances.end(), pi->model_instance) -
                 model_object->instances.begin());
+            const std::pair<int, int> source_identity{object_id, instance_id};
 
             // Get object name and trim it to avoid name length issues.
             // The limit in FW is 96 chars, OctoPrint may add no more than 12 chars at the end (checksum).
@@ -157,10 +158,18 @@ void LabelObjects::init(const SpanOfConstPtrs<PrintObject> &objects, LabelObject
             polygon_str.pop_back();
             polygon_str += "]";
 
-            m_label_data.emplace_back(LabelData{pi, name, center_str, polygon_str, unique_id});
+            m_label_data.emplace_back(LabelData{pi, name, center_str, polygon_str, unique_id, source_identity});
             ++unique_id;
         }
     }
+
+    // OctoPrint headers are independent comment declarations. Pointer-address
+    // grouping made their order (and objects_info JSON order) vary across runs.
+    // Sort only after assigning the legacy labels/IDs; body lookup remains by
+    // PrintInstance. Firmware declarations may carry semantics and stay untouched.
+    if (m_label_objects_style == LabelObjectsStyle::Octoprint)
+        std::stable_sort(m_label_data.begin(), m_label_data.end(),
+                         [](const LabelData &a, const LabelData &b) { return a.source_identity < b.source_identity; });
 }
 
 bool LabelObjects::update(const PrintInstance *instance)

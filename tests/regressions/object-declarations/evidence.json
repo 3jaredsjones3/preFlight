@@ -1,0 +1,37 @@
+{
+  "origin": "Pre-existing pointer-address ordering in LabelObjects; both exports had analysis disabled",
+  "commands": [
+    [
+      "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+      "--export-gcode",
+      "--output",
+      "C:\\src\\j_slice\\j-slice\\build\\m1-production-trial2\\multi_object\\baseline.gcode",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+    ],
+    [
+      "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+      "--export-gcode",
+      "--output",
+      "C:\\src\\j_slice\\j-slice\\build\\m1-production-trial2\\multi_object\\ordinary.gcode",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+      "--load",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+      "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+    ]
+  ],
+  "sha256": {
+    "disabled-a": "d739caa9f07fb3561bb01260869f981da2b413f15817420a871b5dfdf2c7e037",
+    "disabled-b": "45a5d0d54318c05646f8b2f50a9910c0b2f5c1ad438d933fc9571c670c575d52"
+  },
+  "slicer_dll_sha256": "e5356719296af763ed354335b4ce81c6ec5c8dc7f5aae634e6b5d664243f8bb4",
+  "inputs_sha256": {
+    "tests\\predictive\\jobs\\base.ini": "30057c8d7584c4d414dd582b1298a0b66a46cbb293d84767051029827d313a73",
+    "tests\\predictive\\jobs\\multi_object.ini": "3687376af3d7e19fa5b514029be7eaf4eca26ce6c7cc09c9a0351b555ff7695b",
+    "tests\\predictive\\jobs\\multi_object.amf": "29e0283a8ce97c69d56e6f0fe2f65b02ae3ae1241028303b7691b1abe0006ca9"
+  }
+}

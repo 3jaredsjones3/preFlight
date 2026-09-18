@@ -1,0 +1,158 @@
+{
+  "historical_disabled_comparison": "command, parameter, or preserved metadata differs (baseline line 20, candidate line 20)",
+  "only_independent_header_order_changed": true,
+  "analysis_reports_identical": true,
+  "runs": [
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--export-gcode",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-0.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "reference",
+      "sha256": "4d601b95fc67d2402064a93d5cd5729856f842de3130c5daa2a54334d21f9a40"
+    },
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--predictive-analysis",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-1.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "canonical command streams match (baseline line 0, candidate line 0)",
+      "sha256": "655fc3317c2663d0c65509f76464cacb9f92a3c3132b3cf481bd26bb8af6a988"
+    },
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--export-gcode",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-2.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "canonical command streams match (baseline line 0, candidate line 0)",
+      "sha256": "655fc3317c2663d0c65509f76464cacb9f92a3c3132b3cf481bd26bb8af6a988"
+    },
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--predictive-analysis",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-3.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "canonical command streams match (baseline line 0, candidate line 0)",
+      "sha256": "655fc3317c2663d0c65509f76464cacb9f92a3c3132b3cf481bd26bb8af6a988"
+    },
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--export-gcode",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-4.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "canonical command streams match (baseline line 0, candidate line 0)",
+      "sha256": "655fc3317c2663d0c65509f76464cacb9f92a3c3132b3cf481bd26bb8af6a988"
+    },
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--predictive-analysis",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-5.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "canonical command streams match (baseline line 0, candidate line 0)",
+      "sha256": "655fc3317c2663d0c65509f76464cacb9f92a3c3132b3cf481bd26bb8af6a988"
+    },
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--export-gcode",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-6.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "canonical command streams match (baseline line 0, candidate line 0)",
+      "sha256": "655fc3317c2663d0c65509f76464cacb9f92a3c3132b3cf481bd26bb8af6a988"
+    },
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--predictive-analysis",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-7.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "canonical command streams match (baseline line 0, candidate line 0)",
+      "sha256": "655fc3317c2663d0c65509f76464cacb9f92a3c3132b3cf481bd26bb8af6a988"
+    },
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--export-gcode",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-8.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "canonical command streams match (baseline line 0, candidate line 0)",
+      "sha256": "655fc3317c2663d0c65509f76464cacb9f92a3c3132b3cf481bd26bb8af6a988"
+    },
+    {
+      "command": [
+        "C:\\src\\j_slice\\j-slice\\build\\m1-native\\src\\Release\\preFlight-console.exe",
+        "--predictive-analysis",
+        "--output",
+        "C:\\src\\j_slice\\j-slice\\build\\m1-label-qualification\\run-9.gcode",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\base.ini",
+        "--load",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.ini",
+        "C:\\src\\j_slice\\j-slice\\tests\\predictive\\jobs\\multi_object.amf"
+      ],
+      "comparison": "canonical command streams match (baseline line 0, candidate line 0)",
+      "sha256": "655fc3317c2663d0c65509f76464cacb9f92a3c3132b3cf481bd26bb8af6a988"
+    }
+  ],
+  "slicer_dll_sha256": "8c61fda272e3bc34bed48843c3d5beb6e799052491b0d4337d12b02374d595d2"
+}

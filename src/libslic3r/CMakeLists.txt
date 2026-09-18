@@ -558,6 +558,10 @@ option(JS_SLICE_NATIVE_ADAPTER_TESTS "Build the M1 test against real preFlight e
 if(JS_SLICE_NATIVE_ADAPTER_TESTS)
     add_executable(predictive_native_adapter_tests "${CMAKE_SOURCE_DIR}/tools/predictive_native_adapter_tests.cpp")
     target_link_libraries(predictive_native_adapter_tests PRIVATE libslic3r)
+    add_executable(legacy_label_objects_tests "${CMAKE_SOURCE_DIR}/tools/legacy_label_objects_tests.cpp")
+    # This regression also builds before the separate headless NanoSVG fix.
+    find_package(NanoSVG REQUIRED)
+    target_link_libraries(legacy_label_objects_tests PRIVATE libslic3r NanoSVG::nanosvg)
 endif()
 
 

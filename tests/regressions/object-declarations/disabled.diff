@@ -1,0 +1,11 @@
+--- disabled-a.gcode
++++ disabled-b.gcode
+@@ -19,0 +20,2 @@
++; printing object multi_object-1 id:1 copy 0
++; stop printing object multi_object-1 id:1 copy 0
+@@ -22,2 +23,0 @@
+-; printing object multi_object-1 id:1 copy 0
+-; stop printing object multi_object-1 id:1 copy 0
+@@ -3472 +3472 @@
+-; objects_info = {"objects":[{"name":"multi_object-0 id:0 copy 0","polygon":[[122.000,110.000],[98.000,110.000],[98.000,92.000],[122.000,92.000]]},{"name":"multi_object-1 id:1 copy 0","polygon":[[116.000,128.000],[104.000,128.000],[104.000,116.000],[116.000,116.000]]}]}
++; objects_info = {"objects":[{"name":"multi_object-1 id:1 copy 0","polygon":[[116.000,128.000],[104.000,128.000],[104.000,116.000],[116.000,116.000]]},{"name":"multi_object-0 id:0 copy 0","polygon":[[122.000,110.000],[98.000,110.000],[98.000,92.000],[122.000,92.000]]}]}

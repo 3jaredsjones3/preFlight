@@ -6,6 +6,7 @@
 #define slic3r_GCode_LabelObjects_hpp_
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "libslic3r/Print.hpp"
@@ -48,6 +49,7 @@ private:
         std::string center;
         std::string polygon;
         int unique_id;
+        std::pair<int, int> source_identity;
     };
 
     enum class IncludeName
