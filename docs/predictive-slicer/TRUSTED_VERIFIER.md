@@ -69,6 +69,27 @@ The verifier does not prove physical material strength. It verifies only those
 contracts supported by the supplied model and evidence, and must report
 unverifiable claims rather than converting them into approval.
 
+## M2.1 machine/export binding
+
+The M2 coupon handoff has a separate machine-evidence bootstrap contract in
+`schema/machine-evidence.schema.json`. It records source class, exact artifact
+identity, pinned revision, observation date, qualification state, and
+uncertainty for every retained fact. It preserves conflicting AD5M/AD5X
+coordinates and distinguishes published limits from qualified coupon limits.
+
+For a non-fixture physical coupon specification, the coupon tool requires the
+actual printer serial, firmware identity/version, slicer/profile identity and
+hash, exported start/end/tool-change hashes, material manufacturer/type/color/
+lot, ambient observation, operator/date, and actual coordinate convention. An
+ambiguous coordinate convention, firmware identity, or startup behavior fails
+closed. Manufacturer thermal ratings and firmware `max_temp` values are not
+treated as measured limits.
+
+The optional collision manifest is evidence metadata only. It separates fixed
+and moving geometry and records the nozzle-tip frame, transform, mesh hash,
+uncertainty margin, state, and provenance. Inferred or image-generated meshes
+remain unqualified and cannot satisfy exact collision-proof requirements.
+
 ## Implemented boundary: v1
 
 `src/TrustedVerifier/` defines the `JSlice::Verification` namespace and the

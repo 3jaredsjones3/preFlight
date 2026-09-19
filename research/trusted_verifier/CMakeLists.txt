@@ -52,3 +52,5 @@ add_test(NAME trusted_verifier_mutations COMMAND "${Python3_EXECUTABLE}"
 add_test(NAME m2_coupon_package COMMAND "${Python3_EXECUTABLE}"
     "${JS_ROOT}/tools/m2_coupon_tests.py")
 set_tests_properties(m2_coupon_package PROPERTIES ENVIRONMENT "M2_COUPON_VERIFIER=$<TARGET_FILE:jslice_verify>")
+add_test(NAME m2_machine_evidence COMMAND "${Python3_EXECUTABLE}"
+    "${JS_ROOT}/tools/machine_evidence_tests.py")

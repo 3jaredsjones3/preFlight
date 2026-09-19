@@ -76,3 +76,22 @@ fingerprint hashes, nozzle and material-lot records, measured calibration data
 and fit hash, proposal path contracts, camera/thermography calibration, fixture
 identity, and the preregistered acceptance thresholds. This checkout contains
 none of those real physical inputs; synthetic fixtures are test-only.
+
+## M2.1 machine-evidence handoff
+
+Use `M2_1_MACHINE_EVIDENCE.md` and the generated worksheets before preparing a
+coupon bundle. The bootstrap records are provenance ledgers, not printer
+profiles: manufacturer ratings are not calibrated operating limits, firmware
+control ceilings are not physical ratings, and Orca start G-code is not proof
+of the Flash Studio/firmware startup sequence. AD5M centered coordinates and
+AD5X corner-origin coordinates must remain explicit.
+
+For each printer, Jared must next capture the nameplate serial and exact
+firmware; nozzle identifier/type/diameter; slicer/profile identity and hash;
+verbatim profile start program and hash; exported start/end/tool-change
+sequences and hashes; actual G-code coordinate convention; material
+manufacturer/type/color/lot; ambient conditions; operator/date; and the full
+nozzle-axis toolhead, cable/PTFE, clearance, bed-edge, and obstacle worksheet.
+AD5X additionally requires cutter, wiper/purge, and filament-handling obstacle
+measurements. Photographs must retain scale/fiducial metadata. No inferred or
+image-generated mesh satisfies exact collision proof.

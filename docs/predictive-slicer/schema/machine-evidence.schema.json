@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://j-slice.dev/schema/js-machine-evidence-1",
+  "title": "J-Slice physical machine evidence bootstrap",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "artifact_kind", "machine", "published_facts", "conflicts", "machine_binding", "collision_geometry", "geometry_policy", "required_observations", "qualification", "source_integrity_sha256"],
+  "properties": {
+    "schema_version": {"const": "js-machine-evidence-1"},
+    "artifact_kind": {"const": "machine-evidence-bootstrap"},
+    "machine": {"type": "object", "additionalProperties": false, "required": ["model", "serial", "identity_state"], "properties": {
+      "model": {"enum": ["AD5M", "AD5X"]}, "serial": {"type": ["string", "null"]}, "identity_state": {"enum": ["draft", "observed"]}
+    }},
+    "published_facts": {"type": "array", "items": {"$ref": "#/$defs/datum"}},
+    "conflicts": {"type": "array", "items": {"type": "object", "required": ["subject", "values", "interpretation"], "properties": {
+      "subject": {"type": "string"}, "values": {"type": "array", "items": {"type": "object"}}, "interpretation": {"type": "string"}
+    }}},
+    "machine_binding": {"type": "object", "additionalProperties": {"oneOf": [{"$ref": "#/$defs/observation"}, {"type": "null"}]}},
+    "collision_geometry": {"type": ["object", "null"], "additionalProperties": true},
+    "geometry_policy": {"type": "object", "additionalProperties": {"type": "boolean"}},
+    "required_observations": {"type": "array", "items": {"type": "string"}},
+    "qualification": {"type": "object", "additionalProperties": false, "required": ["qualification_state", "coupon_bundle_eligible_for_review", "physical_qualification_claim", "blockers"], "properties": {
+      "qualification_state": {"const": "unqualified"}, "coupon_bundle_eligible_for_review": {"type": "boolean"}, "physical_qualification_claim": {"const": false}, "blockers": {"type": "array", "items": {"type": "string"}}
+    }},
+    "source_integrity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "source": {"type": "object", "additionalProperties": false, "required": ["class", "artifact", "revision", "observation_date", "qualification_state", "uncertainty"], "properties": {
+      "class": {"enum": ["manufacturer", "slicer_profile", "community_firmware", "measured", "user_supplied"]},
+      "artifact": {"type": "string", "minLength": 1}, "revision": {"type": ["string", "null"]}, "observation_date": {"type": "string", "minLength": 1},
+      "qualification_state": {"enum": ["published", "corroborative", "observed", "unqualified", "ambiguous", "missing"]}, "uncertainty": {}
+    }},
+    "datum": {"type": "object", "additionalProperties": false, "required": ["id", "value", "units", "source", "qualification_state", "uncertainty"], "properties": {
+      "id": {"type": "string", "minLength": 1}, "value": {}, "units": {"type": "string", "minLength": 1}, "source": {"$ref": "#/$defs/source"},
+      "qualification_state": {"enum": ["published", "corroborative", "observed", "unqualified", "ambiguous", "missing"]}, "uncertainty": {}
+    }},
+    "observation": {"type": "object", "additionalProperties": false, "required": ["id", "value", "units", "source", "qualification_state", "uncertainty"], "properties": {
+      "id": {"type": "string", "minLength": 1}, "value": {}, "units": {"type": "string", "minLength": 1}, "source": {"$ref": "#/$defs/source"},
+      "qualification_state": {"const": "observed"}, "uncertainty": {}
+    }}
+  }
+}

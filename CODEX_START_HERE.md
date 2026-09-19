@@ -49,6 +49,9 @@ deferred and explicit. Read `docs/predictive-slicer/M1_5_STATUS.md` and
 analysis-only thermal-debt scheduler foundation. Read
 `docs/predictive-slicer/M2_STATUS.md` and `M2_COUPON_PROTOCOL.md`; physical A/B
 evidence is still required and no legacy emission replacement is permitted.
+M2.1 adds the machine-evidence bootstrap and worksheets in
+`docs/predictive-slicer/M2_1_MACHINE_EVIDENCE.md`; it remains unqualified
+evidence infrastructure and does not alter ordinary output.
 
 ## Qualified M1 source-inventory boundary
 

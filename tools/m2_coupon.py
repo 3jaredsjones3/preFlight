@@ -145,6 +145,16 @@ def validate_spec(spec: dict[str, Any], permit_fixture: bool) -> None:
         require(model.get("synthetic") is False and model.get("provenance") == "measured",
                 "only measured, non-synthetic thermal models are eligible")
         require(model.get("calibrated") is True, "thermal model must be calibrated")
+        for key in ("firmware_identity", "firmware_version", "slicer_profile_identity", "slicer_profile_hash",
+                    "operator", "observation_date", "coordinate_convention"):
+            required_string(printer, key)
+        startup = required_object(printer, "startup_observations")
+        for key in ("start_gcode_sha256", "end_gcode_sha256", "tool_change_gcode_sha256"):
+            required_string(startup, key)
+        require(str(printer["coordinate_convention"]).strip().lower() not in {"unknown", "ambiguous", "tbd"},
+                "actual G-code coordinate convention is ambiguous")
+        for key in ("material_manufacturer", "material_type", "material_color"):
+            required_string(process, key)
 
 
 def validate_model(model: dict[str, Any], spec: dict[str, Any], machine: dict[str, Any], permit_fixture: bool) -> None:
@@ -562,8 +572,16 @@ def templates(args: argparse.Namespace) -> None:
     write_json(args.out / "experiment.template.json", {
         "schema_version": SPEC_VERSION, "experiment": {"id": "REPLACE", "registration_status": "preregistered"},
         "printer": {"model": "AD5M or AD5X", "serial": "REPLACE", "identity_status": "REPLACE_WITH_CONFIRMED",
+                     "firmware_identity": "REPLACE_WITH_STOCK_OR_MODDED_IDENTITY", "firmware_version": "REPLACE_WITH_EXACT_VERSION",
+                     "slicer_profile_identity": "REPLACE_WITH_SLICER_PROFILE_ID", "slicer_profile_hash": "REPLACE_WITH_PROFILE_HASH",
+                     "startup_observations": {"start_gcode_sha256": "REPLACE_WITH_EXPORTED_START_HASH",
+                                                "end_gcode_sha256": "REPLACE_WITH_EXPORTED_END_HASH",
+                                                "tool_change_gcode_sha256": "REPLACE_WITH_EXPORTED_TOOL_CHANGE_HASH"},
+                     "coordinate_convention": "REPLACE_WITH_ACTUAL_GCODE_COORDINATE_CONVENTION",
+                     "operator": "REPLACE_WITH_OPERATOR", "observation_date": "REPLACE_WITH_OBSERVATION_DATE",
                      "machine_fingerprint_sha256": "REPLACE_WITH_REAL_FINGERPRINT_HASH", "synthetic": False},
-        "process": {"material_family": "REPLACE", "material_lot": "REPLACE", "nozzle_id": "REPLACE",
+        "process": {"material_family": "REPLACE", "material_manufacturer": "REPLACE", "material_type": "REPLACE",
+                     "material_color": "REPLACE", "material_lot": "REPLACE", "nozzle_id": "REPLACE",
                      "nozzle_diameter_mm": 0.4, "layer_height_mm": 0.2, "line_width_mm": 0.45,
                      "print_temperature_c": 215, "bed_temperature_c": 60, "fan_percent": 0, "ambient_temperature_c": 25},
         "model": {"model_id": "REPLACE", "model_hash": "REPLACE", "calibration_hash": "REPLACE"},

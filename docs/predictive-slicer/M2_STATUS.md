@@ -173,3 +173,19 @@ M2 remains **in progress**. No thermal schedule is enabled in ordinary slicer
 exports, and no M3 work has started. General printer-changing lowering still
 requires genuine paired AD5M and AD5X evidence, independent review of the
 preregistered rule, and a later explicitly authorized milestone.
+
+## M2.1 machine-evidence bootstrap
+
+M2.1 adds `tools/machine_evidence.py`, the
+`schema/machine-evidence.schema.json` contract, deterministic AD5M/AD5X draft
+records, collision-geometry policy, and human-fillable printer worksheets. It
+is evidence infrastructure only. Drafts remain `unqualified`; no physical
+qualification claim is emitted. The tool preserves source conflicts and fails
+closed on missing/ambiguous serial, firmware, startup, material, ambient,
+operator, or coordinate evidence. See `M2_1_MACHINE_EVIDENCE.md`.
+
+The existing M2 coupon gate now also requires, for non-fixture inputs, exact
+firmware/profile identities and hashes, start/end/tool-change export hashes,
+the actual coordinate convention, material manufacturer/type/color, operator,
+and observation date. The `--permit-synthetic-test-fixture` path remains test
+only and cannot create physical evidence.
