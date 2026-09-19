@@ -49,3 +49,6 @@ endif()
 add_test(NAME trusted_verifier_mutations COMMAND "${Python3_EXECUTABLE}"
     "${JS_ROOT}/tools/trusted_verifier_tests.py" "$<TARGET_FILE:jslice_verify>"
     --evidence "${CMAKE_CURRENT_BINARY_DIR}/verification-evidence.json" ${replay_args})
+add_test(NAME m2_coupon_package COMMAND "${Python3_EXECUTABLE}"
+    "${JS_ROOT}/tools/m2_coupon_tests.py")
+set_tests_properties(m2_coupon_package PROPERTIES ENVIRONMENT "M2_COUPON_VERIFIER=$<TARGET_FILE:jslice_verify>")

@@ -85,3 +85,91 @@ suites.
 The remaining gate is physical, paired AD5M and AD5X coupon evidence. Until
 those records are collected and reviewed, this code is infrastructure and
 synthetic analysis only; it must not lower into printer-changing G-code.
+
+## Isolated coupon package (software evidence)
+
+The research-only package is `tools/m2_coupon.py`. It consumes an already
+emitted, independently bound work packet and the actual versioned M2 proposal;
+it does not slice, optimize an arbitrary job, or link into the production
+export path. Its `prepare` action moves only complete packet path blocks and
+fails closed unless the proposal is a complete dependency-safe permutation.
+The packet must carry a `coupon_contract` for every path. That contract records
+geometry, deposited volume, width, height, speed, temperature, fan, tool and
+material. The pair verifier recomputes command content and these contracts; it
+does not trust the generator's saved integrity report.
+
+The canonical experiment contract is
+`schema/m2-coupon-experiment.schema.json`; the explicitly synthetic/incomplete
+example is `tests/predictive/m2_coupon_example.spec.json`. To create input
+templates when a real printer package is unavailable:
+
+```powershell
+python tools/m2_coupon.py templates --out build/m2-coupon-input-templates
+```
+
+To create a physical bundle after Jared supplies real inputs and a rebuilt
+independent verifier:
+
+```powershell
+python tools/m2_coupon.py prepare `
+  --spec path/to/experiment.json `
+  --gcode path/to/source-order.gcode `
+  --machine path/to/AD5M.machine.json `
+  --manifest path/to/source-order.manifest.json `
+  --packet path/to/source-order.work-packet.json `
+  --proposal path/to/m2-proposal.json `
+  --model path/to/measured-model-fit.json `
+  --verifier build/m2-trusted/jslice_verify.exe `
+  --out build/m2-evidence/AD5M/experiment-001
+```
+
+The output directory is immutable and contains `baseline/` and `proposed/`
+G-code, manifests and work packets, `experiment.json`, `machine.json`,
+`model.json`, `proposal.json`, `manifest.json`, `pair-integrity.json`, trusted
+verifier reports, `print-order.csv`, `raw-observations.csv`, a normalized
+measurement template, `operator-checklist.md` and `README.md`. The command
+refuses to overwrite an existing directory. `--permit-synthetic-test-fixture`
+exists only for deterministic non-printable tests; it cannot qualify a physical
+bundle.
+
+The handoff commands after printing are:
+
+```powershell
+python tools/m2_coupon.py verify-pair --bundle build/m2-evidence/AD5M/experiment-001 --verifier build/m2-trusted/jslice_verify.exe
+python tools/m2_coupon.py fit --measurements path/to/calibration-measurements.json --output path/to/model-fit.json
+python tools/m2_coupon.py evaluate --bundle build/m2-evidence/AD5M/experiment-001 --measurements path/to/confirmatory-measurements.json --output path/to/evaluation.json
+```
+
+Calibration coupon IDs and confirmatory coupon IDs are disjoint in the
+specification. The evaluator rejects overlap, unknown IDs, missing variants and
+silently dropped exclusions. AD5M and AD5X must be evaluated as separate
+experiments and must not be pooled. The preregistered rule is the rule in
+`experiment.acceptance`: included proposed bond-proxy mean must improve by at
+least `minimum_bond_proxy_improvement_percent`, while the recorded visible
+quality and print-time guardrails remain within their registered limits. A
+failed rule is M2 failed/revise; an incomplete or excluded record is not a
+pass.
+
+No real AD5M or AD5X machine fingerprint, serial/startup contract, material lot,
+measured calibration dataset, or physical observation is present in this
+repository. The existing `tests/verifier/machine.json` and
+`tests/predictive/thermal_calibration.json` remain synthetic regression inputs
+and are ineligible. Jared must supply, for each printer separately, model and
+serial, firmware and startup assumptions, nozzle identity/diameter, material
+family and lot, actual machine limits/tool envelope/heater/fan fingerprint,
+ambient/bed/temperature/fan records, a measured calibration dataset and its
+fit hash, the proposal/work-packet path contracts, instrument calibration,
+randomized print records, raw thermography, destructive bond observations,
+visible-quality/bridge/support scores, print times and exclusion reasons.
+
+Automated evidence for this package is complete: the native M2 CTest run is
+13/13, including the seven production fixture invariant/replay groups, thermal
+schedule and calibration tests, 23/23 independent-verifier mutation groups,
+and 6/6 coupon-package tests. The standalone verifier CTest is 2/2. The
+production runner replays all 7/7 accepted fixtures. This is software evidence
+only and does not satisfy the physical M2 exit criterion.
+
+M2 remains **in progress**. No thermal schedule is enabled in ordinary slicer
+exports, and no M3 work has started. General printer-changing lowering still
+requires genuine paired AD5M and AD5X evidence, independent review of the
+preregistered rule, and a later explicitly authorized milestone.

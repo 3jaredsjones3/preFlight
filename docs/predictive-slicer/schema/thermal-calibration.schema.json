@@ -28,6 +28,6 @@
     },
     "measurements": {"type": "array", "minItems": 3, "items": {"type": "object", "additionalProperties": false,
       "required": ["coupon_id", "contact_age_s", "measured_temperature_c", "bond_proxy"],
-      "properties": {"coupon_id": {"type": "string", "minLength": 1}, "contact_age_s": {"type": "number", "minimum": 0}, "measured_temperature_c": {"type": "number"}, "bond_proxy": {"type": "number", "minimum": 0}, "uncertainty_c": {"type": "number", "minimum": 0}}}}
+      "properties": {"coupon_id": {"type": "string", "minLength": 1}, "variant": {"enum": ["baseline", "proposed"]}, "contact_age_s": {"type": "number", "minimum": 0}, "measured_temperature_c": {"type": "number"}, "bond_proxy": {"type": "number", "minimum": 0}, "uncertainty_c": {"type": "number", "minimum": 0}, "visible_quality_score": {"type": "number"}, "bridge_support_effect": {"type": "string"}, "print_time_s": {"type": "number", "minimum": 0}, "excluded": {"type": "boolean"}, "exclusion_reason": {"type": "string"}}}}
   }
 }

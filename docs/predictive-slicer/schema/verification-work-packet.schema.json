@@ -53,12 +53,27 @@
         "object": {"type": "string", "minLength": 1, "maxLength": 512},
         "instance": {"type": "integer", "minimum": 0, "maximum": 1000000},
         "command_start": {"type": "integer", "minimum": 1},
-        "command_end": {"type": "integer", "minimum": 1},
+            "command_end": {"type": "integer", "minimum": 1},
+            "source_line_start": {"type": "integer", "minimum": 1},
+            "source_line_end": {"type": "integer", "minimum": 1},
         "command_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "predecessors": {"type": "array", "maxItems": 100000, "items": {"type": "string", "minLength": 1, "maxLength": 256}},
         "tool": {"type": "integer", "minimum": 0, "maximum": 7},
         "material": {"type": "string", "minLength": 1, "maxLength": 128},
         "uses_temporary": {"type": "array", "maxItems": 100000, "items": {"type": "string", "minLength": 1, "maxLength": 256}}
+        ,"coupon_contract": {"type": "object", "additionalProperties": false,
+          "required": ["geometry_sha256", "extrusion_volume_mm3", "width_mm", "height_mm", "speed_mm_s", "temperature_c", "fan_pwm", "tool", "material"],
+          "properties": {
+            "geometry_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "extrusion_volume_mm3": {"type": "number", "minimum": 0},
+            "width_mm": {"type": "number", "exclusiveMinimum": 0},
+            "height_mm": {"type": "number", "exclusiveMinimum": 0},
+            "speed_mm_s": {"type": "number", "exclusiveMinimum": 0},
+            "temperature_c": {"type": "number"},
+            "fan_pwm": {"type": "integer", "minimum": 0, "maximum": 255},
+            "tool": {"type": "integer", "minimum": 0, "maximum": 7},
+            "material": {"type": "string", "minLength": 1, "maxLength": 128}
+          }}
       }
     }},
     "temporary_structures": {"type": "array", "maxItems": 100000, "items": {"type": "object", "additionalProperties": false,

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://j-slice.dev/schema/js-m2-coupon-experiment-1",
+  "title": "J-Slice M2 preregistered thermal coupon experiment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment", "printer", "process", "model", "variants", "measurement_protocol", "acceptance", "abort_exclusion", "evidence", "sample_plan", "randomization"],
+  "properties": {
+    "schema_version": {"const": "js-m2-coupon-experiment-1"},
+    "experiment": {"type": "object", "additionalProperties": false, "required": ["id", "registration_status"], "properties": {"id": {"type": "string", "minLength": 1}, "registration_status": {"enum": ["preregistered", "template"]}, "owner": {"type": "string"}, "commit": {"type": "string"}}},
+    "printer": {"type": "object", "additionalProperties": false, "required": ["model", "serial", "identity_status", "machine_fingerprint_sha256", "synthetic"], "properties": {"model": {"enum": ["AD5M", "AD5X"]}, "serial": {"type": "string", "minLength": 1}, "firmware": {"type": "string"}, "startup_assumptions": {"type": "array", "items": {"type": "string"}}, "identity_status": {"enum": ["confirmed", "template"]}, "machine_fingerprint_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "synthetic": {"type": "boolean"}}},
+    "process": {"type": "object", "additionalProperties": false, "required": ["material_family", "material_lot", "nozzle_id", "nozzle_diameter_mm", "layer_height_mm", "line_width_mm", "print_temperature_c", "bed_temperature_c", "fan_percent", "ambient_temperature_c"], "properties": {"material_family": {"type": "string", "minLength": 1}, "material_lot": {"type": "string", "minLength": 1}, "nozzle_id": {"type": "string", "minLength": 1}, "nozzle_diameter_mm": {"type": "number", "exclusiveMinimum": 0}, "layer_height_mm": {"type": "number", "exclusiveMinimum": 0}, "line_width_mm": {"type": "number", "exclusiveMinimum": 0}, "print_temperature_c": {"type": "number"}, "bed_temperature_c": {"type": "number"}, "fan_percent": {"type": "number", "minimum": 0, "maximum": 100}, "ambient_temperature_c": {"type": "number"}}},
+    "model": {"type": "object", "additionalProperties": false, "required": ["model_id", "model_hash", "calibration_hash"], "properties": {"model_id": {"type": "string", "minLength": 1}, "model_hash": {"type": "string", "minLength": 1}, "calibration_hash": {"type": "string", "minLength": 1}}},
+    "variants": {"type": "object", "additionalProperties": false, "required": ["baseline", "proposed"], "properties": {"baseline": {"$ref": "#/$defs/variant"}, "proposed": {"$ref": "#/$defs/variant"}}},
+    "measurement_protocol": {"type": "object", "minProperties": 1},
+    "acceptance": {"type": "object", "additionalProperties": false, "required": ["minimum_bond_proxy_improvement_percent", "visible_quality_noninferiority_delta", "print_time_max_increase_percent"], "properties": {"minimum_bond_proxy_improvement_percent": {"type": "number"}, "visible_quality_noninferiority_delta": {"type": "number"}, "print_time_max_increase_percent": {"type": "number"}, "minimum_included_confirmatory_pairs": {"type": "integer", "minimum": 1}}},
+    "abort_exclusion": {"type": "object", "minProperties": 1},
+    "evidence": {"type": "object", "minProperties": 1},
+    "sample_plan": {"type": "object", "additionalProperties": false, "required": ["calibration_coupon_ids", "confirmatory_coupon_ids"], "properties": {"calibration_coupon_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "confirmatory_coupon_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}},
+    "randomization": {"type": "object", "additionalProperties": false, "required": ["unit", "seed"], "properties": {"unit": {"const": "coupon_pair"}, "seed": {"type": "integer", "minimum": 0}}}
+  },
+  "$defs": {"variant": {"type": "object", "additionalProperties": false, "required": ["identity"], "properties": {"identity": {"type": "string", "minLength": 1}, "description": {"type": "string"}}}}
+}

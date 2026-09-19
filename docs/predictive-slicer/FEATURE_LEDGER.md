@@ -7,7 +7,7 @@
 | Stress-to-field mapping | Executable nearest-sample seed | FEA import, confidence propagation, mechanical coupons |
 | Spectral interlock | Executable bounded seed | Strength tests and machine-spectrum validation |
 | Slight nonplanar projection | Executable bounded seed | Nozzle/tool collision model and surface tests |
-| Thermal-aware scheduling | M2 analysis-only neighbor graph, bounded proposal, synthetic/uncalibrated eligibility gate | Physical calibrated model and preregistered AD5M/AD5X A/B coupons; separately reviewed lowering |
+| Thermal-aware scheduling | M2 analysis-only neighbor graph, bounded proposal, synthetic/uncalibrated eligibility gate, isolated fail-closed coupon bundle/pair verifier | Physical calibrated model and preregistered AD5M/AD5X A/B coupons; separately reviewed lowering |
 | Modal vibration prediction | Reduced model seed | Fingerprint measurement and displacement validation |
 | Geometric pre-compensation | Bounded hook | Per-feature calibration and metrology |
 | Pressure release | Reduced model seed | Extrusion-pressure calibration |

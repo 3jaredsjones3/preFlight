@@ -187,6 +187,14 @@ and proposed precedence against executable path ranges. It ignores thermal
 scores, temperature estimates and bond claims; those remain compiler-side
 analysis and are never treated as trusted physical evidence.
 
+M2 coupon packets may additionally attach an optional `coupon_contract` to each
+path. It is an identity/process record for the isolated research package
+(geometry digest, deposited volume, width/height, speed, temperature, fan, tool
+and material); the verifier schema binds its shape but does not accept the
+generator's claim as physical proof. `tools/m2_coupon.py verify-pair`
+independently recomputes both final programs and compares those contracts and
+path command contents before a bundle is handed to an operator.
+
 Datum entries define axis-aligned protected and permitted envelopes plus a
 conservative maximum bead radius. Positive-E linear segments are expanded by
 that radius and checked for object identity, envelope containment and optional
