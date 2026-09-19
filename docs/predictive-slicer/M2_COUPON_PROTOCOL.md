@@ -88,10 +88,17 @@ AD5X corner-origin coordinates must remain explicit.
 
 For each printer, Jared must next capture the nameplate serial and exact
 firmware; nozzle identifier/type/diameter; slicer/profile identity and hash;
-verbatim profile start program and hash; exported start/end/tool-change
-sequences and hashes; actual G-code coordinate convention; material
+verbatim profile start program and hash; exported start/end sequence artifacts
+and hashes; capability-applicable tool-change evidence; actual G-code coordinate convention; material
 manufacturer/type/color/lot; ambient conditions; operator/date; and the full
 nozzle-axis toolhead, cable/PTFE, clearance, bed-edge, and obstacle worksheet.
 AD5X additionally requires cutter, wiper/purge, and filament-handling obstacle
 measurements. Photographs must retain scale/fiducial metadata. No inferred or
 image-generated mesh satisfies exact collision proof.
+
+AD5M tool change is `not_applicable` because the machine is single-material and
+has no ordinary tool-change sequence; no empty or N/A artifact may be invented
+or hashed. AD5X tool change is `required` and must identify a real captured
+multi-material sequence with a lowercase 64-character SHA-256. The same
+`required` versus `not_applicable` structure applies to any future sequence that
+machine capabilities may legitimately omit.

@@ -11,6 +11,7 @@ import argparse
 import copy
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -20,6 +21,7 @@ SCHEMA_VERSION = "js-machine-evidence-1"
 TODAY = "2026-09-19"
 SOURCE_CLASSES = {"manufacturer", "slicer_profile", "community_firmware", "measured", "user_supplied"}
 QUALIFICATION_STATES = {"published", "corroborative", "observed", "unqualified", "ambiguous", "missing"}
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 class EvidenceError(ValueError):
@@ -204,9 +206,8 @@ REQUIRED_FIELDS = {
     "nozzle_diameter_mm": "nozzle diameter",
     "slicer_profile_identity": "slicer/profile identity",
     "slicer_profile_hash": "slicer/profile hash",
-    "exported_start_gcode": "exported start G-code observation",
-    "exported_end_gcode": "exported end G-code observation",
-    "exported_tool_change_gcode": "exported tool-change G-code observation",
+    "machine_artifact_identity": "machine configuration artifact identity",
+    "machine_artifact_sha256": "machine configuration artifact SHA-256",
     "material_manufacturer": "material manufacturer",
     "material_type": "material type",
     "material_color": "material color",
@@ -217,6 +218,43 @@ REQUIRED_FIELDS = {
     "coordinate_convention": "actual G-code coordinate convention",
 }
 
+SEQUENCE_POLICY = {
+    "AD5M": {"start": "required", "end": "required", "tool_change": "not_applicable"},
+    "AD5X": {"start": "required", "end": "required", "tool_change": "required"},
+}
+AD5M_TOOL_CHANGE_REASON = "AD5M is a single-material machine with no ordinary tool-change sequence"
+
+
+def is_sha256(value: Any) -> bool:
+    return isinstance(value, str) and SHA256_RE.fullmatch(value) is not None
+
+
+def initial_sequence_evidence(model: str) -> dict[str, Any]:
+    mf, _, _ = common_sources(model)
+    result: dict[str, Any] = {}
+    for name, applicability in SEQUENCE_POLICY[model].items():
+        if applicability == "required":
+            result[name] = {"applicability": "required", "artifact_identity": None,
+                            "sha256": None, "source": None}
+        else:
+            result[name] = {"applicability": "not_applicable", "reason": AD5M_TOOL_CHANGE_REASON,
+                            "source": mf}
+    return result
+
+
+def observations_template(model: str) -> dict[str, Any]:
+    sequences: dict[str, Any] = {}
+    for name, applicability in SEQUENCE_POLICY[model].items():
+        if applicability == "required":
+            sequences[name] = {"applicability": "required", "artifact_identity": None, "sha256": None}
+        else:
+            sequences[name] = {"applicability": "not_applicable", "reason": AD5M_TOOL_CHANGE_REASON}
+    fields = {key: None for key in REQUIRED_FIELDS}
+    fields["slicer_profile_text"] = None
+    fields["sequence_evidence"] = sequences
+    return {"source_class": "measured", "artifact_identity": None, "revision": None,
+            "observation_date": None, "fields": fields}
+
 
 def empty_observations() -> dict[str, Any]:
     return {}
@@ -224,12 +262,13 @@ def empty_observations() -> dict[str, Any]:
 
 def observation_source(observations: dict[str, Any]) -> dict[str, Any]:
     cls = observations.get("source_class", "user_supplied")
-    artifact = observations.get("artifact_identity", "user-observation-record-required")
-    return source(cls, artifact, observations.get("revision"), observations.get("observation_date", TODAY), "observed")
+    artifact = observations.get("artifact_identity") or "user-observation-record-required"
+    observed_on = observations.get("observation_date") or TODAY
+    return source(cls, artifact, observations.get("revision"), observed_on, "observed")
 
 
 def make_record(field: str, value: Any, observations: dict[str, Any]) -> dict[str, Any]:
-    units = "mm" if field == "nozzle_diameter_mm" else "degC" if field == "ambient_temperature_c" else "verbatim_gcode" if field.startswith("exported_") else "identifier"
+    units = "mm" if field == "nozzle_diameter_mm" else "degC" if field == "ambient_temperature_c" else "sha256" if field.endswith("sha256") or field == "slicer_profile_hash" else "identifier"
     return datum(field, value, units, observation_source(observations), "observed")
 
 
@@ -251,12 +290,24 @@ def merge_observations(artifact: dict[str, Any], observations: dict[str, Any]) -
             if field == "serial":
                 artifact["machine"]["serial"] = value
                 artifact["machine"]["identity_state"] = "observed"
-    for raw_name, hash_name in (("exported_start_gcode", "exported_start_gcode_sha256"),
-                                ("exported_end_gcode", "exported_end_gcode_sha256"),
-                                ("exported_tool_change_gcode", "exported_tool_change_gcode_sha256")):
-        value = binding.get(raw_name, {}).get("value")
-        if isinstance(value, str) and value:
-            binding[hash_name] = make_record(hash_name, sha256(value.encode("utf-8")), observations)
+    supplied_sequences = fields.get("sequence_evidence")
+    if supplied_sequences is not None:
+        if not isinstance(supplied_sequences, dict):
+            fail("fields.sequence_evidence must be an object")
+        for name in SEQUENCE_POLICY[artifact["machine"]["model"]]:
+            supplied = supplied_sequences.get(name)
+            if supplied is None:
+                continue
+            if not isinstance(supplied, dict):
+                fail(f"sequence_evidence.{name} must be an object")
+            entry = copy.deepcopy(supplied)
+            if entry.get("applicability") == "required" and (entry.get("artifact_identity") is not None or entry.get("sha256") is not None):
+                entry["source"] = observation_source(observations)
+            elif entry.get("applicability") == "not_applicable":
+                entry["source"] = artifact["sequence_evidence"][name].get("source") or observation_source(observations)
+            else:
+                entry["source"] = None
+            artifact["sequence_evidence"][name] = entry
     profile_text = fields.get("slicer_profile_text")
     profile_hash = fields.get("slicer_profile_hash")
     if isinstance(profile_text, str) and profile_hash is not None:
@@ -268,6 +319,53 @@ def merge_observations(artifact: dict[str, Any], observations: dict[str, Any]) -
 
 def record_value(record: Any) -> Any:
     return record.get("value") if isinstance(record, dict) else None
+
+
+def sequence_blockers(model: str, sequences: Any) -> list[str]:
+    blockers: list[str] = []
+    if not isinstance(sequences, dict):
+        return ["sequence_evidence: missing sequence applicability records"]
+    for name, expected in SEQUENCE_POLICY[model].items():
+        entry = sequences.get(name)
+        path = f"sequence_evidence.{name}"
+        if not isinstance(entry, dict):
+            blockers.append(f"{path}: missing applicability record")
+            continue
+        actual = entry.get("applicability")
+        if actual != expected:
+            blockers.append(f"{path}: {model} requires applicability={expected}")
+            continue
+        if expected == "required":
+            if not isinstance(entry.get("artifact_identity"), str) or not entry["artifact_identity"]:
+                blockers.append(f"{path}: missing artifact identity")
+            if not is_sha256(entry.get("sha256")):
+                blockers.append(f"{path}: SHA-256 must match lowercase [0-9a-f]{{64}}")
+            if not isinstance(entry.get("source"), dict):
+                blockers.append(f"{path}: missing provenance")
+        else:
+            if not isinstance(entry.get("reason"), str) or not entry["reason"]:
+                blockers.append(f"{path}: not_applicable requires a machine-capability reason")
+            if entry.get("artifact_identity") is not None or entry.get("sha256") is not None:
+                blockers.append(f"{path}: not_applicable must not contain an artifact or hash")
+    return blockers
+
+
+def validate_sequence_structure(model: str, sequences: Any) -> None:
+    if not isinstance(sequences, dict):
+        fail("sequence_evidence must be an object")
+    for name, expected in SEQUENCE_POLICY[model].items():
+        entry = sequences.get(name)
+        path = f"sequence_evidence.{name}"
+        if not isinstance(entry, dict):
+            fail(f"{path} must be an object")
+        if entry.get("applicability") != expected:
+            fail(f"{path}: {model} requires applicability={expected}")
+        if expected == "required":
+            digest = entry.get("sha256")
+            if digest is not None and not is_sha256(digest):
+                fail(f"{path}.sha256 must match lowercase [0-9a-f]{{64}}")
+        elif entry.get("artifact_identity") is not None or entry.get("sha256") is not None:
+            fail(f"{path}: not_applicable must not contain an artifact or hash")
 
 
 def qualification_report(artifact: dict[str, Any]) -> dict[str, Any]:
@@ -284,9 +382,13 @@ def qualification_report(artifact: dict[str, Any]) -> dict[str, Any]:
         blockers.append("coordinate_convention: ambiguous actual G-code convention")
     if record_value(binding.get("firmware_version")) in ("unknown", "ambiguous", "tbd"):
         blockers.append("firmware_version: exact firmware identity is ambiguous")
-    startup = [record_value(binding.get(name)) for name in ("exported_start_gcode", "exported_end_gcode", "exported_tool_change_gcode")]
-    if any(value in ("unknown", "ambiguous", "tbd") for value in startup):
-        blockers.append("startup_behavior: exported startup behavior is ambiguous")
+    for field in ("slicer_profile_hash", "machine_artifact_sha256"):
+        value = record_value(binding.get(field))
+        if value is not None and not is_sha256(value):
+            blockers.append(f"{field}: SHA-256 must match lowercase [0-9a-f]{{64}}")
+    model = artifact.get("machine", {}).get("model")
+    if model in SEQUENCE_POLICY:
+        blockers.extend(sequence_blockers(model, artifact.get("sequence_evidence")))
     return {"qualification_state": "unqualified", "coupon_bundle_eligible_for_review": not blockers,
             "physical_qualification_claim": False, "blockers": sorted(set(blockers))}
 
@@ -306,12 +408,13 @@ def build_artifact(model: str, observations: dict[str, Any] | None = None,
         "published_facts": facts,
         "conflicts": conflicts,
         "machine_binding": empty_observations(),
+        "sequence_evidence": initial_sequence_evidence(model),
         "collision_geometry": None,
         "geometry_policy": {"image_generated_or_inferred_is_unqualified": True,
                             "exact_collision_proof_requires_measured_qualified_mesh": True},
         "required_observations": list(REQUIRED_FIELDS.values()) + [
             "profile start program captured verbatim and hashed",
-            "profile/end/tool-change export evidence retained as immutable artifacts",
+            "start/end and capability-applicable tool-change sequence evidence retained as immutable artifacts",
             "physical measurement worksheet completed for this printer",
         ],
         "qualification": {"qualification_state": "unqualified", "coupon_bundle_eligible_for_review": False,
@@ -327,6 +430,7 @@ def build_artifact(model: str, observations: dict[str, Any] | None = None,
         artifact["conflicts"].extend(copy.deepcopy(source_records.get("conflicts", [])))
     if observations is not None:
         merge_observations(artifact, observations)
+    validate_sequence_structure(model, artifact["sequence_evidence"])
     artifact["qualification"] = qualification_report(artifact)
     artifact["source_integrity_sha256"] = source_integrity(artifact)
     return artifact
@@ -343,6 +447,8 @@ def validate_collision_geometry(geometry: Any, exact: bool = False) -> None:
     for key in required:
         if key not in geometry:
             fail(f"collision_geometry missing {key}")
+    if not is_sha256(geometry["mesh_hash"]):
+        fail("collision_geometry.mesh_hash must match lowercase [0-9a-f]{64}")
     if geometry["qualification_state"] != "qualified":
         geometry["exact_proof_eligible"] = False
         if exact:
@@ -362,9 +468,15 @@ def validate_artifact(artifact: dict[str, Any], require_review_ready: bool = Fal
     model = artifact.get("machine", {}).get("model")
     if model not in {"AD5M", "AD5X"}:
         fail("machine.model must be AD5M or AD5X")
+    validate_sequence_structure(model, artifact.get("sequence_evidence"))
     expected = source_integrity(artifact)
     if artifact.get("source_integrity_sha256") != expected:
         fail("source/profile fact integrity hash mismatch")
+    binding = artifact.get("machine_binding", {})
+    for field in ("slicer_profile_hash", "machine_artifact_sha256"):
+        value = record_value(binding.get(field))
+        if value is not None and not is_sha256(value):
+            fail(f"machine_binding.{field} must match lowercase [0-9a-f]{{64}}")
     validate_collision_geometry(artifact.get("collision_geometry"), exact_collision)
     report = qualification_report(artifact)
     if artifact.get("qualification") != report:
@@ -375,6 +487,9 @@ def validate_artifact(artifact: dict[str, Any], require_review_ready: bool = Fal
 
 def worksheet(model: str) -> str:
     extra = "- AD5X cutter, wiper/purge, filament-handling obstacles\n" if model == "AD5X" else "- Any printer-specific fixed/moving obstacles\n"
+    tool_change = ("- Exported multi-material tool-change G-code artifact identity/SHA-256: ____________________\n"
+                   if model == "AD5X" else
+                   f"- Tool-change sequence: not_applicable — {AD5M_TOOL_CHANGE_REASON}. Do not create or hash an N/A file.\n")
     return f"""# {model} machine measurement worksheet
 
 Status: unqualified until every required field is captured and reviewed. Do not invent values.
@@ -405,10 +520,10 @@ ________________________________________________________________________________
 {extra}
 ## Evidence capture
 
-- Exported start G-code artifact path/hash: __________________________________________
-- Exported end G-code artifact path/hash: ____________________________________________
-- Exported tool-change G-code artifact path/hash: ____________________________________
-- Profile start program captured verbatim/hash: _______________________________________
+- Machine configuration artifact identity/SHA-256: __________________________________
+- Exported start G-code artifact identity/SHA-256: ___________________________________
+- Exported end G-code artifact identity/SHA-256: _____________________________________
+{tool_change}- Profile start program captured verbatim/SHA-256: __________________________________
 - Photos: path, camera, lens, date, scale/fiducial and orientation for each image:
   ____________________________________________________________________________________
   ____________________________________________________________________________________
@@ -441,6 +556,13 @@ def command_validate(args: argparse.Namespace) -> None:
     print(json.dumps({"valid": True, "qualification": artifact["qualification"]}, sort_keys=True, indent=2))
 
 
+def write_template(path: Path, value: Any, description: str) -> None:
+    if path.exists():
+        fail(f"refusing to overwrite {description}: {path}")
+    write_json(path, value)
+    print(f"created {description}: {path}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -454,6 +576,9 @@ def main() -> int:
     valid.add_argument("--input", type=Path, required=True)
     valid.add_argument("--require-review-ready", action="store_true")
     valid.add_argument("--exact-collision-proof", action="store_true")
+    observation_template = sub.add_parser("observations-template")
+    observation_template.add_argument("--model", choices=["AD5M", "AD5X"], required=True)
+    observation_template.add_argument("--output", type=Path, required=True)
     sheet = sub.add_parser("worksheet")
     sheet.add_argument("--model", choices=["AD5M", "AD5X"], required=True)
     sheet.add_argument("--output", type=Path, required=True)
@@ -463,10 +588,12 @@ def main() -> int:
             command_bootstrap(args)
         elif args.command == "validate":
             command_validate(args)
+        elif args.command == "observations-template":
+            write_template(args.output, observations_template(args.model), f"{args.model} observations template")
         else:
-            args.output.parent.mkdir(parents=True, exist_ok=True)
             if args.output.exists():
                 fail(f"refusing to overwrite worksheet: {args.output}")
+            args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(worksheet(args.model), encoding="utf-8", newline="\n")
             print(f"created {args.model} measurement worksheet: {args.output}")
         return 0

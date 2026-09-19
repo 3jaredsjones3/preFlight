@@ -79,8 +79,11 @@ coordinates and distinguishes published limits from qualified coupon limits.
 
 For a non-fixture physical coupon specification, the coupon tool requires the
 actual printer serial, firmware identity/version, slicer/profile identity and
-hash, exported start/end/tool-change hashes, material manufacturer/type/color/
-lot, ambient observation, operator/date, and actual coordinate convention. An
+hash, machine-artifact identity/hash, required start/end sequence artifacts,
+capability-dependent tool-change evidence, material manufacturer/type/color/
+lot, ambient observation, operator/date, and actual coordinate convention. AD5M
+must record tool change as `not_applicable` with a machine-capability reason and
+no artifact/hash; AD5X must supply a real tool-change artifact and SHA-256. An
 ambiguous coordinate convention, firmware identity, or startup behavior fails
 closed. Manufacturer thermal ratings and firmware `max_temp` values are not
 treated as measured limits.

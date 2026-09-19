@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import os
 import subprocess
@@ -14,6 +15,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOL = ROOT / "tools" / "m2_coupon.py"
+
+
+def load_tool():
+    spec = importlib.util.spec_from_file_location("m2_coupon", TOOL)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def canonical(value):
@@ -32,6 +41,7 @@ class CouponTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
+        self.contract = load_tool()
         self.gcode = (self.root / "program.gcode")
         program = ("; preflight_config = begin\nG21\nG90\nM83\nM109 S210\n"
                    "G0 X10 Y10 Z0.2 F120\nG1 X20 Y10 E0.09 F2400\n"
@@ -173,7 +183,35 @@ class CouponTests(unittest.TestCase):
         output = self.root / "templates"
         result = self.run_tool("templates", "--out", output)
         self.assertEqual(result.returncode, 0)
-        self.assertIn("REPLACE_WITH_REAL_FINGERPRINT_HASH", (output / "experiment.template.json").read_text())
+        template = json.loads((output / "experiment.template.json").read_text())
+        self.assertIsNone(template["printer"]["machine_fingerprint_sha256"])
+        self.assertEqual(template["printer"]["startup_observations"]["tool_change"]["applicability"], "not_applicable")
+        self.assertNotIn("sha256", template["printer"]["startup_observations"]["tool_change"])
+
+    def test_coupon_startup_applicability_is_model_specific(self):
+        required = lambda digest: {"applicability": "required", "artifact_identity": "capture.gcode", "sha256": digest}
+        ad5m = {"start": required("a" * 64), "end": required("b" * 64),
+                "tool_change": {"applicability": "not_applicable", "reason": "single-material capability"}}
+        self.contract.validate_sequence_evidence(ad5m, "AD5M")
+        fabricated = json.loads(json.dumps(ad5m))
+        fabricated["tool_change"] = required("c" * 64)
+        with self.assertRaises(self.contract.CouponError):
+            self.contract.validate_sequence_evidence(fabricated, "AD5M")
+        with self.assertRaises(self.contract.CouponError):
+            self.contract.validate_sequence_evidence(ad5m, "AD5X")
+        missing = json.loads(json.dumps(ad5m))
+        del missing["tool_change"]
+        with self.assertRaises(self.contract.CouponError):
+            self.contract.validate_sequence_evidence(missing, "AD5X")
+
+    def test_coupon_sequence_hashes_are_strict_lowercase_sha256(self):
+        for digest_value in ("short", "A" * 64, "g" * 64):
+            with self.subTest(digest=digest_value):
+                startup = {"start": {"applicability": "required", "artifact_identity": "start.gcode", "sha256": digest_value},
+                           "end": {"applicability": "required", "artifact_identity": "end.gcode", "sha256": "b" * 64},
+                           "tool_change": {"applicability": "not_applicable", "reason": "single-material capability"}}
+                with self.assertRaises(self.contract.CouponError):
+                    self.contract.validate_sequence_evidence(startup, "AD5M")
 
 
 if __name__ == "__main__":

@@ -163,9 +163,10 @@ randomized print records, raw thermography, destructive bond observations,
 visible-quality/bridge/support scores, print times and exclusion reasons.
 
 Automated evidence for this package is complete: the native M2 CTest run is
-13/13, including the seven production fixture invariant/replay groups, thermal
+14/14, including the seven production fixture invariant/replay groups, thermal
 schedule and calibration tests, 23/23 independent-verifier mutation groups,
-and 6/6 coupon-package tests. The standalone verifier CTest is 2/2. The
+8/8 coupon-package tests, and 14/14 machine-evidence tests. The standalone
+verifier CTest is 2/2. The
 production runner replays all 7/7 accepted fixtures. This is software evidence
 only and does not satisfy the physical M2 exit criterion.
 
@@ -185,7 +186,10 @@ closed on missing/ambiguous serial, firmware, startup, material, ambient,
 operator, or coordinate evidence. See `M2_1_MACHINE_EVIDENCE.md`.
 
 The existing M2 coupon gate now also requires, for non-fixture inputs, exact
-firmware/profile identities and hashes, start/end/tool-change export hashes,
-the actual coordinate convention, material manufacturer/type/color, operator,
-and observation date. The `--permit-synthetic-test-fixture` path remains test
+firmware/profile and machine-artifact identities/hashes, required start/end
+sequence artifacts, capability-dependent tool-change evidence, the actual
+coordinate convention, material manufacturer/type/color, operator, and
+observation date. AD5M must mark tool change `not_applicable` with its
+single-material capability reason and no hash; AD5X must supply a real artifact
+identity and SHA-256. The `--permit-synthetic-test-fixture` path remains test
 only and cannot create physical evidence.

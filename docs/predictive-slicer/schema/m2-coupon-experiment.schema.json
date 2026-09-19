@@ -7,17 +7,52 @@
   "required": ["schema_version", "experiment", "printer", "process", "model", "variants", "measurement_protocol", "acceptance", "abort_exclusion", "evidence", "sample_plan", "randomization"],
   "properties": {
     "schema_version": {"const": "js-m2-coupon-experiment-1"},
-    "experiment": {"type": "object", "additionalProperties": false, "required": ["id", "registration_status"], "properties": {"id": {"type": "string", "minLength": 1}, "registration_status": {"enum": ["preregistered", "template"]}, "owner": {"type": "string"}, "commit": {"type": "string"}}},
-    "printer": {"type": "object", "additionalProperties": false, "required": ["model", "serial", "identity_status", "machine_fingerprint_sha256", "synthetic", "firmware_identity", "firmware_version", "slicer_profile_identity", "slicer_profile_hash", "startup_observations", "coordinate_convention", "operator", "observation_date"], "properties": {"model": {"enum": ["AD5M", "AD5X"]}, "serial": {"type": "string", "minLength": 1}, "firmware": {"type": "string"}, "firmware_identity": {"type": "string", "minLength": 1}, "firmware_version": {"type": "string", "minLength": 1}, "slicer_profile_identity": {"type": "string", "minLength": 1}, "slicer_profile_hash": {"type": "string", "minLength": 1}, "startup_observations": {"type": "object", "additionalProperties": false, "required": ["start_gcode_sha256", "end_gcode_sha256", "tool_change_gcode_sha256"], "properties": {"start_gcode_sha256": {"type": "string", "minLength": 1}, "end_gcode_sha256": {"type": "string", "minLength": 1}, "tool_change_gcode_sha256": {"type": "string", "minLength": 1}}}, "coordinate_convention": {"type": "string", "minLength": 1}, "operator": {"type": "string", "minLength": 1}, "observation_date": {"type": "string", "minLength": 1}, "identity_status": {"enum": ["confirmed", "template"]}, "machine_fingerprint_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "synthetic": {"type": "boolean"}}},
-    "process": {"type": "object", "additionalProperties": false, "required": ["material_family", "material_manufacturer", "material_type", "material_color", "material_lot", "nozzle_id", "nozzle_diameter_mm", "layer_height_mm", "line_width_mm", "print_temperature_c", "bed_temperature_c", "fan_percent", "ambient_temperature_c"], "properties": {"material_family": {"type": "string", "minLength": 1}, "material_manufacturer": {"type": "string", "minLength": 1}, "material_type": {"type": "string", "minLength": 1}, "material_color": {"type": "string", "minLength": 1}, "material_lot": {"type": "string", "minLength": 1}, "nozzle_id": {"type": "string", "minLength": 1}, "nozzle_diameter_mm": {"type": "number", "exclusiveMinimum": 0}, "layer_height_mm": {"type": "number", "exclusiveMinimum": 0}, "line_width_mm": {"type": "number", "exclusiveMinimum": 0}, "print_temperature_c": {"type": "number"}, "bed_temperature_c": {"type": "number"}, "fan_percent": {"type": "number", "minimum": 0, "maximum": 100}, "ambient_temperature_c": {"type": "number"}}},
-    "model": {"type": "object", "additionalProperties": false, "required": ["model_id", "model_hash", "calibration_hash"], "properties": {"model_id": {"type": "string", "minLength": 1}, "model_hash": {"type": "string", "minLength": 1}, "calibration_hash": {"type": "string", "minLength": 1}}},
+    "experiment": {"type": "object", "additionalProperties": false, "required": ["id", "registration_status"], "properties": {
+      "id": {"type": "string", "minLength": 1}, "registration_status": {"enum": ["preregistered", "template"]}, "owner": {"type": "string"}, "commit": {"type": "string"}
+    }},
+    "printer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "serial", "identity_status", "machine_fingerprint_sha256", "machine_artifact_identity", "machine_artifact_sha256", "synthetic", "firmware_identity", "firmware_version", "slicer_profile_identity", "slicer_profile_hash", "startup_observations", "coordinate_convention", "operator", "observation_date"],
+      "properties": {
+        "model": {"enum": ["AD5M", "AD5X"]}, "serial": {"type": "string", "minLength": 1}, "firmware": {"type": "string"},
+        "firmware_identity": {"type": "string", "minLength": 1}, "firmware_version": {"type": "string", "minLength": 1},
+        "slicer_profile_identity": {"type": "string", "minLength": 1}, "slicer_profile_hash": {"$ref": "#/$defs/sha256"},
+        "machine_artifact_identity": {"type": "string", "minLength": 1}, "machine_artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "startup_observations": {"type": "object", "additionalProperties": false, "required": ["start", "end", "tool_change"], "properties": {
+          "start": {"$ref": "#/$defs/sequenceEvidence"}, "end": {"$ref": "#/$defs/sequenceEvidence"}, "tool_change": {"$ref": "#/$defs/sequenceEvidence"}
+        }},
+        "coordinate_convention": {"type": "string", "minLength": 1}, "operator": {"type": "string", "minLength": 1}, "observation_date": {"type": "string", "minLength": 1},
+        "identity_status": {"enum": ["confirmed", "template"]}, "machine_fingerprint_sha256": {"$ref": "#/$defs/sha256"}, "synthetic": {"type": "boolean"}
+      },
+      "allOf": [
+        {"properties": {"startup_observations": {"properties": {"start": {"$ref": "#/$defs/requiredSequence"}, "end": {"$ref": "#/$defs/requiredSequence"}}}}},
+        {"if": {"properties": {"model": {"const": "AD5M"}}}, "then": {"properties": {"startup_observations": {"properties": {"tool_change": {"$ref": "#/$defs/notApplicableSequence"}}}}}},
+        {"if": {"properties": {"model": {"const": "AD5X"}}}, "then": {"properties": {"startup_observations": {"properties": {"tool_change": {"$ref": "#/$defs/requiredSequence"}}}}}}
+      ]
+    },
+    "process": {"type": "object", "additionalProperties": false, "required": ["material_family", "material_manufacturer", "material_type", "material_color", "material_lot", "nozzle_id", "nozzle_diameter_mm", "layer_height_mm", "line_width_mm", "print_temperature_c", "bed_temperature_c", "fan_percent", "ambient_temperature_c"], "properties": {
+      "material_family": {"type": "string", "minLength": 1}, "material_manufacturer": {"type": "string", "minLength": 1}, "material_type": {"type": "string", "minLength": 1}, "material_color": {"type": "string", "minLength": 1}, "material_lot": {"type": "string", "minLength": 1}, "nozzle_id": {"type": "string", "minLength": 1}, "nozzle_diameter_mm": {"type": "number", "exclusiveMinimum": 0}, "layer_height_mm": {"type": "number", "exclusiveMinimum": 0}, "line_width_mm": {"type": "number", "exclusiveMinimum": 0}, "print_temperature_c": {"type": "number"}, "bed_temperature_c": {"type": "number"}, "fan_percent": {"type": "number", "minimum": 0, "maximum": 100}, "ambient_temperature_c": {"type": "number"}
+    }},
+    "model": {"type": "object", "additionalProperties": false, "required": ["model_id", "model_hash", "calibration_hash"], "properties": {
+      "model_id": {"type": "string", "minLength": 1}, "model_hash": {"type": "string", "minLength": 1}, "calibration_hash": {"type": "string", "minLength": 1}
+    }},
     "variants": {"type": "object", "additionalProperties": false, "required": ["baseline", "proposed"], "properties": {"baseline": {"$ref": "#/$defs/variant"}, "proposed": {"$ref": "#/$defs/variant"}}},
     "measurement_protocol": {"type": "object", "minProperties": 1},
     "acceptance": {"type": "object", "additionalProperties": false, "required": ["minimum_bond_proxy_improvement_percent", "visible_quality_noninferiority_delta", "print_time_max_increase_percent"], "properties": {"minimum_bond_proxy_improvement_percent": {"type": "number"}, "visible_quality_noninferiority_delta": {"type": "number"}, "print_time_max_increase_percent": {"type": "number"}, "minimum_included_confirmatory_pairs": {"type": "integer", "minimum": 1}}},
-    "abort_exclusion": {"type": "object", "minProperties": 1},
-    "evidence": {"type": "object", "minProperties": 1},
+    "abort_exclusion": {"type": "object", "minProperties": 1}, "evidence": {"type": "object", "minProperties": 1},
     "sample_plan": {"type": "object", "additionalProperties": false, "required": ["calibration_coupon_ids", "confirmatory_coupon_ids"], "properties": {"calibration_coupon_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "confirmatory_coupon_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}},
     "randomization": {"type": "object", "additionalProperties": false, "required": ["unit", "seed"], "properties": {"unit": {"const": "coupon_pair"}, "seed": {"type": "integer", "minimum": 0}}}
   },
-  "$defs": {"variant": {"type": "object", "additionalProperties": false, "required": ["identity"], "properties": {"identity": {"type": "string", "minLength": 1}, "description": {"type": "string"}}}}
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "requiredSequence": {"type": "object", "additionalProperties": false, "required": ["applicability", "artifact_identity", "sha256"], "properties": {
+      "applicability": {"const": "required"}, "artifact_identity": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}
+    }},
+    "notApplicableSequence": {"type": "object", "additionalProperties": false, "required": ["applicability", "reason"], "properties": {
+      "applicability": {"const": "not_applicable"}, "reason": {"type": "string", "minLength": 1}
+    }},
+    "sequenceEvidence": {"oneOf": [{"$ref": "#/$defs/requiredSequence"}, {"$ref": "#/$defs/notApplicableSequence"}]},
+    "variant": {"type": "object", "additionalProperties": false, "required": ["identity"], "properties": {"identity": {"type": "string", "minLength": 1}, "description": {"type": "string"}}}
+  }
 }

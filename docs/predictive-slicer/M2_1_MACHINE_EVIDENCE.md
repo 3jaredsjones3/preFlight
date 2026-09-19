@@ -12,6 +12,8 @@ manufacturer, OrcaSlicer, and community-firmware source facts:
 ```powershell
 python tools/machine_evidence.py bootstrap --model AD5M --output build/m2.1/AD5M.bootstrap.json
 python tools/machine_evidence.py bootstrap --model AD5X --output build/m2.1/AD5X.bootstrap.json
+python tools/machine_evidence.py observations-template --model AD5M --output build/m2.1/AD5M.observations.json
+python tools/machine_evidence.py observations-template --model AD5X --output build/m2.1/AD5X.observations.json
 python tools/machine_evidence.py worksheet --model AD5M --output build/m2.1/AD5M.measurements.md
 python tools/machine_evidence.py worksheet --model AD5X --output build/m2.1/AD5X.measurements.md
 ```
@@ -24,10 +26,23 @@ community firmware ceilings, and future coupon limits remain separate. The
 5M-series hotend STL identity is retained only as an unqualified visualization
 prior; AD5X does not inherit it as exact geometry.
 
-Supply observations in a JSON record with `fields` for the actual serial,
-firmware identity/version, nozzle, slicer/profile and hash, exported start/end/
-tool-change G-code, material manufacturer/type/color/lot, ambient conditions,
-operator/date, and actual coordinate convention:
+The observations templates preserve null placeholders for physical values. All
+captured SHA-256 values must be 64 lowercase hexadecimal characters. This
+includes the slicer profile, machine artifact, start/end sequence artifacts,
+AD5X tool-change artifact, and any collision mesh.
+
+Every exported sequence uses the same applicability record. `required` needs a
+real artifact identity and SHA-256. `not_applicable` needs a machine-capability
+reason and cannot contain an artifact or hash. AD5M tool change is explicitly
+`not_applicable` because the single-material machine has no ordinary tool-change
+sequence; Jared must not create or hash an empty/N/A file. AD5X tool change is
+`required` because its multi-material workflow has a real sequence to capture.
+
+Supply observations in the generated JSON record with `fields` for the actual
+serial, firmware identity/version, nozzle, slicer/profile and hash, machine
+artifact identity/hash, applicable sequence evidence, material manufacturer/
+type/color/lot, ambient conditions, operator/date, and actual coordinate
+convention:
 
 ```powershell
 python tools/machine_evidence.py bootstrap --model AD5X `
@@ -41,6 +56,7 @@ python tools/machine_evidence.py validate --input build/m2.1/AD5X.observed.json 
 physical review; it never changes `qualification_state: unqualified` and never
 sets a physical qualification claim. Unknown or ambiguous firmware, startup
 behavior, or coordinates fails closed. A profile text/hash mismatch is rejected.
+Malformed, uppercase, or shortened SHA-256 values are rejected.
 
 The optional `collision_geometry` object records coordinate frame, units,
 nozzle-tip origin, mesh hash, transform, fixed and moving components,
@@ -58,9 +74,11 @@ original artifacts; do not pool evidence:
 2. Record nozzle identifier, type, diameter, and installed state.
 3. Record slicer version/profile identity and hash; capture the profile start
    program verbatim and hash it.
-4. Export and preserve the actual start, end, and tool-change G-code or
-   immutable captures of each sequence, with hashes and the actual coordinate
-   convention (origin, units, absolute/relative modes).
+4. Export and preserve the actual start and end G-code as identified artifacts
+   with SHA-256 values and record the actual coordinate convention (origin,
+   units, absolute/relative modes). For AD5X also capture the real multi-material
+   tool-change sequence. For AD5M record tool change as `not_applicable` with the
+   single-material capability reason and no artifact/hash.
 5. Measure toolhead left/right/front/back extents from the nozzle axis, lowest
    non-nozzle component, carriage height, cable/PTFE swept envelope at bed
    corners, rods/gantry/lid clearances, bed edges, tabs, and raised features.

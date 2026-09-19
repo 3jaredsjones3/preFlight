@@ -14,6 +14,7 @@ import hashlib
 import json
 import os
 import random
+import re
 import subprocess
 import sys
 import tempfile
@@ -25,6 +26,7 @@ SPEC_VERSION = "js-m2-coupon-experiment-1"
 PAIR_VERSION = "js-m2-coupon-pair-1"
 PACKET_VERSION = "js-work-packet-1"
 FORBIDDEN_MARKERS = ("synthetic", "inferred", "uncalibrated", "unknown", "tbd", "template", "incomplete")
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 class CouponError(ValueError):
@@ -84,6 +86,28 @@ def required_string(value: dict[str, Any], key: str) -> str:
     return result
 
 
+def required_sha256(value: dict[str, Any], key: str) -> str:
+    result = required_string(value, key)
+    require(SHA256_RE.fullmatch(result) is not None, f"{key} must match lowercase [0-9a-f]{{64}}")
+    return result
+
+
+def validate_sequence_evidence(startup: dict[str, Any], model: str) -> None:
+    expected = {"start": "required", "end": "required",
+                "tool_change": "required" if model == "AD5X" else "not_applicable"}
+    for name, applicability in expected.items():
+        record = required_object(startup, name)
+        require(record.get("applicability") == applicability,
+                f"startup_observations.{name} must use applicability={applicability} for {model}")
+        if applicability == "required":
+            required_string(record, "artifact_identity")
+            required_sha256(record, "sha256")
+        else:
+            required_string(record, "reason")
+            require("artifact_identity" not in record and "sha256" not in record,
+                    "not_applicable startup evidence must not contain an artifact or hash")
+
+
 def find_markers(value: Any, path: str = "$") -> list[str]:
     found: list[str] = []
     if isinstance(value, dict):
@@ -113,8 +137,9 @@ def validate_spec(spec: dict[str, Any], permit_fixture: bool) -> None:
     status = required_string(printer, "identity_status")
     if status != "confirmed" and not permit_fixture:
         fail("printer.identity_status must be confirmed; templates and synthetic identities cannot qualify")
-    for key in ("model", "serial", "machine_fingerprint_sha256"):
+    for key in ("model", "serial"):
         required_string(printer, key)
+    required_sha256(printer, "machine_fingerprint_sha256")
     for key in ("material_family", "material_lot", "nozzle_id", "nozzle_diameter_mm", "layer_height_mm",
                 "line_width_mm", "print_temperature_c", "bed_temperature_c", "fan_percent", "ambient_temperature_c"):
         require(key in process, f"process missing {key}")
@@ -145,12 +170,14 @@ def validate_spec(spec: dict[str, Any], permit_fixture: bool) -> None:
         require(model.get("synthetic") is False and model.get("provenance") == "measured",
                 "only measured, non-synthetic thermal models are eligible")
         require(model.get("calibrated") is True, "thermal model must be calibrated")
-        for key in ("firmware_identity", "firmware_version", "slicer_profile_identity", "slicer_profile_hash",
+        for key in ("firmware_identity", "firmware_version", "slicer_profile_identity",
                     "operator", "observation_date", "coordinate_convention"):
             required_string(printer, key)
+        required_sha256(printer, "slicer_profile_hash")
+        required_string(printer, "machine_artifact_identity")
+        required_sha256(printer, "machine_artifact_sha256")
         startup = required_object(printer, "startup_observations")
-        for key in ("start_gcode_sha256", "end_gcode_sha256", "tool_change_gcode_sha256"):
-            required_string(startup, key)
+        validate_sequence_evidence(startup, printer["model"])
         require(str(printer["coordinate_convention"]).strip().lower() not in {"unknown", "ambiguous", "tbd"},
                 "actual G-code coordinate convention is ambiguous")
         for key in ("material_manufacturer", "material_type", "material_color"):
@@ -571,15 +598,18 @@ def templates(args: argparse.Namespace) -> None:
     args.out.mkdir(parents=True)
     write_json(args.out / "experiment.template.json", {
         "schema_version": SPEC_VERSION, "experiment": {"id": "REPLACE", "registration_status": "preregistered"},
-        "printer": {"model": "AD5M or AD5X", "serial": "REPLACE", "identity_status": "REPLACE_WITH_CONFIRMED",
+        "printer": {"model": "AD5M", "serial": None, "identity_status": "template",
                      "firmware_identity": "REPLACE_WITH_STOCK_OR_MODDED_IDENTITY", "firmware_version": "REPLACE_WITH_EXACT_VERSION",
-                     "slicer_profile_identity": "REPLACE_WITH_SLICER_PROFILE_ID", "slicer_profile_hash": "REPLACE_WITH_PROFILE_HASH",
-                     "startup_observations": {"start_gcode_sha256": "REPLACE_WITH_EXPORTED_START_HASH",
-                                                "end_gcode_sha256": "REPLACE_WITH_EXPORTED_END_HASH",
-                                                "tool_change_gcode_sha256": "REPLACE_WITH_EXPORTED_TOOL_CHANGE_HASH"},
+                     "slicer_profile_identity": None, "slicer_profile_hash": None,
+                     "machine_artifact_identity": None, "machine_artifact_sha256": None,
+                     "startup_observations": {
+                         "start": {"applicability": "required", "artifact_identity": None, "sha256": None},
+                         "end": {"applicability": "required", "artifact_identity": None, "sha256": None},
+                         "tool_change": {"applicability": "not_applicable",
+                                         "reason": "AD5M is a single-material machine with no ordinary tool-change sequence"}},
                      "coordinate_convention": "REPLACE_WITH_ACTUAL_GCODE_COORDINATE_CONVENTION",
                      "operator": "REPLACE_WITH_OPERATOR", "observation_date": "REPLACE_WITH_OBSERVATION_DATE",
-                     "machine_fingerprint_sha256": "REPLACE_WITH_REAL_FINGERPRINT_HASH", "synthetic": False},
+                     "machine_fingerprint_sha256": None, "synthetic": False},
         "process": {"material_family": "REPLACE", "material_manufacturer": "REPLACE", "material_type": "REPLACE",
                      "material_color": "REPLACE", "material_lot": "REPLACE", "nozzle_id": "REPLACE",
                      "nozzle_diameter_mm": 0.4, "layer_height_mm": 0.2, "line_width_mm": 0.45,
@@ -593,7 +623,7 @@ def templates(args: argparse.Namespace) -> None:
         "evidence": {"files": ["raw-observations.csv", "instrument-calibration", "photos", "verifier-reports"]},
         "sample_plan": {"calibration_coupon_ids": ["CAL-1", "CAL-2", "CAL-3"], "confirmatory_coupon_ids": ["CONF-1", "CONF-2"]},
         "randomization": {"unit": "coupon_pair", "seed": 0}})
-    (args.out / "README.txt").write_text("Supply real AD5M/AD5X printer serial, firmware/startup assumptions, fingerprint, material lot, measured model/calibration hash, and a preregistered proposal before prepare can create printable output.\n", encoding="utf-8")
+    (args.out / "README.txt").write_text("This is an AD5M template. Preserve explicit sequence applicability; never hash an invented N/A tool-change file. For AD5X, tool_change must be required and must identify a real captured artifact with a lowercase SHA-256. Supply real serial, firmware/startup evidence, fingerprint, material lot, measured model/calibration hash, and a preregistered proposal before prepare can create printable output.\n", encoding="utf-8")
     print(f"created fail-closed M2 input templates: {args.out}")
 
 

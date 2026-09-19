@@ -4,7 +4,7 @@
   "title": "J-Slice physical machine evidence bootstrap",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "artifact_kind", "machine", "published_facts", "conflicts", "machine_binding", "collision_geometry", "geometry_policy", "required_observations", "qualification", "source_integrity_sha256"],
+  "required": ["schema_version", "artifact_kind", "machine", "published_facts", "conflicts", "machine_binding", "sequence_evidence", "collision_geometry", "geometry_policy", "required_observations", "qualification", "source_integrity_sha256"],
   "properties": {
     "schema_version": {"const": "js-machine-evidence-1"},
     "artifact_kind": {"const": "machine-evidence-bootstrap"},
@@ -15,16 +15,32 @@
     "conflicts": {"type": "array", "items": {"type": "object", "required": ["subject", "values", "interpretation"], "properties": {
       "subject": {"type": "string"}, "values": {"type": "array", "items": {"type": "object"}}, "interpretation": {"type": "string"}
     }}},
-    "machine_binding": {"type": "object", "additionalProperties": {"oneOf": [{"$ref": "#/$defs/observation"}, {"type": "null"}]}},
-    "collision_geometry": {"type": ["object", "null"], "additionalProperties": true},
+    "machine_binding": {
+      "type": "object",
+      "properties": {
+        "slicer_profile_hash": {"$ref": "#/$defs/hashObservation"},
+        "machine_artifact_sha256": {"$ref": "#/$defs/hashObservation"}
+      },
+      "additionalProperties": {"$ref": "#/$defs/observation"}
+    },
+    "sequence_evidence": {"type": "object", "additionalProperties": false, "required": ["start", "end", "tool_change"], "properties": {
+      "start": {"$ref": "#/$defs/sequenceEvidence"}, "end": {"$ref": "#/$defs/sequenceEvidence"}, "tool_change": {"$ref": "#/$defs/sequenceEvidence"}
+    }},
+    "collision_geometry": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/collisionGeometry"}]},
     "geometry_policy": {"type": "object", "additionalProperties": {"type": "boolean"}},
     "required_observations": {"type": "array", "items": {"type": "string"}},
     "qualification": {"type": "object", "additionalProperties": false, "required": ["qualification_state", "coupon_bundle_eligible_for_review", "physical_qualification_claim", "blockers"], "properties": {
       "qualification_state": {"const": "unqualified"}, "coupon_bundle_eligible_for_review": {"type": "boolean"}, "physical_qualification_claim": {"const": false}, "blockers": {"type": "array", "items": {"type": "string"}}
     }},
-    "source_integrity_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    "source_integrity_sha256": {"$ref": "#/$defs/sha256"}
   },
+  "allOf": [
+    {"properties": {"sequence_evidence": {"properties": {"start": {"$ref": "#/$defs/requiredSequence"}, "end": {"$ref": "#/$defs/requiredSequence"}}}}},
+    {"if": {"properties": {"machine": {"properties": {"model": {"const": "AD5M"}}}}}, "then": {"properties": {"sequence_evidence": {"properties": {"tool_change": {"$ref": "#/$defs/notApplicableSequence"}}}}}},
+    {"if": {"properties": {"machine": {"properties": {"model": {"const": "AD5X"}}}}}, "then": {"properties": {"sequence_evidence": {"properties": {"tool_change": {"$ref": "#/$defs/requiredSequence"}}}}}}
+  ],
   "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "source": {"type": "object", "additionalProperties": false, "required": ["class", "artifact", "revision", "observation_date", "qualification_state", "uncertainty"], "properties": {
       "class": {"enum": ["manufacturer", "slicer_profile", "community_firmware", "measured", "user_supplied"]},
       "artifact": {"type": "string", "minLength": 1}, "revision": {"type": ["string", "null"]}, "observation_date": {"type": "string", "minLength": 1},
@@ -37,6 +53,20 @@
     "observation": {"type": "object", "additionalProperties": false, "required": ["id", "value", "units", "source", "qualification_state", "uncertainty"], "properties": {
       "id": {"type": "string", "minLength": 1}, "value": {}, "units": {"type": "string", "minLength": 1}, "source": {"$ref": "#/$defs/source"},
       "qualification_state": {"const": "observed"}, "uncertainty": {}
+    }},
+    "hashObservation": {"type": "object", "additionalProperties": false, "required": ["id", "value", "units", "source", "qualification_state", "uncertainty"], "properties": {
+      "id": {"type": "string", "minLength": 1}, "value": {"$ref": "#/$defs/sha256"}, "units": {"const": "sha256"}, "source": {"$ref": "#/$defs/source"},
+      "qualification_state": {"const": "observed"}, "uncertainty": {}
+    }},
+    "requiredSequence": {"type": "object", "additionalProperties": false, "required": ["applicability", "artifact_identity", "sha256", "source"], "properties": {
+      "applicability": {"const": "required"}, "artifact_identity": {"type": ["string", "null"]}, "sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}, "source": {"oneOf": [{"$ref": "#/$defs/source"}, {"type": "null"}]}
+    }},
+    "notApplicableSequence": {"type": "object", "additionalProperties": false, "required": ["applicability", "reason", "source"], "properties": {
+      "applicability": {"const": "not_applicable"}, "reason": {"type": "string", "minLength": 1}, "source": {"$ref": "#/$defs/source"}
+    }},
+    "sequenceEvidence": {"oneOf": [{"$ref": "#/$defs/requiredSequence"}, {"$ref": "#/$defs/notApplicableSequence"}]},
+    "collisionGeometry": {"type": "object", "additionalProperties": true, "required": ["coordinate_frame", "units", "nozzle_tip_origin", "mesh_hash", "transform", "fixed_components", "moving_components", "applicable_printer_nozzle_state", "uncertainty_inflation_margin", "provenance", "qualification_state"], "properties": {
+      "mesh_hash": {"$ref": "#/$defs/sha256"}
     }}
   }
 }
