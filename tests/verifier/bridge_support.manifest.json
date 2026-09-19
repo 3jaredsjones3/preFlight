@@ -2,6 +2,8 @@
   "schema_version": "js-verification-1",
   "fingerprint_sha256": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
   "program_sha256": "6d678f1a4c90aa12578a7ab44330f3b8c1e9922022b0c1f3fda96bac699431fe",
+  "compiler_commit": "393904b9b92930058074019a5616097ec8ec2af8",
+  "compiler_build_id": "jslice-m1.5-verifier-fixtures",
   "initial_state": {
     "position_mm": [
       10,

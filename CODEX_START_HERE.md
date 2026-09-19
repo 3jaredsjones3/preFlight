@@ -39,13 +39,14 @@ resolve downstream emitter state; see the documented coverage limits.
 Read `docs/predictive-slicer/M1_STATUS.md` and `tests/predictive/README.md` for the
 implemented boundary, verification evidence and remaining work.
 
-M1.5 now has a separate `src/TrustedVerifier` library and `jslice_verify` CLI.
-It consumes final G-code plus versioned immutable fingerprint/manifest files,
-replays its own modal state, and only reports/rejects. The initial supported
-linear-command mutation gate passes; the full milestone remains in progress.
-Read `docs/predictive-slicer/M1_5_STATUS.md` and `TRUSTED_VERIFIER.md` before
-continuing. Exact datum/part collision and dependency/contact proofs remain
-unimplemented and explicit. Do not begin M2 or replace legacy emission.
+M1.5's contract/integrity boundary is complete in the separate
+`src/TrustedVerifier` library and `jslice_verify` CLI. It consumes final G-code,
+versioned machine/manifest files and a canonical work packet, replays its own
+modal state, checks path precedence and conservative datum envelopes, and only
+reports/rejects. Exact surface/part collision and dependency/contact physics are
+deferred and explicit. Read `docs/predictive-slicer/M1_5_STATUS.md` and
+`TRUSTED_VERIFIER.md` before continuing. Do not begin M2 or replace legacy
+emission.
 
 ## Qualified M1 source-inventory boundary
 

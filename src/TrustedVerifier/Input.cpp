@@ -62,6 +62,35 @@ Json strict_json(std::string_view bytes)
     });
 }
 
+namespace {
+Json canonical_value(const Json &value)
+{
+    if (value.is_object()) {
+        Json result = Json::object();
+        std::vector<std::string> keys;
+        keys.reserve(value.size());
+        for (const auto &[key, ignored] : value.items()) {
+            (void)ignored;
+            keys.push_back(key);
+        }
+        std::sort(keys.begin(), keys.end());
+        for (const auto &key : keys) result[key] = canonical_value(value.at(key));
+        return result;
+    }
+    if (value.is_array()) {
+        Json result = Json::array();
+        for (const auto &item : value) result.push_back(canonical_value(item));
+        return result;
+    }
+    return value;
+}
+}
+
+std::string canonical_json(const Json &value)
+{
+    return canonical_value(value).dump(-1, ' ', false, Json::error_handler_t::strict);
+}
+
 // Deliberately limited to the keywords used by the two compiled-in v1 schemas.
 // A schema author cannot add a keyword that silently receives no enforcement.
 void validate_schema(const Json &v, const Json &s, const std::string &path)

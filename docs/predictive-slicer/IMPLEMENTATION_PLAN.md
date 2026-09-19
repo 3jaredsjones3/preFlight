@@ -53,24 +53,27 @@ identical under a canonical G-code comparator.
 
 ## M1.5: independent trusted verifier
 
-Status: implemented and qualified for the v1 linear-command static checks;
-the full milestone remains in progress. Seven accepted M1 goldens, twenty focused
-production mutations, independent modal replay and actual off/on comparisons
-pass under explicit synthetic machine/startup assumptions. See
-[M1_5_STATUS.md](M1_5_STATUS.md) and [TRUSTED_VERIFIER.md](TRUSTED_VERIFIER.md).
-Exact datum protection, deposited-part collision, dependency/contact contracts
-and authenticated artifact/calibration binding remain unproven. Requesting an
-unimplemented proof rejects; the original broader exit criterion is not weakened.
+Status: complete for the final-G-code contract/integrity boundary. Seven accepted
+M1 goldens, twenty focused production mutations, packet/path/datum mutations,
+independent modal replay and actual off/on comparisons pass under explicit
+synthetic machine/startup assumptions. See [M1_5_STATUS.md](M1_5_STATUS.md) and
+[TRUSTED_VERIFIER.md](TRUSTED_VERIFIER.md). Exact surface geometry, deposited-part
+collision, dependency/contact physics and authenticated calibration/artifact
+proofs remain deferred and reject when requested.
 
 - Separate library/executable with no generator or repair APIs.
 - Parse final G-code independently.
 - Check syntax/modal state, build volume, axis/flow limits, extrusion continuity,
-  object boundaries, tool envelope, datum restrictions, and fingerprint binding.
+  object boundaries, tool envelope, datum restrictions, fingerprint binding and
+  canonical work-packet content.
+- Independently check sidecar path ranges/digests, object/tool identity,
+  predecessor order and temporary lifetimes.
 - Emit machine-readable findings and fail closed on unknown commands required
   for safety reasoning.
 
-Exit criterion: mutation tests demonstrate rejection of every protected
-invariant while accepted baseline jobs remain accepted.
+Exit criterion: representable invariants reject focused mutations while accepted
+baseline jobs remain accepted; unsupported physical proofs are explicitly
+versioned, reported unproven and assigned to later calibration/geometry work.
 
 ## M2: thermal-debt scheduler
 

@@ -6,11 +6,12 @@ The verifier answers one narrow question: is this final machine program allowed
 to execute under this machine fingerprint and manufacturing contract? It does not
 generate paths, optimize them, or repair failures.
 
-M1.5 v1 now implements the independent linear-program checks below. Its
-`accepted` result means **conditional static acceptance under the supplied
-fingerprint and startup assumptions**, not authorization to run a printer.
-The full contract list remains the goal; datum, deposited-part collision,
-dependency and contact proofs are still unimplemented. See `M1_5_STATUS.md`.
+M1.5 implements the independent linear-program and contract/integrity checks
+below. Its `accepted` result means **conditional static acceptance under the
+supplied fingerprint, work packet and startup assumptions**, not authorization
+to run a printer. Exact deposited-part collision, support/contact physics,
+calibration authentication and firmware behavior absent from final G-code are
+explicitly deferred; requesting them rejects. See `M1_5_STATUS.md`.
 
 ## Separation rules
 
@@ -26,17 +27,22 @@ dependency and contact proofs are still unimplemented. See `M1_5_STATUS.md`.
 2. Build-volume and temperature bounds.
 3. Axis speed/acceleration and volumetric-flow limits.
 4. Extrusion continuity, impossible negative deposition, and unsafe startup/end.
-5. Swept tool/envelope collision against predicted deposited geometry.
+5. Conservative translated tool-envelope/build-volume checks and datum bead
+   sweeps when a bound envelope is supplied.
 6. Object identity and exclude-object boundary preservation.
 7. Protected datum and forbidden-region violations.
 8. Required dependencies and unsupported deposition.
 9. Contact lower/upper contracts where sufficient evidence exists.
-10. Exact binding to fingerprint, compiler manifest, and artifact report.
+10. Exact binding to fingerprint, compiler manifest, optional intent/artifact
+    payloads and the final program through a canonical work packet.
+11. Independent path command ranges, digests, object/tool identity, predecessor
+    order and temporary-structure lifetimes.
+12. Conservative datum bead-sweep envelopes when the packet supplies them.
 
 ## Architecture
 
 ```text
-G-code + manifest + fingerprint + contracts
+G-code + fingerprint + verification manifest + work packet
                   |
              strict parser
                   |
@@ -73,9 +79,10 @@ dependencies are nlohmann JSON 3.12 from the existing supported dependency
 bootstrap and system cryptography (Windows BCrypt; OpenSSL Crypto on other
 platforms). Only the native Windows build is qualified here.
 
-The API accepts three immutable byte strings: final G-code, a fingerprint and
-a manifest. The CLI opens inputs read-only, emits a JSON report on stdout and
-returns 0 for conditional acceptance, 1 for rejection, or 2 for CLI/I/O failure.
+The API accepts four immutable byte strings: final G-code, a fingerprint, a
+verification manifest and a work packet. The CLI opens inputs read-only, emits
+a JSON report on stdout and returns 0 for conditional acceptance, 1 for
+rejection, or 2 for CLI/I/O failure.
 There is no repair, emission, postprocessing, printer or generator API. The
 optional root build flag `JS_SLICE_TRUSTED_VERIFIER` defaults off and adds separate
 targets only; ordinary slicing does not call the verifier or change behavior.
@@ -103,24 +110,31 @@ or filament presence from E alone.
 - `schema/verifier-machine.schema.json`: `js-machine-1`, dialect
   `marlin-cartesian-1`. This is distinct from the unchanged M0
   `machine-fingerprint.schema.json` (version 0.1).
-- `schema/verification-manifest.schema.json`: `js-verification-1`.
+- `schema/verification-manifest.schema.json`: `js-verification-1`, including
+  compiler commit/build identity used by packet binding.
+- `schema/verification-work-packet.schema.json`: `js-work-packet-1` and
+  `js-canonical-json-1`; it binds exact program bytes, canonical fingerprint and
+  manifest content, compiler identity, schema versions, path sidecars,
+  temporary lifetimes and datum envelopes.
 - `schema/verifier-report.schema.json`: `js-verifier-report-1`.
 
 Input schemas are compiled into the library. Unknown fields, wrong versions,
 duplicate JSON keys, invalid types/ranges and inconsistent heater/tool/initial
 state dimensions reject. A small schema evaluator implements exactly the
-keywords used by those two embedded schemas and rejects unsupported schema
+keywords used by those three embedded schemas and rejects unsupported schema
 keywords. Tests also validate inputs and every report using an independent
 Draft 2020-12 JSON Schema implementation.
 
-The minimum manifest binds the exact final program bytes and exact fingerprint
-file bytes using SHA-256; it supplies initial physical XYZ, initial logical E,
+The manifest binds the exact final program bytes and fingerprint file bytes
+using SHA-256; the work packet additionally binds canonical machine and manifest
+content, compiler identity and schema versions. It supplies initial physical XYZ, initial logical E,
 tool, heater/bed temperatures and fan state, expected object labels, the terminal
 marker, and required property names. It has no generator state. It must be
 issued or reviewed by a trusted party **after all G-code postprocessors**. A
 hash detects a mismatched file; it does not authenticate a manifest or establish
-that a declared machine calibration/start position is true. Reports also hash
-the manifest itself. Generation timestamps are included in program binding;
+that a declared machine calibration/start position is true. Reports expose raw
+and canonical work-packet hashes. Generation timestamps are included in program
+binding;
 unlike the M1 comparator, the verifier ignores no bytes for hashing. Optional
 `; JS_FINGERPRINT_SHA256=<64 lowercase hex>` metadata must match the manifest.
 
@@ -148,6 +162,31 @@ Firmware mode/override references: [M83](https://marlinfw.org/docs/gcode/M083.ht
 [M221](https://marlinfw.org/docs/gcode/M221.html), and
 [M109](https://marlinfw.org/docs/gcode/M109.html). These document the selected
 dialect; they are not a claim that every Marlin configuration behaves identically.
+
+## Work-packet integrity and path boundary
+
+`js-work-packet-1` is a content-addressed sidecar. The verifier recomputes the
+exact program hash and canonical JSON hashes for the machine and manifest, then
+requires the packet compiler identity to match the manifest and all schema
+versions to match the embedded contracts. Canonical JSON sorts object keys and
+preserves array order, so formatting and key-order changes do not change a
+component address; semantic changes do. A hash is an integrity binding, not a
+signature or proof that the issuer is trusted. Optional intent/artifact hashes
+are rejected until their content payloads have a versioned binding.
+
+Each path sidecar names an executable-command range and SHA-256 digest. The
+verifier independently checks range order, duplicate IDs, object and tool
+identity, object-boundary cuts, predecessor topological order, and temporary
+structure creation/last-use lifetimes. It does not infer dependencies or
+thermal safety from a path sidecar. Missing sidecars mean path precedence was
+not requested; a required sidecar mutation fails closed.
+
+Datum entries define axis-aligned protected and permitted envelopes plus a
+conservative maximum bead radius. Positive-E linear segments are expanded by
+that radius and checked for object identity, envelope containment and optional
+planarity. Interlocking, exact feature identity, swept collision with deposited
+matter and surface tolerances remain unproven and reject when explicitly
+required.
 
 ## Supported command envelope
 
@@ -191,9 +230,9 @@ as skirts or wipe towers. Firmware M486 and Klipper cancel-object dialects rejec
 | Temperature/cold extrusion | Command bounds and established lower bounds before positive E |
 | Extrusion continuity | Logical resets, bounded deltas and cumulative retraction; actual deposited matter unproven |
 | Object boundaries | Exact declared labels, unique IDs, balanced use and footer agreement |
-| Fingerprint/program binding | SHA-256 of immutable bytes and manifest compatibility |
+| Fingerprint/program/work-packet binding | Exact program bytes plus canonical machine/manifest content, compiler identity and schema compatibility |
 | End state/completeness | Bound program hash, unique terminal marker/final newline, closed labels, heater targets off |
-| Exact datums/forbidden geometry | Unproven |
+| Conservative datum envelope | Axis-aligned protected/permitted envelope and expanded positive-E line sweeps when supplied |
 | Swept deposited-part collision | Unproven |
 | Support/dependency/contact contracts | Unproven |
 | Artifact binding, calibration/authentication, report signing | Unproven |
@@ -201,10 +240,10 @@ as skirts or wipe towers. Firmware M486 and Klipper cancel-object dialects rejec
 Every report explicitly lists the unproven properties. Requesting any of them
 in `required_properties` produces `rule.unproven` and rejects; omission does not
 turn them into proven claims. A future geometry-contract schema will need exact
-geometry hashes, units/reference frame/transforms, protected surfaces and
-tolerances, full tool solids and independently reconstructed deposited matter.
-Those payloads do not exist in final G-code. V1 deliberately offers no Boolean
-"datum verified" shortcut or unsupported geometry blob that could imply a proof.
+surface hashes, units/reference frame/transforms, tolerances, full tool solids
+and independently reconstructed deposited matter. Those payloads do not exist
+in final G-code. The current datum sidecar is deliberately conservative and
+does not imply exact feature or collision proof.
 
 Findings have one-based G-code lines and zero-based byte offsets. Line 0 denotes
 input/schema/binding findings. Ordering is stable by line, code and message.
@@ -226,12 +265,13 @@ The suite preserves exact input bytes, checks deterministic reports and stable
 finding order, verifies actual off/on production outputs, independently replays
 seeded modal sequences with decimal arithmetic, and tests targeted malformed
 input. It asserts full-file scanning and exact intended rejection codes for the
-20 focused production mutations. Hashes are rebound for physical mutations so a
-generic integrity failure cannot conceal missing physics/state checks.
+20 focused production mutations plus work-packet, path and datum mutations.
+Hashes are rebound for physical mutations so a generic integrity failure cannot
+conceal missing physics/state checks.
 
-M1.5 remains in progress against the full original contract list above. The
-initial supported-command mutation gate passes. Remaining work includes exact
-datum/forbidden-region checks, deposited-part swept collision, dependencies and
-contacts, authenticated calibration/contracts/artifact binding, more firmware
-dialects, arcs/homing/tool compensation, coverage-guided fuzzing, and signatures.
-None of this authorizes thermal scheduling or generator replacement.
+The M1.5 contract/integrity exit criterion is satisfied. Exact surface geometry,
+deposited-part swept collision, dependencies/contacts, calibrated and
+authenticated artifact packages, more firmware dialects, arcs/homing/tool
+compensation, coverage-guided fuzzing and report signatures remain deferred to
+later milestones. None of this authorizes thermal scheduling or generator
+replacement.

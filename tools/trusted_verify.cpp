@@ -16,8 +16,8 @@ static std::string read(const char *path)
 int main(int argc, char **argv)
 {
     try {
-        if (argc != 4) throw std::runtime_error("usage: jslice_verify PROGRAM.gcode MACHINE.json MANIFEST.json");
-        const auto report = JSlice::Verification::verify(read(argv[1]), read(argv[2]), read(argv[3]));
+        if (argc != 5) throw std::runtime_error("usage: jslice_verify PROGRAM.gcode MACHINE.json MANIFEST.json WORK_PACKET.json");
+        const auto report = JSlice::Verification::verify(read(argv[1]), read(argv[2]), read(argv[3]), read(argv[4]));
         std::cout << report.dump(2) << '\n';
         return report.at("accepted").get<bool>() ? 0 : 1;
     } catch (const std::exception &error) {

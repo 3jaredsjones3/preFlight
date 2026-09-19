@@ -1,0 +1,20 @@
+{
+  "schema_version": "js-work-packet-1",
+  "canonicalization": "js-canonical-json-1",
+  "program_sha256": "13f4dd5df3f92a535d61ea22ed30e72a1a085119d5bff2da0f072981ba6644d5",
+  "fingerprint_sha256": "83dad1d7c68bbf1521ccaf56b6786ba634001608bb962bab2f1628e753a2363a",
+  "manifest_sha256": "b79a0907715b70e2b9aca7dd0cf73d4e46534c01e9c39d83ffb9f63da29e71b7",
+  "compiler": {
+    "commit": "393904b9b92930058074019a5616097ec8ec2af8",
+    "build_id": "jslice-m1.5-verifier-fixtures"
+  },
+  "schema_versions": {
+    "machine": "js-machine-1",
+    "manifest": "js-verification-1",
+    "packet": "js-work-packet-1",
+    "report": "js-verifier-report-1"
+  },
+  "paths": [],
+  "temporary_structures": [],
+  "datums": []
+}

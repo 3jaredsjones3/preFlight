@@ -1,6 +1,6 @@
 # M1.5 implementation status
 
-Starting commit: `9228575df549161ff77f6b103580aa16c2f2d91a`.
+Starting commit: `393904b9b92930058074019a5616097ec8ec2af8`.
 Working tree was clean before any modification. Before editing, native CTest
 passed all eight groups, then the full M1 accepted-baseline replay passed all
 seven fixtures (28 exports, 14 deterministic/schema-valid reports).
@@ -15,13 +15,18 @@ python tools/predictive_golden.py run --manifest tests/predictive/jobs/manifest.
 
 ## Outcome and scope
 
-The independent v1 static verifier is implemented. Its native standalone and
-production-tree builds pass the initial acceptance/mutation gate. The **full
-M1.5 milestone is still in progress**: exact datums, deposited-part collision,
-dependency/contact contracts and authenticated artifact/calibration binding are
-unproven. The original broad exit criterion has not been replaced with a weaker
-one. No thermal scheduling, replacement lowering or printer-changing optimization
-was introduced. No slicer/adapter/comparator implementation changed.
+The M1.5 contract/integrity boundary is complete under its documented scope.
+The verifier consumes final G-code plus a versioned, canonical,
+content-addressed work packet. It independently replays modal state, checks
+machine limits, verifies path identity/precedence and performs conservative
+datum bead-sweep checks when the packet supplies the required envelope. Unknown
+safety-relevant commands fail closed. No thermal scheduling, replacement
+lowering or printer-changing optimization was introduced.
+
+Exact deposited-part collision, support/contact physics, authenticated machine
+calibration, signatures, and firmware semantics absent from final G-code remain
+explicitly deferred. They cannot be claimed by this boundary and are rejected
+when requested as required properties.
 
 ## Architecture and changed files
 
@@ -32,15 +37,18 @@ was introduced. No slicer/adapter/comparator implementation changed.
   SHA-256. Versioned schemas are embedded at build time, not loaded from an
   untrusted path at verification time. Duplicate/unknown keys and unsupported
   versions reject.
-- `tools/trusted_verify.cpp`: read-only three-input CLI; JSON stdout, exit 0/1/2.
+- `tools/trusted_verify.cpp`: read-only four-input CLI (program, machine,
+  manifest, work packet); JSON stdout, exit 0/1/2.
 - `research/trusted_verifier/`: separate library/executable and strict C++20
   build. `CMakeLists.txt` adds opt-in separate root targets only.
 - `schema/verifier-machine.schema.json`, `verification-manifest.schema.json`,
-  `verifier-report.schema.json`: independent `js-machine-1`, `js-verification-1`
-  and `js-verifier-report-1` contracts. The M0 fingerprint schema is unchanged.
+  `verification-work-packet.schema.json`, `verifier-report.schema.json`:
+  independent `js-machine-1`, `js-verification-1`, `js-work-packet-1` and
+  `js-verifier-report-1` contracts. The M0 fingerprint schema is unchanged.
 - `tools/trusted_verifier_tests.py`, `verifier_fixture_manifests.py`, and
-  `tests/verifier/`: explicit trusted regression inputs, twenty production
-  mutations, modal/schema/failure tests and persistent evidence.
+  `tests/verifier/`: explicit trusted regression inputs, seven packet fixtures,
+  twenty production mutations, packet/path/datum mutations, modal/schema/failure
+  tests and persistent evidence.
 - `TRUSTED_VERIFIER.md`, `IMPLEMENTATION_PLAN.md`, `FEATURE_LEDGER.md`,
   `ARCHITECTURE.md` and `CODEX_START_HERE.md`: scope and handoff updates.
 
@@ -85,7 +93,7 @@ Fixture generation, production replay and verification from PowerShell:
 ```powershell
 python tools/verifier_fixture_manifests.py
 python tools/predictive_golden.py run --manifest tests/predictive/jobs/manifest.json --baseline build/m1-native/src/Release/preFlight-console.exe --candidate build/m1-native/src/Release/preFlight-console.exe --comparator build/m1-native/research/predictive_core/predictive_compare_gcode.exe --accepted tests/predictive/production --output build/m1_5-final-baseline --keep-going
-python tools/trusted_verifier_tests.py build/trusted-verifier/jslice_verify.exe --evidence build/trusted-verifier/verification-evidence.json --production-replay build/m1_5-start-baseline
+python tools/trusted_verifier_tests.py build/trusted-verifier/jslice_verify.exe --evidence build/m1_5-final-validation/verification-evidence.json --production-replay build/m1_5-final-validation
 & 'C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe' --test-dir build/trusted-verifier --verbose
 & 'C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\ctest.exe' --test-dir build/m1-native --output-on-failure
 & 'C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe' --build build/predictive-core --config Release
@@ -94,10 +102,10 @@ python tools/trusted_verifier_tests.py build/trusted-verifier/jslice_verify.exe 
 ```
 
 M1 replay output directories must be fresh on subsequent runs. The CLI invocation
-for a caller's three already-bound input files is:
+for a caller's already-bound inputs is:
 
 ```text
-jslice_verify PROGRAM.gcode MACHINE.json MANIFEST.json
+jslice_verify PROGRAM.gcode MACHINE.json MANIFEST.json WORK_PACKET.json
 ```
 
 No output G-code is produced. The test runner supplies actual input paths and
@@ -108,10 +116,13 @@ captures the JSON report from stdout.
 - Original independent predictive suite: **6/6 CTest groups passed**.
 - Native production tree: **9/9 CTest groups passed**, preserving the original
   eight and adding the verifier suite.
-- Standalone verifier: **21/21 unittest groups passed, zero skips**, also exposed
-  as one CTest group. The production-tree verifier passed the same 21 groups.
+- Standalone verifier: **23/23 unittest groups passed, zero skips** with the
+  final production replay, also exposed as one CTest group. The production-tree
+  verifier passed the same 23 groups.
 - **7/7 archived production goldens accepted**, deterministic on repetition;
-  **20/20 focused production mutation cases rejected for their intended codes**.
+  **20/20 focused production mutation cases rejected for their intended codes**;
+  packet substitution/canonicalization, path precedence/lifetime and datum
+  positive/negative cases also passed.
 - **28/28 final production exports accepted** under the synthetic fingerprint,
   with equivalent off/on results per fixture. Every report is schema-validated.
 - Seeded independent decimal replay: **692 commands matched**, including unit,
@@ -140,6 +151,10 @@ findings, state, metrics and acceptance must otherwise be identical.
 
 Both the pre-edit and final M1 replay pass all seven fixtures against saved G-code
 and exact analysis JSON. Analysis remains opt-in and ordinary output is unchanged.
+The verifier binds the final emitted bytes after the slicer's header/footer,
+flavor and other downstream postprocessors. Those transformations are not
+reconstructed from compiler state; their result is covered by the program hash,
+while hidden firmware transforms and physical postprocessing remain unproven.
 The synthetic verifier fingerprint binds a 300 mm box, 200 mm/s maximum feed,
 XYZ speed caps of 200 mm/s, E cap 120 mm/s, 200 mm3/s positive drive-flow cap,
 two logical tools sharing one heater, and a small axis-aligned tool envelope.
@@ -213,8 +228,8 @@ temperature targets and minimum-temperature state, E continuity/retraction bound
 exact object-label consistency, byte hash binding and schema compatibility.
 
 These checks are partial physical evidence: they do not reconstruct acceleration
-trajectories, actual temperatures, bead geometry, filament presence or deposited
-matter. Every report lists unproven datum protection, swept part collision,
+trajectories, actual temperatures, filament presence or all deposited matter.
+Reports list unproven exact surface protection, swept part collision,
 dependency/contact contracts, physical state, dynamic motion and ArtifactIR
 binding. Requiring any of these in the manifest rejects with `rule.unproven`.
 No unproven property is reported as certified merely because there are warnings
@@ -225,8 +240,20 @@ retraction, workspaces, volumetric E, jerk changes, nonzero pressure advance,
 firmware/Klipper object exclusion and macros. The complete supported command
 table and trust contract are in `TRUSTED_VERIFIER.md`.
 
-Remaining M1.5 work: exact geometry/forbidden-region contracts, independent
-deposited-part reconstruction and collision, support/dependency/contact evidence,
-authenticated fingerprint/artifact/contract packages, more command dialects,
-arcs/homing/tool compensation, coverage-guided fuzzing and report signatures.
-Thermal scheduling and predictive G-code changes remain out of scope.
+Deferred work: exact surface geometry and deposited-part reconstruction/collision,
+support/dependency/contact evidence, calibrated/authenticated machine packages,
+more command dialects, arcs/homing/tool compensation, coverage-guided fuzzing
+and report signatures. Thermal scheduling and predictive G-code changes remain
+out of scope. These properties are listed as unproven and are rejected when
+requested as required properties.
+
+## M1.5 exit criterion
+
+Satisfied for the representable final-G-code contract boundary: supported safety
+invariants have focused accepted/mutated tests; work-packet hashes and schema
+versions are recomputed independently; path IDs, command ranges, object/tool
+identity, predecessor order and temporary lifetimes are checked; conservative
+datum envelopes fail closed when required data is missing; unknown commands,
+truncation, malformed boundaries and invalid tools reject; and all seven real
+M1 fixtures receive equivalent verifier results with analysis disabled and
+enabled. The verifier has no generator, adapter, optimizer or comparator link.

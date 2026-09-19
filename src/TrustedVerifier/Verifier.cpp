@@ -123,6 +123,11 @@ struct Replay {
     bool objects_info_seen = false;
     std::size_t end_markers = 0;
     double peak_flow = 0, peak_feed = 0;
+    std::vector<std::string> command_bytes, command_objects;
+    std::vector<std::size_t> command_tools;
+    std::vector<std::size_t> command_lines;
+    struct Deposition { V3 start {}, end {}; std::size_t line = 0, command = 0; std::string object; };
+    std::vector<Deposition> depositions;
     Replay(const Json &fp, const Json &mf) : machine(fp), manifest(mf) {
         const auto &initial = mf.at("initial_state");
         position = initial.at("position_mm").get<V3>();
@@ -264,6 +269,7 @@ struct Replay {
                 const double flow = delta_e * std::numbers::pi * diameter * diameter / (4 * duration);
                 demand(flow <= t.at("max_flow_mm3_s").get<double>() + epsilon, "extrusion.flow", "volumetric drive flow exceeded (including unretraction)");
                 peak_flow = std::max(peak_flow, flow);
+                if (length > 0) depositions.push_back({position, next, line, commands, active});
             }
         }
         const double next_debt = std::max(0.0, debt[tool] - delta_e);
@@ -394,20 +400,40 @@ struct Replay {
 };
 }
 
-Json verify(std::string_view program, std::string_view fingerprint, std::string_view manifest)
+Json verify(std::string_view program, std::string_view fingerprint, std::string_view manifest, std::string_view work_packet)
 {
     Json report {{"schema_version", "js-verifier-report-1"}, {"accepted", false}, {"scope", "conditional_static_checks"},
         {"findings", Json::array()}, {"lines_scanned", 0}, {"commands_seen", 0}, {"replay_complete", false},
-        {"input_sha256", {{"program", sha256(program)}, {"fingerprint", sha256(fingerprint)}, {"manifest", sha256(manifest)}}}};
+        {"input_sha256", {{"program", sha256(program)}, {"fingerprint", sha256(fingerprint)}, {"manifest", sha256(manifest)},
+            {"work_packet", sha256(work_packet)}, {"work_packet_canonical", sha256(work_packet)}}}};
     const auto input_error = [&](const std::string &code, const std::string &message) {
         report["findings"].push_back({{"line", 0}, {"byte_offset", 0}, {"severity", "error"}, {"code", code}, {"message", message}});
     };
-    Json fp, mf;
+    Json fp, mf, packet;
     try { fp = strict_json(fingerprint); validate_schema(fp, strict_json(machine_schema)); }
     catch (const std::exception &error) { input_error("schema.machine", error.what()); return report; }
     try { mf = strict_json(manifest); validate_schema(mf, strict_json(manifest_schema)); }
     catch (const std::exception &error) { input_error("schema.manifest", error.what()); return report; }
+    try { packet = strict_json(work_packet); report["input_sha256"]["work_packet_canonical"] = sha256(canonical_json(packet)); validate_schema(packet, strict_json(work_packet_schema)); }
+    catch (const std::exception &error) { input_error("schema.work_packet", error.what()); return report; }
     try {
+        demand(packet.at("program_sha256") == sha256(program), "binding.program", "work packet program hash mismatch");
+        demand(packet.at("fingerprint_sha256") == sha256(canonical_json(fp)), "binding.fingerprint", "work packet canonical fingerprint hash mismatch");
+        demand(packet.at("manifest_sha256") == sha256(canonical_json(mf)), "binding.manifest", "work packet canonical manifest hash mismatch");
+        demand(packet.at("compiler").at("commit") == mf.at("compiler_commit"), "binding.compiler", "work packet compiler commit differs from manifest");
+        demand(packet.at("compiler").at("build_id") == mf.at("compiler_build_id"), "binding.compiler", "work packet compiler build identity differs from manifest");
+        demand(packet.at("schema_versions").at("machine") == "js-machine-1" &&
+            packet.at("schema_versions").at("manifest") == "js-verification-1" &&
+            packet.at("schema_versions").at("packet") == "js-work-packet-1" &&
+            packet.at("schema_versions").at("report") == "js-verifier-report-1",
+            "schema.compatibility", "work packet schema version mismatch");
+        for (const auto &[hash_name, content_name] : {std::pair<std::string, std::string>{"intent_sha256", "intent_manifest"},
+                                                        {"artifact_sha256", "artifact_report"}}) {
+            const bool has_hash = packet.contains(hash_name), has_content = packet.contains(content_name);
+            demand(has_hash == has_content, "packet.unbound_component", "optional intent/artifact claim lacks its content payload");
+            if (has_hash) demand(packet.at(hash_name).get<std::string>() == sha256(canonical_json(packet.at(content_name))),
+                "binding.component", "work packet optional component hash mismatch");
+        }
         Replay replay(fp, mf);
         if (mf.at("fingerprint_sha256") != report.at("input_sha256").at("fingerprint")) replay.add("binding.fingerprint", "fingerprint bytes do not match manifest SHA-256");
         if (mf.at("program_sha256") != report.at("input_sha256").at("program")) replay.add("binding.program", "final program bytes do not match manifest SHA-256");
@@ -432,14 +458,22 @@ Json verify(std::string_view program, std::string_view fingerprint, std::string_
         std::size_t first_replay_error = 0;
         while (cursor < program.size()) {
             replay.offset = cursor; ++replay.line;
+            const auto line_start = cursor;
             const auto newline = program.find('\n', cursor);
             auto text = program.substr(cursor, (newline == std::string_view::npos ? program.size() : newline) - cursor);
             cursor = newline == std::string_view::npos ? program.size() : newline + 1;
+            const auto line_end = cursor;
             text = trim(text);
             if (!text.empty()) last_nonempty = text;
             const auto semicolon = text.find(';');
             const auto instruction = trim(text.substr(0, semicolon));
-            if (!instruction.empty()) ++replay.commands;
+            if (!instruction.empty()) {
+                ++replay.commands;
+                replay.command_bytes.emplace_back(program.substr(line_start, line_end - line_start));
+                replay.command_lines.push_back(replay.line);
+                replay.command_objects.push_back(replay.active);
+                replay.command_tools.push_back(replay.tool);
+            }
             try {
                 demand(text.size() <= 1024 * 1024 && text.find('\0') == std::string_view::npos, "syntax.line", "oversized line or binary data");
                 if (!instruction.empty()) {
@@ -465,6 +499,110 @@ Json verify(std::string_view program, std::string_view fingerprint, std::string_
             replay.add("object.boundary", "incomplete object declarations, usage, metadata or boundaries at EOF");
         if (replay.bed_target != 0 || std::any_of(replay.target.begin(), replay.target.end(), [](double value) { return value != 0; }))
             replay.add("shutdown.heaters", "heater target remains on at EOF");
+
+        // Verify the immutable sidecar independently of compiler state. Command
+        // ordinals refer to executable lines in the final byte stream.
+        const auto total_lines = replay.line;
+        const auto command_digest = [&](std::size_t first, std::size_t last) {
+            std::string bytes;
+            for (std::size_t i = first - 1; i < last; ++i) bytes += replay.command_bytes[i];
+            return sha256(bytes);
+        };
+        std::map<std::string, std::pair<std::size_t, std::size_t>> path_ranges;
+        std::set<std::string> path_ids;
+        for (const auto &path : packet.at("paths")) {
+            const auto id = path.at("id").get<std::string>();
+            const auto first = path.at("command_start").get<std::size_t>(), last = path.at("command_end").get<std::size_t>();
+            if (!path_ids.insert(id).second) replay.add("path.duplicate_id", "duplicate sidecar path identity");
+            else path_ranges[id] = {first, last};
+        }
+        std::set<std::string> checked_path_ids;
+        for (const auto &path : packet.at("paths")) {
+            const auto id = path.at("id").get<std::string>();
+            if (!checked_path_ids.insert(id).second) continue;
+            const auto first = path.at("command_start").get<std::size_t>(), last = path.at("command_end").get<std::size_t>();
+            if (!path_ids.contains(id) || path_ranges.at(id) != std::pair<std::size_t, std::size_t>{first, last}) continue;
+            if (first == 0 || first > last || last > replay.command_bytes.size()) {
+                replay.add("path.range", "sidecar path command range is outside final program");
+                continue;
+            }
+            if (path.at("command_sha256") != command_digest(first, last))
+                replay.add("path.digest", "sidecar path command digest mismatch", "error");
+            std::set<std::string> labels;
+            std::set<std::size_t> tools;
+            for (std::size_t i = first - 1; i < last; ++i) {
+                labels.insert(replay.command_objects[i]);
+                tools.insert(replay.command_tools[i]);
+            }
+            if (labels.size() > 1 || (labels.size() == 1 && *labels.begin() != path.value("object", "")))
+                replay.add("path.object_boundary", "sidecar path crosses or disagrees with an object boundary");
+            if (path.contains("object") && labels.size() == 0)
+                replay.add("path.object_identity", "sidecar path object identity is absent from final commands");
+            if (path.contains("tool") && (tools.size() != 1 || *tools.begin() != path.at("tool").get<std::size_t>()))
+                replay.add("path.tool", "sidecar path tool identity differs from final commands");
+            for (const auto &predecessor : path.at("predecessors")) {
+                const auto previous = predecessor.get<std::string>();
+                const auto it = path_ranges.find(previous);
+                if (it == path_ranges.end()) replay.add("path.predecessor", "sidecar predecessor is missing");
+                else if (it->second.second >= first) replay.add("path.predecessor", "sidecar predecessor follows or overlaps dependent path");
+            }
+        }
+        std::set<std::string> temporary_ids;
+        std::map<std::string, std::pair<std::size_t, std::size_t>> temporary_ranges;
+        for (const auto &temporary : packet.at("temporary_structures")) {
+            const auto id = temporary.at("id").get<std::string>();
+            if (!temporary_ids.insert(id).second) replay.add("temporary.duplicate_id", "duplicate temporary structure identity");
+            const auto create = temporary.at("create_command").get<std::size_t>(), last = temporary.at("last_use_command").get<std::size_t>();
+            temporary_ranges[id] = {create, last};
+            if (create == 0 || create > last || last > replay.command_bytes.size()) replay.add("temporary.lifetime", "temporary structure lifetime is outside final program");
+            if (temporary.contains("object")) {
+                for (std::size_t i = create == 0 ? 0 : create - 1; i < std::min(last, replay.command_objects.size()); ++i)
+                    if (!replay.command_objects[i].empty() && replay.command_objects[i] != temporary.at("object").get<std::string>()) {
+                        replay.add("temporary.object", "temporary structure lifetime crosses object identity");
+                        break;
+                    }
+            }
+        }
+        for (const auto &path : packet.at("paths")) {
+            const auto first = path.at("command_start").get<std::size_t>(), last = path.at("command_end").get<std::size_t>();
+            for (const auto &use : path.value("uses_temporary", Json::array())) {
+                const auto it = temporary_ranges.find(use.get<std::string>());
+                if (it == temporary_ranges.end() || first < it->second.first || last > it->second.second)
+                    replay.add("temporary.use", "path uses a temporary structure outside its declared lifetime");
+            }
+        }
+        const auto aabb_intersects = [](const V3 &a0, const V3 &a1, const V3 &b0, const V3 &b1) {
+            for (std::size_t i = 0; i < 3; ++i) if (std::max(a0[i], a1[i]) < b0[i] - epsilon || std::min(a0[i], a1[i]) > b1[i] + epsilon) return false;
+            return true;
+        };
+        const auto aabb_inside = [](const V3 &a0, const V3 &a1, const V3 &b0, const V3 &b1) {
+            for (std::size_t i = 0; i < 3; ++i) if (std::min(a0[i], a1[i]) < b0[i] - epsilon || std::max(a0[i], a1[i]) > b1[i] + epsilon) return false;
+            return true;
+        };
+        for (const auto &datum : packet.at("datums")) {
+            const auto object = datum.at("object").get<std::string>();
+            const auto pmin = datum.at("protected_min_mm").get<V3>(), pmax = datum.at("protected_max_mm").get<V3>();
+            const auto emin = datum.at("permitted_min_mm").get<V3>(), emax = datum.at("permitted_max_mm").get<V3>();
+            const auto radius = datum.at("max_bead_radius_mm").get<double>();
+            if (!aabb_inside(pmin, pmax, emin, emax)) replay.add("datum.contract", "protected datum region is outside permitted envelope");
+            if (datum.value("require_no_interlocking", 0) != 0 || datum.value("require_feature_identity", 0) != 0)
+                replay.add("rule.unproven", "requested datum feature/interlocking property is not recoverable from final G-code", "error");
+            for (const auto &segment : replay.depositions) {
+                V3 expanded_min {}, expanded_max {};
+                for (std::size_t i = 0; i < 3; ++i) {
+                    expanded_min[i] = std::min(segment.start[i], segment.end[i]) - radius;
+                    expanded_max[i] = std::max(segment.start[i], segment.end[i]) + radius;
+                }
+                if (!aabb_intersects(expanded_min, expanded_max, pmin, pmax)) continue;
+                replay.line = segment.line;
+                if (segment.object != object) replay.add("datum.object", "deposition intersecting datum has the wrong object identity");
+                if (!aabb_inside(expanded_min, expanded_max, emin, emax)) replay.add("datum.envelope", "deposition bead sweep leaves the permitted datum envelope");
+                if (datum.contains("planar_z_mm") && (std::abs(segment.start[2] - datum.at("planar_z_mm").get<double>()) > epsilon ||
+                    std::abs(segment.end[2] - datum.at("planar_z_mm").get<double>()) > epsilon))
+                    replay.add("datum.planarity", "deposition intersecting datum is outside the bound planar datum");
+            }
+        }
+        replay.line = total_lines;
         std::stable_sort(replay.findings.begin(), replay.findings.end(), [](const Json &a, const Json &b) {
             return std::tuple(a.at("line").get<std::size_t>(), a.at("code").get<std::string>(), a.at("message").get<std::string>()) <
                    std::tuple(b.at("line").get<std::size_t>(), b.at("code").get<std::string>(), b.at("message").get<std::string>());

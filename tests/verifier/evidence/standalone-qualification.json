@@ -1,6 +1,6 @@
 {
-  "starting_commit": "9228575df549161ff77f6b103580aa16c2f2d91a",
-  "verifier_sha256": "7b836a3d29f8a26bb2adb57381af53cca3a862ab9eee92a4862c0940d59e79e8",
+  "starting_commit": "393904b9b92930058074019a5616097ec8ec2af8",
+  "verifier_sha256": "a181ab236dd00ce3ffeb728358d20e1929427230a344960da3f63431b4e3007a",
   "fingerprint_sha256": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
   "acceptance": [
     {
@@ -138,8 +138,10 @@
         "first_replay_error_line": null,
         "input_sha256": {
           "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
-          "manifest": "153e6729d13d407f6e85ff63b93f0bad3ae3ff3ec4dee261e7234965a3160f9e",
-          "program": "6d678f1a4c90aa12578a7ab44330f3b8c1e9922022b0c1f3fda96bac699431fe"
+          "manifest": "5f299202d77eb1a0a23d51550905a1b746c51a53368d87af2c7ba3945b1c6d6b",
+          "program": "6d678f1a4c90aa12578a7ab44330f3b8c1e9922022b0c1f3fda96bac699431fe",
+          "work_packet": "9813b831465d7a6435f571e43059bbb89d4e46eac98d4e7ab09485b384f79af9",
+          "work_packet_canonical": "9813b831465d7a6435f571e43059bbb89d4e46eac98d4e7ab09485b384f79af9"
         },
         "lines_scanned": 8979,
         "metrics": {
@@ -296,8 +298,10 @@
         "first_replay_error_line": null,
         "input_sha256": {
           "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
-          "manifest": "c057f117f568b1b3932f92f147a597f51e5eea2fb1a2eb5731bd8aab1c47a450",
-          "program": "eaa30a70f9067f66d37d56525c9952585d697e043c85b88fb5255d9b5a16d2cd"
+          "manifest": "dd4f754db23368ef14c071d99287b98cffa06769853cd4912fdd90357c319a36",
+          "program": "eaa30a70f9067f66d37d56525c9952585d697e043c85b88fb5255d9b5a16d2cd",
+          "work_packet": "4b7f39b20557d20742056fb4248c60fc82a11abadea4281604ee630c77d59d98",
+          "work_packet_canonical": "4b7f39b20557d20742056fb4248c60fc82a11abadea4281604ee630c77d59d98"
         },
         "lines_scanned": 3431,
         "metrics": {
@@ -454,8 +458,10 @@
         "first_replay_error_line": null,
         "input_sha256": {
           "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
-          "manifest": "2cfac16ecb304e47481a819315cd16019f6fa92850c68a43fe66988bf100e0f8",
-          "program": "13a1090cc129f69cbbfc503136e8dd9d757b07e4b06abbf6c02ca2cefa88ea24"
+          "manifest": "8e2b4ca490b407aedf264fe597775c3eac624b56cca7c4f22d9cf2370806be6a",
+          "program": "13a1090cc129f69cbbfc503136e8dd9d757b07e4b06abbf6c02ca2cefa88ea24",
+          "work_packet": "532e55ee48d4ba20c52e95fdc5da661e42bb2e42fd6bd5617e9f4503db90495d",
+          "work_packet_canonical": "532e55ee48d4ba20c52e95fdc5da661e42bb2e42fd6bd5617e9f4503db90495d"
         },
         "lines_scanned": 5933,
         "metrics": {
@@ -612,8 +618,10 @@
         "first_replay_error_line": null,
         "input_sha256": {
           "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
-          "manifest": "a489383b0daa0163c65edfdf77f9e3546fe946b21caac2360839e474adf2bbcc",
-          "program": "8a33f96022dd2fb9b53fd2c725b5d539eed54f9dd4d9c54ec7f5050e8bfb928f"
+          "manifest": "8d8ad08bbb64a7ba453762ad8901095d35828a065ff4028df762e1709ca56944",
+          "program": "8a33f96022dd2fb9b53fd2c725b5d539eed54f9dd4d9c54ec7f5050e8bfb928f",
+          "work_packet": "90c870da8b2846548188145860287a85f8678c3cf0b1750d38a5806a9603faa1",
+          "work_packet_canonical": "90c870da8b2846548188145860287a85f8678c3cf0b1750d38a5806a9603faa1"
         },
         "lines_scanned": 8704,
         "metrics": {
@@ -770,8 +778,10 @@
         "first_replay_error_line": null,
         "input_sha256": {
           "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
-          "manifest": "2062737b55110ad82cc67dedda6b65583cc92933b7f58d42dcfcd6813e20a29c",
-          "program": "8d22abeedfbd5bcc1198b3771d52d385429bbace7958c92ecc5f567d85786900"
+          "manifest": "a7e55ebbca4456df752799c180eed7694182db77f91cb93d941c8ef78a6cfee2",
+          "program": "8d22abeedfbd5bcc1198b3771d52d385429bbace7958c92ecc5f567d85786900",
+          "work_packet": "68cc9808640047e29bd4fb9f6041b3bc8919862bccc3347b9169642274d9a0e2",
+          "work_packet_canonical": "68cc9808640047e29bd4fb9f6041b3bc8919862bccc3347b9169642274d9a0e2"
         },
         "lines_scanned": 3939,
         "metrics": {
@@ -928,8 +938,10 @@
         "first_replay_error_line": null,
         "input_sha256": {
           "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
-          "manifest": "98d61015af5c30bc006388dad1f4de965f7b1a717f006ba6018d0ed8dcd79b8d",
-          "program": "13f4dd5df3f92a535d61ea22ed30e72a1a085119d5bff2da0f072981ba6644d5"
+          "manifest": "b79a0907715b70e2b9aca7dd0cf73d4e46534c01e9c39d83ffb9f63da29e71b7",
+          "program": "13f4dd5df3f92a535d61ea22ed30e72a1a085119d5bff2da0f072981ba6644d5",
+          "work_packet": "67fafebee7bc75396eeb27e9056261463eac21704a211ab8f64761ee284226be",
+          "work_packet_canonical": "67fafebee7bc75396eeb27e9056261463eac21704a211ab8f64761ee284226be"
         },
         "lines_scanned": 11934,
         "metrics": {
@@ -1086,8 +1098,10 @@
         "first_replay_error_line": null,
         "input_sha256": {
           "fingerprint": "cef23931aa522a9a083d1a4432db51f6294f656316b29bb7bdae581d010af088",
-          "manifest": "1b9758c95ad160ac100022324af808dcb07ac7de0902e506022d972a38033c34",
-          "program": "2813fb6f24f16e94e5bd610217785e8f10420ac4c1103693e63b3f250021d8ef"
+          "manifest": "c4d288000610955c3dc1c7243a23fc13558f9f898c4da853fd3b3d41ba10daf8",
+          "program": "2813fb6f24f16e94e5bd610217785e8f10420ac4c1103693e63b3f250021d8ef",
+          "work_packet": "5b6619bb8ec3b9ca818eb6043ce7cefb56e390749bb93a1623538b7c91c1268a",
+          "work_packet_canonical": "5b6619bb8ec3b9ca818eb6043ce7cefb56e390749bb93a1623538b7c91c1268a"
         },
         "lines_scanned": 893,
         "metrics": {
@@ -1864,7 +1878,7 @@
     "commands": 692,
     "decimal_state_matches": true
   },
-  "tests_run": 21,
+  "tests_run": 23,
   "successful": true,
   "skipped": 0
 }

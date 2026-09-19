@@ -3,4 +3,5 @@
 namespace JSlice::Verification {
 inline constexpr std::string_view machine_schema = R"schema(@verifier_machine@)schema";
 inline constexpr std::string_view manifest_schema = R"schema(@verification_manifest@)schema";
+inline constexpr std::string_view work_packet_schema = R"schema(@verification_work_packet@)schema";
 }

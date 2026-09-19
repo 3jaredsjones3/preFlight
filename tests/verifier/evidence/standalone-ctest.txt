@@ -1,0 +1,7 @@
+Test project C:/src/j_slice/j-slice/build/trusted-verifier
+    Start 1: trusted_verifier_mutations
+1/1 Test #1: trusted_verifier_mutations .......   Passed    5.78 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   5.78 sec

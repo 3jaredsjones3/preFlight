@@ -18,7 +18,7 @@
 | Conventional support graph | Executable M0.1 | Buckling/load/removal models |
 | Drawn strands and arches | Rejected unless qualified | Strand, joint, arch, load, lifetime, collision experiments |
 | Orientation Pareto search | Designed | Reduced compiler and stable objectives |
-| Independent verifier | Separate v1 library/CLI; 7 production goldens and 20 focused mutations qualified under declared synthetic inputs | Exact datum/part-collision/dependency/contact checks, authenticated calibration/artifact binding; see M1_5_STATUS.md |
+| Independent verifier | M1.5 contract/integrity boundary complete: separate four-input library/CLI, canonical work packets, 7 production goldens, 20 focused mutations, path precedence/lifetime and conservative datum cases qualified under declared synthetic inputs | Exact surface/part collision, dependency/contact physics, authenticated calibration/artifact binding, more dialects and signatures remain deferred; see M1_5_STATUS.md |
 | Legacy preFlight adapter | M1 native source inventory and 7-job off/on production equivalence qualified | Downstream emitter state remains outside the source report; see M1_STATUS.md |
 | Full GUI build | Not verified | Dependency-complete Windows/Linux builds |
 

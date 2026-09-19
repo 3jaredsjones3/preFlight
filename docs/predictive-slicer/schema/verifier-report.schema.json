@@ -7,8 +7,8 @@
     "schema_version": {"const": "js-verifier-report-1"},
     "accepted": {"type": "boolean"},
     "scope": {"const": "conditional_static_checks"},
-    "input_sha256": {"type": "object", "additionalProperties": false, "required": ["program", "fingerprint", "manifest"],
-      "properties": {"program": {"$ref": "#/$defs/hash"}, "fingerprint": {"$ref": "#/$defs/hash"}, "manifest": {"$ref": "#/$defs/hash"}}},
+    "input_sha256": {"type": "object", "additionalProperties": false, "required": ["program", "fingerprint", "manifest", "work_packet"],
+      "properties": {"program": {"$ref": "#/$defs/hash"}, "fingerprint": {"$ref": "#/$defs/hash"}, "manifest": {"$ref": "#/$defs/hash"}, "work_packet": {"$ref": "#/$defs/hash"}, "work_packet_canonical": {"$ref": "#/$defs/hash"}}},
     "findings": {"type": "array", "items": {"type": "object", "additionalProperties": false,
       "required": ["line", "severity", "code", "message"], "properties": {
         "line": {"type": "integer", "minimum": 0}, "byte_offset": {"type": "integer", "minimum": 0},

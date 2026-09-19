@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jslice:verification-work-packet:1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "canonicalization", "program_sha256", "fingerprint_sha256", "manifest_sha256", "compiler", "schema_versions", "paths", "temporary_structures", "datums"],
+  "properties": {
+    "schema_version": {"const": "js-work-packet-1"},
+    "canonicalization": {"const": "js-canonical-json-1"},
+    "program_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fingerprint_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "intent_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "intent_manifest": {"type": "object"},
+    "artifact_report": {"type": "object"},
+    "compiler": {"type": "object", "additionalProperties": false, "required": ["commit", "build_id"], "properties": {
+      "commit": {"type": "string", "pattern": "^[0-9a-f]{7,64}$"},
+      "build_id": {"type": "string", "minLength": 1, "maxLength": 256}
+    }},
+    "schema_versions": {"type": "object", "additionalProperties": false, "required": ["machine", "manifest", "packet", "report"], "properties": {
+      "machine": {"const": "js-machine-1"}, "manifest": {"const": "js-verification-1"},
+      "packet": {"const": "js-work-packet-1"}, "report": {"const": "js-verifier-report-1"}
+    }},
+    "paths": {"type": "array", "maxItems": 100000, "items": {"type": "object", "additionalProperties": false,
+      "required": ["id", "command_start", "command_end", "command_sha256", "predecessors"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 256},
+        "object": {"type": "string", "minLength": 1, "maxLength": 512},
+        "instance": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "command_start": {"type": "integer", "minimum": 1},
+        "command_end": {"type": "integer", "minimum": 1},
+        "command_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "predecessors": {"type": "array", "maxItems": 100000, "items": {"type": "string", "minLength": 1, "maxLength": 256}},
+        "tool": {"type": "integer", "minimum": 0, "maximum": 7},
+        "material": {"type": "string", "minLength": 1, "maxLength": 128},
+        "uses_temporary": {"type": "array", "maxItems": 100000, "items": {"type": "string", "minLength": 1, "maxLength": 256}}
+      }
+    }},
+    "temporary_structures": {"type": "array", "maxItems": 100000, "items": {"type": "object", "additionalProperties": false,
+      "required": ["id", "create_command", "last_use_command"], "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 256},
+        "object": {"type": "string", "minLength": 1, "maxLength": 512},
+        "create_command": {"type": "integer", "minimum": 1},
+        "last_use_command": {"type": "integer", "minimum": 1}
+      }
+    }},
+    "datums": {"type": "array", "maxItems": 1000, "items": {"type": "object", "additionalProperties": false,
+      "required": ["id", "object", "protected_min_mm", "protected_max_mm", "permitted_min_mm", "permitted_max_mm", "max_bead_radius_mm"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 256},
+        "object": {"type": "string", "minLength": 1, "maxLength": 512},
+        "protected_min_mm": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number", "minimum": -10000, "maximum": 10000}},
+        "protected_max_mm": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number", "minimum": -10000, "maximum": 10000}},
+        "permitted_min_mm": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number", "minimum": -10000, "maximum": 10000}},
+        "permitted_max_mm": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number", "minimum": -10000, "maximum": 10000}},
+        "max_bead_radius_mm": {"type": "number", "minimum": 0, "maximum": 1000},
+        "planar_z_mm": {"type": "number", "minimum": -10000, "maximum": 10000},
+        "require_no_interlocking": {"type": "integer", "minimum": 0, "maximum": 1},
+        "require_feature_identity": {"type": "integer", "minimum": 0, "maximum": 1}
+      }
+    }}
+  }
+}
