@@ -124,9 +124,13 @@ features to control the time and temperature at which neighboring beads meet.
 It must preserve object exclusion boundaries, material/tool changes, bridges,
 seams, cooling constraints, support lifetimes, and functional datums.
 
-The M0 scheduler only supplies deterministic precedence/travel/thermal-priority
-behavior. M2 replaces its heuristic thermal term with a calibrated sparse model
-and measurable bonding-window objective.
+The M0 scheduler remains the legacy reference and is unchanged. M2 adds an
+independent analysis-only thermal-neighbor graph and bounded proposal pass over
+BeadGraphIR. It uses a versioned exponential model contract, reports contact
+age, temperature estimate and uncertainty, and locks any path whose object,
+material, tool, first-layer, support, bridge, wipe or dependency identity is
+uncertain. A measured model and physical coupon evidence are required before a
+proposal may be considered for a separately reviewed lowering pass.
 
 ## Trust boundary
 
@@ -151,5 +155,7 @@ native Windows build and seven production fixture equivalence tests pass; see
 linkage. Its canonical work-packet binding, independent modal replay, path
 precedence and conservative datum envelope checks pass under explicit synthetic
 machine assumptions. Exact surface/deposited-part collision and dependency/contact
-proofs remain deferred; see `M1_5_STATUS.md`. J-Slice remains executable research
-code, not a replacement slicer.
+proofs remain deferred; see `M1_5_STATUS.md`. M2 thermal contracts, graph
+construction and proposal serialization are analysis-only and do not feed the
+emitter; see `M2_STATUS.md`. J-Slice remains executable research code, not a
+replacement slicer.

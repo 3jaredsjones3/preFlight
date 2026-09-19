@@ -16,6 +16,7 @@ add_library(jslice_predictive_core
     "${JS_ROOT}/src/libslic3r/Predictive/LegacyRoleMapping.cpp"
     "${JS_ROOT}/src/libslic3r/Predictive/ArtifactJson.cpp"
     "${JS_ROOT}/src/libslic3r/Predictive/CanonicalGCodeComparator.cpp"
+    "${JS_ROOT}/src/libslic3r/Predictive/ThermalSchedule.cpp"
 )
 
 target_include_directories(jslice_predictive_core PUBLIC "${JS_ROOT}/src")
@@ -38,6 +39,7 @@ else()
 endif()
 
 enable_testing()
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
 add_test(NAME predictive_core_smoke COMMAND predictive_core_smoke)
 
 foreach(tool predictive_adapter_tests predictive_compare_gcode)
@@ -49,8 +51,21 @@ foreach(tool predictive_adapter_tests predictive_compare_gcode)
         target_compile_options(${tool} PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror)
     endif()
 endforeach()
+add_executable(predictive_thermal_schedule_tests "${JS_ROOT}/tools/predictive_thermal_schedule_tests.cpp")
+target_link_libraries(predictive_thermal_schedule_tests PRIVATE jslice_predictive_core)
+if(MSVC)
+    target_compile_options(predictive_thermal_schedule_tests PRIVATE /W4 /WX /permissive-)
+else()
+    target_compile_options(predictive_thermal_schedule_tests PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror)
+endif()
+add_test(NAME predictive_thermal_schedule_tests COMMAND predictive_thermal_schedule_tests)
+ add_test(NAME predictive_thermal_calibration
+     COMMAND "${Python3_EXECUTABLE}" "${JS_ROOT}/tools/thermal_calibration_tests.py")
+ add_test(NAME predictive_thermal_schema
+     COMMAND "${Python3_EXECUTABLE}" "${JS_ROOT}/tools/thermal_schedule_schema_tests.py"
+         "$<TARGET_FILE:predictive_thermal_schedule_tests>"
+         "${JS_ROOT}/docs/predictive-slicer/schema/thermal-schedule.schema.json")
 add_test(NAME predictive_adapter_tests COMMAND predictive_adapter_tests "${JS_ROOT}/tests/predictive/golden")
-find_package(Python3 COMPONENTS Interpreter REQUIRED)
 add_test(NAME predictive_golden_invariants COMMAND "${Python3_EXECUTABLE}" "${JS_ROOT}/tools/predictive_golden.py" validate "${JS_ROOT}/tests/predictive/golden")
 add_test(NAME predictive_job_inputs COMMAND "${Python3_EXECUTABLE}" "${JS_ROOT}/tools/predictive_golden.py" validate-jobs "${JS_ROOT}/tests/predictive/jobs/manifest.json")
 add_test(NAME predictive_golden_runner COMMAND "${Python3_EXECUTABLE}" "${JS_ROOT}/tools/predictive_golden_tests.py" "$<TARGET_FILE:predictive_compare_gcode>")

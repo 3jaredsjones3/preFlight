@@ -1,0 +1,23 @@
+{
+  "schema_version": "js-thermal-calibration-1",
+  "dataset_id": "ad5m-pla-coupon-example",
+  "printer_id": "AD5M-example",
+  "machine_fingerprint_hash": "sha256:physical-fingerprint-required",
+  "material_family": "PLA",
+  "material_lot": "example-only",
+  "nozzle_diameter_mm": 0.4,
+  "process": {
+    "layer_height_mm": 0.2,
+    "line_width_mm": 0.45,
+    "print_temperature_c": 215,
+    "bed_temperature_c": 60,
+    "fan_percent": 50,
+    "ambient_temperature_c": 25
+  },
+  "measurements": [
+    {"coupon_id": "a", "contact_age_s": 1, "measured_temperature_c": 204.9, "bond_proxy": 0.5},
+    {"coupon_id": "b", "contact_age_s": 5, "measured_temperature_c": 168.7, "bond_proxy": 0.4},
+    {"coupon_id": "c", "contact_age_s": 10, "measured_temperature_c": 130.1, "bond_proxy": 0.3},
+    {"coupon_id": "d", "contact_age_s": 20, "measured_temperature_c": 88.7, "bond_proxy": 0.2}
+  ]
+}

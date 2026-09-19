@@ -181,6 +181,12 @@ structure creation/last-use lifetimes. It does not infer dependencies or
 thermal safety from a path sidecar. Missing sidecars mean path precedence was
 not requested; a required sidecar mutation fails closed.
 
+An optional `thermal_schedule_proposal` sidecar is accepted under the same
+packet schema. The verifier checks only its versioned path identity permutation
+and proposed precedence against executable path ranges. It ignores thermal
+scores, temperature estimates and bond claims; those remain compiler-side
+analysis and are never treated as trusted physical evidence.
+
 Datum entries define axis-aligned protected and permitted envelopes plus a
 conservative maximum bead radius. Positive-E linear segments are expanded by
 that radius and checked for object identity, envelope containment and optional

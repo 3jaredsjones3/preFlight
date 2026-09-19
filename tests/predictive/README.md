@@ -68,6 +68,17 @@ comparison differs only in that line. Object labels, roles, configuration and
 machine commands remain protected.
 Numeric command equality uses parsed IEEE doubles with no tolerance.
 
+## M2 analysis-only thermal infrastructure
+
+The native predictive-core suite includes `predictive_thermal_schedule_tests`
+and `predictive_thermal_calibration`. They exercise deterministic bounded
+neighbor construction, dependency/object/material/tool reorderability,
+first-layer/support/bridge/wipe locks, synthetic-model no-op eligibility,
+out-of-domain rejection, model provenance and incomplete coupon rejection.
+`tools/thermal_calibration.py` writes only versioned fit artifacts bound to the
+input dataset hash. No thermal proposal is connected to production G-code.
+Physical AD5M/AD5X A/B evidence is required before any lowering work.
+
 
 The first passing qualification and accepted replay each exported 28 programs and
 validated 14 reports. The original six CTest groups still pass; the native CTest

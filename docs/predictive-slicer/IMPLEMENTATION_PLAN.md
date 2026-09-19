@@ -77,6 +77,10 @@ versioned, reported unproven and assigned to later calibration/geometry work.
 
 ## M2: thermal-debt scheduler
 
+- **In progress: analysis-only foundation.** Versioned model, neighbor graph,
+  bounded reorderability/scheduling proposal and calibration-fit contracts are
+  implemented without changing the legacy emitter. Synthetic and uncalibrated
+  models are explicitly ineligible for a physical recommendation.
 - Fit simple material cooling and bonding models from coupons.
 - Construct a local thermal-neighbor graph from BeadGraphIR.
 - Reorder only dependency-equivalent paths.
@@ -86,7 +90,8 @@ versioned, reported unproven and assigned to later calibration/geometry work.
 
 Exit criterion: repeated coupon tests show a preregistered improvement or the
 feature is rejected/revised. Print time and visible quality are recorded as
-guardrails.
+guardrails. This criterion remains unsatisfied until physical AD5M and AD5X
+records are attached and reviewed; no printer-changing lowering is enabled.
 
 ## M3: machine fingerprint and evidence loop
 

@@ -1,5 +1,6 @@
 // Dependency-complete test: constructs actual preFlight entities, not mocks.
 #include "libslic3r/Predictive/ArtifactJson.hpp"
+#include "libslic3r/Predictive/ThermalSchedule.hpp"
 #include "libslic3r/ExtrusionEntityCollection.hpp"
 #include <iostream>
 #include <stdexcept>
@@ -86,6 +87,17 @@ int main()
             throw std::runtime_error("native attributes lost");
         if (root.entities.size() != 4 || !root.no_sort || path.polyline.points != polyline.points)
             throw std::runtime_error("source mutated");
+        MachineFingerprint machine;
+        machine.content_hash = "sha256:native-test";
+        ThermalModelContract thermal_model;
+        thermal_model.model_id = "native-synthetic";
+        thermal_model.synthetic = true;
+        thermal_model.provenance = ThermalModelProvenance::Synthetic;
+        const ThermalScheduleOptions thermal_options;
+        const auto proposal = propose_thermal_schedule(first.graph, machine, thermal_model, thermal_options);
+        if (!proposal.analysis_only || proposal.recommendation_eligible || proposal.baseline_order.size() != first.graph.paths.size() ||
+            thermal_schedule_json(proposal) != thermal_schedule_json(propose_thermal_schedule(first.graph, machine, thermal_model, thermal_options)))
+            throw std::runtime_error("production BeadGraphIR thermal analysis is not deterministic or is enabled");
         std::cout << "Native ExtrusionEntity traversal passed\n";
         return 0;
     } catch (const std::exception &e) { std::cerr << e.what() << '\n'; return 1; }

@@ -7,12 +7,12 @@
 | Stress-to-field mapping | Executable nearest-sample seed | FEA import, confidence propagation, mechanical coupons |
 | Spectral interlock | Executable bounded seed | Strength tests and machine-spectrum validation |
 | Slight nonplanar projection | Executable bounded seed | Nozzle/tool collision model and surface tests |
-| Thermal-aware scheduling | Heuristic seed | Calibrated temperature/bond model and A/B coupons |
+| Thermal-aware scheduling | M2 analysis-only neighbor graph, bounded proposal, synthetic/uncalibrated eligibility gate | Physical calibrated model and preregistered AD5M/AD5X A/B coupons; separately reviewed lowering |
 | Modal vibration prediction | Reduced model seed | Fingerprint measurement and displacement validation |
 | Geometric pre-compensation | Bounded hook | Per-feature calibration and metrology |
 | Pressure release | Reduced model seed | Extrusion-pressure calibration |
 | Swept collision checking | Build-volume hook only | Independent full tool/part swept-volume verifier |
-| Sparse thermal/bond model | Executable reduced model | Material/nozzle/cooling calibration and uncertainty fit |
+| Sparse thermal/bond model | Versioned exponential contract and deterministic coupon-fit CLI; no physical result | Measured material/nozzle/cooling calibration with uncertainty and evidence |
 | Closed-loop decisions | Bounded policy seed | Calibrated detector and controller integration |
 | Contact contracts | Executable M0.1 | Measured permanent/fracture process windows |
 | Conventional support graph | Executable M0.1 | Buckling/load/removal models |

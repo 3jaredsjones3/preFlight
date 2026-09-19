@@ -35,6 +35,12 @@ void append(const LegacyEntitySnapshot &source, const LegacyContext &context,
         if (ctx.layer && *ctx.layer <= std::numeric_limits<std::uint32_t>::max())
             path.provenance.source_layer = static_cast<std::uint32_t>(*ctx.layer);
         path.material_id = ctx.material.value_or("");
+        path.source_object = ctx.object;
+        path.source_instance = ctx.instance;
+        path.source_print_object = ctx.print_object;
+        path.tool_id = ctx.tool;
+        path.cancel_object_id = ctx.cancel_object.value_or("");
+        path.source_order = out.graph.paths.size();
         path.closed = source.points_scaled.size() > 1 && source.points_scaled.front() == source.points_scaled.back();
         // Preserve zero-volume paths; never invent deposition from width*height.
         path.extrusion_enabled = attr.mm3_per_mm > 0.0;

@@ -21,6 +21,31 @@
       "machine": {"const": "js-machine-1"}, "manifest": {"const": "js-verification-1"},
       "packet": {"const": "js-work-packet-1"}, "report": {"const": "js-verifier-report-1"}
     }},
+    "thermal_schedule_proposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "model_hash", "baseline_order", "proposed_order", "precedence"],
+      "properties": {
+        "schema_version": {"const": "js-thermal-schedule-1"},
+        "model_hash": {"type": "string", "minLength": 1, "maxLength": 256},
+        "baseline_order": {"type": "array", "maxItems": 100000,
+          "items": {"type": "string", "minLength": 1, "maxLength": 256}},
+        "proposed_order": {"type": "array", "maxItems": 100000,
+          "items": {"type": "string", "minLength": 1, "maxLength": 256}},
+        "precedence": {
+          "type": "array", "maxItems": 100000,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["path", "predecessors"],
+            "properties": {
+              "path": {"type": "string", "minLength": 1, "maxLength": 256},
+              "predecessors": {"type": "array", "maxItems": 100000,
+                "items": {"type": "string", "minLength": 1, "maxLength": 256}}
+            }
+          }
+        }
+      }
+    },
     "paths": {"type": "array", "maxItems": 100000, "items": {"type": "object", "additionalProperties": false,
       "required": ["id", "command_start", "command_end", "command_sha256", "predecessors"],
       "properties": {

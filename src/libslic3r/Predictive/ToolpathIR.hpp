@@ -81,6 +81,14 @@ struct BeadPath {
     std::optional<ThermalWindow> thermal_window;
     Provenance provenance;
     std::string material_id;
+    // Stable source identity captured by M1.  These fields are metadata only;
+    // they never participate in legacy G-code lowering.
+    std::optional<std::uint64_t> source_object;
+    std::optional<std::uint64_t> source_instance;
+    std::optional<std::uint64_t> source_print_object;
+    std::optional<std::uint32_t> tool_id;
+    std::string cancel_object_id;
+    std::size_t source_order {0};
     bool closed {false};
     bool extrusion_enabled {true};
     // M1 source entity record; absent for paths made by the research compiler.

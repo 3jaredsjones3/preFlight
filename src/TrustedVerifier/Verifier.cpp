@@ -547,6 +547,43 @@ Json verify(std::string_view program, std::string_view fingerprint, std::string_
                 else if (it->second.second >= first) replay.add("path.predecessor", "sidecar predecessor follows or overlaps dependent path");
             }
         }
+        // Optional M2 proposal binding.  The trusted verifier checks only
+        // immutable path identity and precedence; it deliberately does not
+        // evaluate thermal temperatures, scores or physical bond claims.
+        if (packet.contains("thermal_schedule_proposal")) {
+            const auto &proposal = packet.at("thermal_schedule_proposal");
+            const auto check_order = [&](const char *name) {
+                std::set<std::string> ids;
+                for (const auto &value : proposal.at(name)) {
+                    const auto id = value.get<std::string>();
+                    if (!path_ranges.contains(id)) replay.add("thermal.path_identity", "proposal references a path absent from the work packet");
+                    if (!ids.insert(id).second) replay.add("thermal.path_identity", "proposal order contains a duplicate path");
+                }
+                if (ids.size() != path_ranges.size()) replay.add("thermal.path_identity", "proposal order is not a complete path permutation");
+                return ids;
+            };
+            const auto baseline_ids = check_order("baseline_order");
+            const auto proposed_ids = check_order("proposed_order");
+            if (baseline_ids != proposed_ids) replay.add("thermal.path_identity", "baseline and proposed path identities differ");
+            std::map<std::string, std::size_t> proposed_position;
+            std::size_t proposal_index = 0;
+            for (const auto &value : proposal.at("proposed_order"))
+                proposed_position[value.get<std::string>()] = proposal_index++;
+            for (const auto &entry : proposal.at("precedence")) {
+                const auto path_id = entry.at("path").get<std::string>();
+                const auto dependent = proposed_position.find(path_id);
+                if (dependent == proposed_position.end()) {
+                    replay.add("thermal.precedence", "proposal precedence names an unknown path");
+                    continue;
+                }
+                for (const auto &value : entry.at("predecessors")) {
+                    const auto predecessor = value.get<std::string>();
+                    const auto previous = proposed_position.find(predecessor);
+                    if (previous == proposed_position.end() || previous->second >= dependent->second)
+                        replay.add("thermal.precedence", "proposal predecessor follows or overlaps dependent path");
+                }
+            }
+        }
         std::set<std::string> temporary_ids;
         std::map<std::string, std::pair<std::size_t, std::size_t>> temporary_ranges;
         for (const auto &temporary : packet.at("temporary_structures")) {

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://j-slice.dev/schema/js-thermal-calibration-1",
+  "title": "J-Slice thermal coupon measurements",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "dataset_id", "printer_id", "machine_fingerprint_hash",
+    "material_family", "nozzle_diameter_mm", "process", "measurements"],
+  "properties": {
+    "schema_version": {"const": "js-thermal-calibration-1"},
+    "dataset_id": {"type": "string", "minLength": 1},
+    "printer_id": {"type": "string", "minLength": 1},
+    "machine_fingerprint_hash": {"type": "string", "minLength": 1},
+    "material_family": {"type": "string", "minLength": 1},
+    "material_lot": {"type": "string"},
+    "nozzle_diameter_mm": {"type": "number", "exclusiveMinimum": 0},
+    "process": {
+      "type": "object", "additionalProperties": false,
+      "required": ["layer_height_mm", "line_width_mm", "print_temperature_c", "bed_temperature_c", "fan_percent", "ambient_temperature_c"],
+      "properties": {
+        "layer_height_mm": {"type": "number", "exclusiveMinimum": 0},
+        "line_width_mm": {"type": "number", "exclusiveMinimum": 0},
+        "print_temperature_c": {"type": "number"},
+        "bed_temperature_c": {"type": "number"},
+        "fan_percent": {"type": "number", "minimum": 0, "maximum": 100},
+        "ambient_temperature_c": {"type": "number"}
+      }
+    },
+    "measurements": {"type": "array", "minItems": 3, "items": {"type": "object", "additionalProperties": false,
+      "required": ["coupon_id", "contact_age_s", "measured_temperature_c", "bond_proxy"],
+      "properties": {"coupon_id": {"type": "string", "minLength": 1}, "contact_age_s": {"type": "number", "minimum": 0}, "measured_temperature_c": {"type": "number"}, "bond_proxy": {"type": "number", "minimum": 0}, "uncertainty_c": {"type": "number", "minimum": 0}}}}
+  }
+}

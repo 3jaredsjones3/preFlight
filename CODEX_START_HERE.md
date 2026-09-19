@@ -45,8 +45,10 @@ versioned machine/manifest files and a canonical work packet, replays its own
 modal state, checks path precedence and conservative datum envelopes, and only
 reports/rejects. Exact surface/part collision and dependency/contact physics are
 deferred and explicit. Read `docs/predictive-slicer/M1_5_STATUS.md` and
-`TRUSTED_VERIFIER.md` before continuing. Do not begin M2 or replace legacy
-emission.
+`TRUSTED_VERIFIER.md` before continuing. M2 is now in progress as an
+analysis-only thermal-debt scheduler foundation. Read
+`docs/predictive-slicer/M2_STATUS.md` and `M2_COUPON_PROTOCOL.md`; physical A/B
+evidence is still required and no legacy emission replacement is permitted.
 
 ## Qualified M1 source-inventory boundary
 

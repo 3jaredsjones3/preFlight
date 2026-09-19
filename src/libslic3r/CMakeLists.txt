@@ -353,6 +353,8 @@ set(SLIC3R_SOURCES
     Predictive/ArtifactJson.cpp
     Predictive/CanonicalGCodeComparator.hpp
     Predictive/CanonicalGCodeComparator.cpp
+    Predictive/ThermalSchedule.hpp
+    Predictive/ThermalSchedule.cpp
     ProgressConfig.cpp
     ProgressConfig.hpp
     PrintRegion.cpp

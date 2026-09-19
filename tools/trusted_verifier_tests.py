@@ -428,8 +428,18 @@ class VerifierTests(unittest.TestCase):
             {"id": "p1", "command_start": 5, "command_end": 5, "command_sha256": hashlib.sha256(first).hexdigest(), "predecessors": [], "tool": 0},
             {"id": "p2", "command_start": 6, "command_end": 6, "command_sha256": hashlib.sha256(second).hexdigest(), "predecessors": ["p1"], "tool": 0}],
             "temporary_structures": [], "datums": []})
+        packet["thermal_schedule_proposal"] = {
+            "schema_version": "js-thermal-schedule-1", "model_hash": "fnv1a64:test",
+            "baseline_order": ["p1", "p2"], "proposed_order": ["p1", "p2"],
+            "precedence": [{"path": "p1", "predecessors": []}, {"path": "p2", "predecessors": ["p1"]}]}
         report, raw = self.run_verify(program, binding=binding, packet=packet)
         self.assertTrue(report["accepted"], raw.decode())
+        bad_thermal = dict(packet)
+        bad_thermal["thermal_schedule_proposal"] = dict(packet["thermal_schedule_proposal"])
+        bad_thermal["thermal_schedule_proposal"]["proposed_order"] = ["p2", "p1"]
+        report, _ = self.run_verify(program, binding=binding, packet=bad_thermal)
+        self.assertFalse(report["accepted"])
+        self.assertIn("thermal.precedence", {f["code"] for f in report["findings"] if f["severity"] == "error"})
         bad = dict(packet); bad["paths"] = [dict(packet["paths"][0]), dict(packet["paths"][1])]
         bad["paths"][1]["predecessors"] = ["missing"]
         report, _ = self.run_verify(program, binding=binding, packet=bad)
