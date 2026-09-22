@@ -93,6 +93,32 @@ feature is rejected/revised. Print time and visible quality are recorded as
 guardrails. This criterion remains unsatisfied until physical AD5M and AD5X
 records are attached and reviewed; no printer-changing lowering is enabled.
 
+## M2.1: machine-evidence bootstrap
+
+Status: implemented as unqualified evidence infrastructure. The capability
+correction is recorded in `de88ce8`; it is not physical qualification or M2
+completion. The canonical capture contract, known validation gaps, and operator
+checklist are in [M2_1_MACHINE_EVIDENCE.md](M2_1_MACHINE_EVIDENCE.md).
+
+Next software work: close the reproduced review-readiness gaps in that document
+with adversarial regressions and matching contract checks. Preserve explicit
+AD5M tool-change non-applicability, real AD5X sequence evidence, deterministic
+null templates, lowercase SHA-256 values, and unqualified records. This work is
+confined to evidence tooling, its schemas, tests, and documentation.
+
+Next physical work: capture the real printer/export inputs separately for AD5M
+and AD5X. Before coupon review, retain complete artifacts and the measurement
+worksheet, resolve firmware/startup/coordinate ambiguity, and inspect the full
+coupon prerequisites in [M2_COUPON_PROTOCOL.md](M2_COUPON_PROTOCOL.md). Identity
+completeness alone does not establish measured limits, a calibrated model,
+verifier dialect compatibility, or permission to print.
+
+Acceptance: the open validation cases reject incomplete or ambiguous evidence;
+complete captured inputs are eligible only for review and remain unqualified;
+existing M1/M1.5/M2 regressions pass with ordinary output unchanged. The physical
+M2 exit criterion above remains a separate, unsatisfied gate. General M3 and
+production lowering have not begun.
+
 ## M3: machine fingerprint and evidence loop
 
 - Calibration suite for flow, pressure response, dimensional bias, corners,

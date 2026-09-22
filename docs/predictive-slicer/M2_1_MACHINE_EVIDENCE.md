@@ -31,12 +31,25 @@ captured SHA-256 values must be 64 lowercase hexadecimal characters. This
 includes the slicer profile, machine artifact, start/end sequence artifacts,
 AD5X tool-change artifact, and any collision mesh.
 
+## Startup evidence applicability
+
 Every exported sequence uses the same applicability record. `required` needs a
 real artifact identity and SHA-256. `not_applicable` needs a machine-capability
 reason and cannot contain an artifact or hash. AD5M tool change is explicitly
 `not_applicable` because the single-material machine has no ordinary tool-change
 sequence; Jared must not create or hash an empty/N/A file. AD5X tool change is
 `required` because its multi-material workflow has a real sequence to capture.
+
+The two Python validators and two JSON schemas express the same capability
+decision at different boundaries: `tools/machine_evidence.py` admits draft
+observations, while `tools/m2_coupon.py` admits coupon specifications.
+`schema/machine-evidence.schema.json` and
+`schema/m2-coupon-experiment.schema.json` describe those artifacts. A capability
+change must update all four and exercise `tools/machine_evidence_tests.py` and
+`tools/m2_coupon_tests.py`; otherwise a draft can pass one boundary and fail
+another. Draft null placeholders remain distinct from complete coupon evidence.
+
+## Observation ingestion
 
 Supply observations in the generated JSON record with `fields` for the actual
 serial, firmware identity/version, nozzle, slicer/profile and hash, machine
@@ -52,17 +65,46 @@ python tools/machine_evidence.py bootstrap --model AD5X `
 python tools/machine_evidence.py validate --input build/m2.1/AD5X.observed.json --require-review-ready
 ```
 
-`--require-review-ready` means the identity/export evidence is complete for
-physical review; it never changes `qualification_state: unqualified` and never
-sets a physical qualification claim. Unknown or ambiguous firmware, startup
-behavior, or coordinates fails closed. A profile text/hash mismatch is rejected.
-Malformed, uppercase, or shortened SHA-256 values are rejected.
+`--require-review-ready` is intended to require complete identity/export evidence
+for physical review; it never changes `qualification_state: unqualified` and
+never sets a physical qualification claim. Unknown or ambiguous firmware,
+startup behavior, or coordinates must fail closed. The open findings below mean
+the current implementation does not fully enforce that requirement. A supplied
+profile text/hash mismatch and malformed, uppercase, or shortened SHA-256 values
+are rejected, but hash syntax alone does not verify capture or authenticate it.
 
 The optional `collision_geometry` object records coordinate frame, units,
 nozzle-tip origin, mesh hash, transform, fixed and moving components,
 printer/nozzle state, inflation margin, provenance, and qualification state.
 Image-generated, inferred, community, or otherwise unqualified meshes cannot
 satisfy exact collision-proof requirements.
+
+## Open validation findings
+
+Self-review on 2026-09-22 reproduced these gaps against `de88ce8`. The probes
+used only the existing synthetic `MachineEvidenceTests.complete_observations`
+helper, `build_artifact`, and `validate_artifact(..., require_review_ready=True)`
+in memory. They created no physical observations or printable packages.
+
+| Input to review-readiness validation | Observed result | Required follow-up |
+| --- | --- | --- |
+| Complete test binding with no verbatim profile-start program or its digest | Accepted; both `profile_start_program` facts remain null | Capture and bind the actual profile-start evidence; reject absent text/digest and mismatches before review readiness |
+| Same binding with `coordinate_convention: false` | Accepted | Validate the coordinate value's type and required convention information, then reject ambiguous or incomplete values |
+| Same binding with `firmware_identity: "unknown"` or `firmware_version: "Unknown"` | Accepted | Check both identity and version for nonempty, unambiguous values, including case/whitespace variants |
+
+All accepted probes still reported `qualification_state: unqualified` and
+`physical_qualification_claim: false`; the defect is an overstated review-ready
+gate, not a demonstrated physical qualification or printer-execution bypass.
+The existing passing tests do not cover these negative cases. Closing them
+requires adversarial regressions, review of both artifact contracts and their
+consumers, and proof that complete printer-specific captures still pass only
+for review. Do not repair the discrepancy by weakening the capture requirement.
+
+Until those checks exist, manually inspect these inputs before treating a record
+as ready for physical review. Physical capture can collect the missing evidence;
+automated review readiness must not substitute for that inspection. This review
+did not revalidate external manufacturer facts, authenticate captures, qualify
+firmware dialects, or exercise a physical printer.
 
 ## Jared's next physical capture, per printer
 

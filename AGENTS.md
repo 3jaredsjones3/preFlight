@@ -30,6 +30,19 @@ artifact-first compiler.
 - Do not combine adapter, optimizer, and verifier work into one opaque change.
 - Commit by milestone with a verification summary.
 
+## Project memory and optional skills
+
+Use `CODEX_START_HERE.md` as the entry point and
+`docs/predictive-slicer/IMPLEMENTATION_PLAN.md` as the canonical milestone plan.
+Keep rationale and open gates in the existing area documents; link them from
+code when an isolated edit could invalidate another contract. Copies outside
+this Git root are historical context, not the current plan.
+
+When available, select skills using the guidance in `CODEX_START_HERE.md`.
+Skills support the task; they do not add milestone authority or require a
+standing review ceremony. Tests and physical evidence retain their distinct
+meanings even when a memory audit reports no findings.
+
 ## Verification
 
 Run the independent smoke build described in `CODEX_START_HERE.md`. When the full

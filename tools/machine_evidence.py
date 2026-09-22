@@ -218,6 +218,11 @@ REQUIRED_FIELDS = {
     "coordinate_convention": "actual G-code coordinate convention",
 }
 
+# ATRAMENTOUS SPINE
+# why: Capability absence is distinct from missing capture across the bootstrap and coupon gates.
+# invariant: Required sequences bind real artifacts; inapplicable ones carry a reason and no artifact/hash.
+# do-not: Invent N/A artifacts or change this policy without checking both schemas and coupon admission.
+# related: [[docs/predictive-slicer/M2_1_MACHINE_EVIDENCE.md]]
 SEQUENCE_POLICY = {
     "AD5M": {"start": "required", "end": "required", "tool_change": "not_applicable"},
     "AD5X": {"start": "required", "end": "required", "tool_change": "required"},

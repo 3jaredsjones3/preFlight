@@ -92,6 +92,7 @@ def required_sha256(value: dict[str, Any], key: str) -> str:
     return result
 
 
+# atra: [[docs/predictive-slicer/M2_1_MACHINE_EVIDENCE.md]] - keep coupon admission aligned with bootstrap capability policy and both schemas.
 def validate_sequence_evidence(startup: dict[str, Any], model: str) -> None:
     expected = {"start": "required", "end": "required",
                 "tool_change": "required" if model == "AD5X" else "not_applicable"}

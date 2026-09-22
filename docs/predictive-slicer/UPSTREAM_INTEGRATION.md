@@ -69,7 +69,11 @@ no GUI or geometry-kernel dependencies and is the fast invariant test surface.
 
 ## Compatibility policy
 
-- Keep `oozebot/preFlight` as the `upstream` remote.
+- Preserve `oozebot/preFlight` provenance and upstream history. Remote aliases
+  are checkout configuration, not project identity: inspect `git remote -v`
+  and branch tracking before publishing. This checkout's `upstream` points to
+  `3jaredsjones3/preFlight`, the user-authorized publication target; do not
+  repoint it based on its name.
 - Preserve AGPL notices and upstream history.
 - Keep J-Slice work in reviewable milestone commits.
 - Rebase only with golden adapter tests available.

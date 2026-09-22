@@ -181,9 +181,11 @@ M2.1 adds `tools/machine_evidence.py`, the
 `schema/machine-evidence.schema.json` contract, deterministic AD5M/AD5X draft
 records, collision-geometry policy, and human-fillable printer worksheets. It
 is evidence infrastructure only. Drafts remain `unqualified`; no physical
-qualification claim is emitted. The tool preserves source conflicts and fails
-closed on missing/ambiguous serial, firmware, startup, material, ambient,
-operator, or coordinate evidence. See `M2_1_MACHINE_EVIDENCE.md`.
+qualification claim is emitted. The tool preserves source conflicts and is
+required to fail closed on missing/ambiguous serial, firmware, startup, material,
+ambient, operator, or coordinate evidence. The current review-readiness checks
+have [open validation gaps](M2_1_MACHINE_EVIDENCE.md#open-validation-findings);
+keep those distinct from the passing regression results above.
 
 The existing M2 coupon gate now also requires, for non-fixture inputs, exact
 firmware/profile and machine-artifact identities/hashes, required start/end

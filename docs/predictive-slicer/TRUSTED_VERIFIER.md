@@ -84,9 +84,12 @@ capability-dependent tool-change evidence, material manufacturer/type/color/
 lot, ambient observation, operator/date, and actual coordinate convention. AD5M
 must record tool change as `not_applicable` with a machine-capability reason and
 no artifact/hash; AD5X must supply a real tool-change artifact and SHA-256. An
-ambiguous coordinate convention, firmware identity, or startup behavior fails
-closed. Manufacturer thermal ratings and firmware `max_temp` values are not
-treated as measured limits.
+ambiguous coordinate convention, firmware identity, or startup behavior must
+fail closed. These are the admission requirements; current bootstrap
+review-readiness gaps are tracked in
+[M2.1's open validation findings](M2_1_MACHINE_EVIDENCE.md#open-validation-findings).
+Manufacturer thermal ratings and firmware `max_temp` values are not treated as
+measured limits.
 
 The optional collision manifest is evidence metadata only. It separates fixed
 and moving geometry and records the nozzle-tip frame, transform, mesh hash,
